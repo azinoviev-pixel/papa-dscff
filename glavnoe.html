@@ -273,54 +273,56 @@ footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rul
   .doc-head{padding:var(--s3) var(--s4)}
 }
 
-/* --- Закреплённая шапка ---------------------------------------------------
-   Оба меню — переходы между страницами и список разделов — живут в одной
-   липкой полосе. Фон непрозрачный: под полосой проезжает текст, и сквозь
-   полупрозрачный он читался бы как грязь. */
+/* --- Шапка: страницы · где я · разделы -------------------------------------
+   Три части с разными ролями, чтобы не путать переход между страницами
+   с переходом внутри страницы. Слева — куда уйти, посередине — где нахожусь,
+   справа — что есть на этой странице. */
 .navbar{position:sticky;top:0;z-index:60;background:var(--paper);
   border-bottom:1px solid var(--rule);margin:0 0 var(--s5);
-  display:flex;align-items:center;gap:var(--s2)}
-/* Меню тянется и прокручивается внутри себя, кнопка «Разделы» держит своё место
-   справа и на узком экране никуда не уезжает. min-width:0 обязателен: без него
-   flex-элемент не даёт себя сжать и выталкивает соседа за край. */
-.navbar nav.files{flex:1 1 auto;min-width:0}
-.navbar .razdely{flex:0 0 auto;margin-left:0}
-.navbar nav.files{border-bottom:0;padding:var(--s2) 0;margin:0;
-  display:flex;align-items:center;gap:var(--s1);flex-wrap:nowrap;
-  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.navbar nav.files::-webkit-scrollbar{display:none}
-.navbar nav.files a{flex:0 0 auto;white-space:nowrap}
-
-/* Кнопка «Разделы» и выпадающий список. Сделан на штатном раскрывающемся
-   блоке, а не на скрипте: работает без JS и закрывается по Esc сам. */
-.razdely{position:relative}
-.razdely>summary{list-style:none;cursor:pointer;user-select:none;
+  display:flex;align-items:center;gap:var(--s2);padding:var(--s2) 0}
+.nb-gde{flex:1 1 auto;min-width:0;font-family:var(--narrow);font-weight:700;
+  font-size:15px;color:var(--ink);text-align:center;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nb-menu,.razdely{flex:0 0 auto;position:relative}
+.nb-menu>summary,.razdely>summary{list-style:none;cursor:pointer;user-select:none;
   font-family:var(--narrow);font-size:14.5px;font-weight:700;letter-spacing:.01em;
-  min-height:38px;display:inline-flex;align-items:center;gap:6px;
+  min-height:40px;display:inline-flex;align-items:center;gap:6px;
   padding:0 var(--s3);color:var(--accent);white-space:nowrap;
   border:1px solid var(--rule);border-radius:3px;background:var(--card)}
-.razdely>summary::-webkit-details-marker{display:none}
-/* Свою стрелку рисуем через ::after, а штатный маркер гасим: в части браузеров
-   list-style:none его не убирает, и получаются две стрелки сразу. */
-.razdely>summary::marker{content:""}
+.nb-menu>summary::-webkit-details-marker,.razdely>summary::-webkit-details-marker{display:none}
+.nb-menu>summary::marker,.razdely>summary::marker{content:""}
+.nb-menu>summary::before,.razdely>summary::before{content:none}
+/* У раскрытых блоков реестра стрелка рисуется правилом details[open] summary::before,
+   и по весу оно перебивает предыдущую строку. Гасим отдельно. */
+.nb-menu[open]>summary::before,.razdely[open]>summary::before{content:none}
+.nb-menu>summary::after{content:"▾";font-size:11px;line-height:1}
 .razdely>summary::after{content:"▾";font-size:11px;line-height:1}
-.razdely[open]>summary{border-color:var(--accent)}
-.razdely[open]>summary::after{content:"▴"}
-.razdely-spisok{position:absolute;right:0;top:calc(100% + 6px);z-index:70;
-  min-width:min(320px,86vw);max-height:min(70vh,560px);overflow-y:auto;
+.nb-menu[open]>summary,.razdely[open]>summary{border-color:var(--accent);background:var(--accent-w)}
+.nb-menu[open]>summary::after,.razdely[open]>summary::after{content:"▴"}
+
+.nb-spisok,.razdely-spisok{position:absolute;top:calc(100% + 6px);z-index:70;
+  min-width:min(300px,88vw);max-height:min(72vh,560px);overflow-y:auto;
   background:var(--card);border:1px solid var(--rule);border-radius:3px;
-  box-shadow:0 10px 30px rgba(0,0,0,.16);padding:var(--s2) 0}
-.razdely-spisok a{display:block;padding:9px var(--s4);font-size:14.5px;
+  box-shadow:0 12px 34px rgba(0,0,0,.18);padding:var(--s2) 0}
+.nb-spisok{left:0}
+.razdely-spisok{right:0}
+.nb-spisok a,.razdely-spisok a{display:block;padding:10px var(--s4);font-size:15px;
   color:var(--ink-2);text-decoration:none;line-height:1.3}
-.razdely-spisok a:hover{background:var(--accent-w);color:var(--accent)}
-.razdely-spisok a.grp{font-family:var(--narrow);font-weight:700;
-  color:var(--ink);border-top:1px solid var(--rule-2);margin-top:4px;padding-top:11px}
+.nb-spisok a:hover,.razdely-spisok a:hover{background:var(--accent-w);color:var(--accent)}
+.nb-spisok a.cur{color:var(--accent);font-weight:700}
+.nb-spisok a.cur::after{content:" — вы здесь";font-family:var(--sans);font-weight:400;
+  font-size:12.5px;color:var(--muted)}
+.nb-spisok .nb-dom{font-family:var(--narrow);font-weight:700;color:var(--ink);
+  border-bottom:1px solid var(--rule-2);margin-bottom:4px;padding-bottom:11px}
+.razdely-spisok a.grp{font-family:var(--narrow);font-weight:700;color:var(--ink);
+  border-top:1px solid var(--rule-2);margin-top:4px;padding-top:12px}
 .razdely-spisok a.grp:first-child{border-top:0;margin-top:0}
 
-/* Якоря не должны прятаться под полосой. */
-section[id],h2[id],div[id]{scroll-margin-top:78px}
-
-@media print{.navbar{display:none}.razdely{display:none}button.up{display:none}}
+@media (max-width:430px){
+  .nb-menu>summary,.razdely>summary{padding:0 10px;font-size:13.5px}
+  .nb-gde{font-size:13.5px}
+}
+@media print{.navbar{display:none}}
 /* --- Телефон: таблица становится стопкой карточек --------------------------
    Ширины в 390 px не хватает ни одной нашей таблице. Горизонтальная прокрутка
    внутри .tw остаётся как запасной путь, но по умолчанию строка разворачивается
@@ -345,7 +347,7 @@ section[id],h2[id],div[id]{scroll-margin-top:78px}
   .tw td:first-child::before{display:none}
 }
 </style>
-<div class="wrap"><div class="navbar"><nav class="files"><a class="cur" href="">Главное</a><a href="papa.html">Всё по задаче</a><a href="reestr.html">Реестр заводов</a><a href="idei.html">Логистика и предложения</a><a href="razbor.html">Разбор записи</a><a href="istochniki.html">Откуда что взято</a></nav><details class="razdely"><summary>Разделы</summary><div class="razdely-spisok"><a class="grp" href="#delo">Три действия</a><a href="#r2">Три действия</a><a href="#r3">Кому звонить: заводы со станками с ЧПУ</a><a href="#r5">Ключевые числа и откуда они взяты</a><a href="#r7">В чём мы не уверены</a><a href="#r8">Где что лежит</a></div></details></div><div class="part" id="delo">
+<div class="wrap"><div class="navbar"><details class="nb-menu"><summary>Страницы</summary><div class="nb-spisok"><a class="nb-dom" href="index.html">Главная</a><a class="cur" href="">Главное</a><a href="papa.html">Всё по задаче</a><a href="reestr.html">Реестр заводов</a><a href="idei.html">Логистика и предложения</a><a href="razbor.html">Разбор записи</a><a href="istochniki.html">Откуда что взято</a><a href="otchet.html">Отчёт о работе</a><a href="voprosy.html">Что нужно от тебя</a></div></details><div class="nb-gde">Главное</div><details class="razdely"><summary>Разделы</summary><div class="razdely-spisok"><a class="grp" href="#delo">Три действия</a><a href="#r2">Три действия</a><a href="#r3">Кому звонить: заводы со станками с ЧПУ</a><a href="#r5">Ключевые числа и откуда они взяты</a><a href="#r7">В чём мы не уверены</a><a href="#r8">Где что лежит</a></div></details></div><div class="part" id="delo">
 
 <header class="mast"><p class="eyebrow">Тюбинги клинчатых перемычек · давальческая обработка</p>
 <h1>Главное на одной странице</h1>
@@ -555,14 +557,15 @@ section[id],h2[id],div[id]{scroll-margin-top:78px}
 /* Список разделов закрывается сам после выбора: иначе панель остаётся поверх
    страницы, и кажется, что переход не сработал. */
 (function(){
-  var d=document.querySelector('.razdely');
-  if(!d) return;
-  d.addEventListener('click',function(e){
-    var a=e.target.closest('a[href^="#"]');
-    if(a) setTimeout(function(){ d.open=false; },0);
+  var spiski=[].slice.call(document.querySelectorAll('.razdely,.nb-menu'));
+  if(!spiski.length) return;
+  spiski.forEach(function(d){
+    d.addEventListener('click',function(e){
+      if(e.target.closest('a')) setTimeout(function(){ d.open=false; },0);
+    });
   });
   document.addEventListener('click',function(e){
-    if(d.open && !d.contains(e.target)) d.open=false;
+    spiski.forEach(function(d){ if(d.open && !d.contains(e.target)) d.open=false; });
   });
 })();
 </script>
