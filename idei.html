@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="ru">
+<!-- собрано из шести рабочих документов, один файл, ничего внешнего -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Тюбинги — логистика и мои предложения</title>
+<style>
+/* ── токены ─────────────────────────────────────────────────────────── */
+:root{
+  --paper:#F7F7F4; --card:#FFFFFF; --sunk:#F1F1EE;
+  --ink:#15181B; --ink-2:#464C53; --muted:#697077;
+  --rule:#CFD3D6; --rule-2:#E4E7E9; --rule-hi:#15181B;
+  --accent:#17486B; --accent-w:#E7EDF2;
+  --flag:#A3392A;  --flag-w:#F7E9E6;
+  --ok:#2C5F40;    --ok-w:#E6EFE9;
+  --warn:#7A5320;  --warn-w:#F4EDE0;
+
+  --serif:"PT Serif",Charter,"Iowan Old Style",Georgia,serif;
+  --narrow:"PT Sans Narrow","Arial Narrow","Helvetica Neue",system-ui,sans-serif;
+  --sans:"PT Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+    --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+    --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+    --accent:#7FB2D4; --accent-w:#1D2C38;
+    --flag:#E08A7B;  --flag-w:#33211E;
+    --ok:#7FBF9B;    --ok-w:#1C2A22;
+    --warn:#DCBB84;  --warn-w:#2A2318;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+  --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+  --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+  --accent:#7FB2D4; --accent-w:#1D2C38;
+  --flag:#E08A7B;  --flag-w:#33211E;
+  --ok:#7FBF9B;    --ok-w:#1C2A22;
+  --warn:#DCBB84;  --warn-w:#2A2318;
+}
+
+/* ── основание ──────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+html,body{margin:0;max-width:100%;overflow-x:clip}
+img,svg{max-width:100%;height:auto}
+body{
+  background:var(--paper); color:var(--ink);
+  font:16.5px/1.62 var(--serif);
+  font-variant-numeric:lining-nums proportional-nums;
+  padding-inline:max(var(--s5),env(safe-area-inset-left));
+}
+.wrap{max-width:1060px;margin-inline:auto;padding-bottom:var(--s8)}
+::selection{background:var(--accent-w);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+
+/* ── типографика ────────────────────────────────────────────────────── */
+h1,h2,h3,h4{font-family:var(--narrow);font-weight:700;letter-spacing:-.005em;
+  color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,5.2vw,46px);line-height:1.06}
+h2{font-size:clamp(22px,3.4vw,31px);line-height:1.12;margin:0 0 var(--s3)}
+h3{font-size:clamp(17px,2.2vw,20px);line-height:1.22;margin:0 0 var(--s2)}
+h4{font-size:16px;line-height:1.3;margin:0 0 var(--s2)}
+p{margin:0 0 var(--s4);max-width:var(--measure)}
+a{color:var(--accent);text-underline-offset:2px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+b,strong{font-weight:700}
+em{font-style:italic}
+ul,ol{margin:0 0 var(--s4);padding-left:1.35em;max-width:var(--measure)}
+li{margin:0 0 var(--s2)}
+code,.mono{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums}
+
+/* надписи в духе основной надписи чертежа.
+   .part сюда НЕ входит: это обёртка целого раздела, а не подпись —
+   иначе весь раздел уходит в прописные. Подпись раздела — .plabel */
+.eyebrow,.plabel,.label,.tag,.lbl{
+  font-family:var(--narrow);font-weight:700;font-size:12px;line-height:1.2;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:0 0 var(--s2)}
+.dim,.sub,.dek,.lede,.src,.how{color:var(--ink-2)}
+.sub,.dek,.lede{font-size:16px;max-width:var(--measure);margin:0 0 var(--s5)}
+.dim{font-size:14px;font-family:var(--sans)}
+
+/* ── шапка страницы ─────────────────────────────────────────────────── */
+header.mast{padding:var(--s7) 0 var(--s5);border-bottom:2px solid var(--rule-hi);margin-bottom:var(--s7)}
+header.mast h1{margin:0 0 var(--s3)}
+header.mast .dek{margin:0}
+
+/* ── навигация ──────────────────────────────────────────────────────── */
+nav.files{display:flex;gap:var(--s1);flex-wrap:wrap;margin:0;padding:var(--s3) 0;
+  border-bottom:1px solid var(--rule)}
+nav.files a{font-family:var(--narrow);font-size:14.5px;font-weight:700;letter-spacing:.01em;
+  min-height:38px;display:inline-flex;align-items:center;padding:0 var(--s3);
+  color:var(--ink-2);text-decoration:none;border-bottom:2px solid transparent}
+nav.files a:hover{color:var(--accent)}
+nav.files a.cur{color:var(--accent);border-bottom-color:var(--accent)}
+
+nav.top{display:flex;gap:var(--s1);flex-wrap:wrap;margin:0 0 var(--s6);padding:var(--s2) 0;
+  border-bottom:1px solid var(--rule-2)}
+nav.top a{font-family:var(--sans);font-size:13.5px;min-height:34px;display:inline-flex;
+  align-items:center;padding:0 var(--s2);color:var(--muted);text-decoration:none;border-radius:3px}
+nav.top a:hover{color:var(--accent);background:var(--accent-w)}
+
+/* ── деление и его шапка ────────────────────────────────────────────────
+   .part — крупное деление документа, внутри несколько section.
+   .ph    — его шапка: метка «Раздел N», заголовок и вводный абзац.
+   Жирную линию несёт только .part, иначе она задваивается с шапкой. */
+section{margin:0 0 var(--s7);scroll-margin-top:var(--s4)}
+.part{border-top:2px solid var(--rule-hi);padding-top:var(--s5);margin:var(--s8) 0 var(--s6)}
+.part:first-of-type{border-top:0;margin-top:var(--s6);padding-top:0}
+.ph{margin:0 0 var(--s6)}
+.ph .n{display:block;font-family:var(--narrow);font-weight:700;font-size:12px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:0 0 var(--s2)}
+.ph h1{font-size:clamp(26px,4.4vw,38px);margin:0 0 var(--s3)}
+.ph p{color:var(--ink-2);margin:0}
+
+/* ── цифры в шапке ──────────────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));
+  gap:var(--s3);margin:var(--s5) 0 0;max-width:none}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:var(--s4);display:flex;flex-direction:column;justify-content:flex-start}
+.stat b{display:block;font-family:var(--narrow);font-size:31px;line-height:1;
+  font-variant-numeric:tabular-nums;margin:0 0 var(--s2)}
+.stat span{font-family:var(--sans);font-size:13px;line-height:1.34;color:var(--ink-2)}
+
+/* ── таблицы ────────────────────────────────────────────────────────── */
+.tw{overflow-x:auto;margin:0 0 var(--s5);border:1px solid var(--rule);border-radius:3px;
+  background:var(--card)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14.5px;
+  font-variant-numeric:tabular-nums}
+thead th{font-family:var(--narrow);font-weight:700;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:var(--s3) var(--s3);border-bottom:2px solid var(--rule-hi);white-space:nowrap;
+  background:var(--sunk);position:sticky;top:0}
+td{padding:var(--s3);border-bottom:1px solid var(--rule-2);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+th.num,td.num,.num{text-align:right;font-variant-numeric:tabular-nums}
+td b,td strong{font-weight:700}
+.ct{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.5}
+.ct-city{font-weight:700}
+td.good{color:var(--ok);font-weight:700}
+
+/* ── врезки ─────────────────────────────────────────────────────────── */
+.note,.key,.qa,.open{border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;background:var(--card);padding:var(--s4) var(--s5);margin:0 0 var(--s5)}
+.key{border-left-color:var(--flag);background:var(--flag-w)}
+.note>p:last-child,.key>p:last-child,.qa>p:last-child,.open>p:last-child{margin-bottom:0}
+.note p,.key p,.qa p,.open p{max-width:none}
+.tag{display:inline-block;margin:0 0 var(--s2)}
+.t-ok{color:var(--ok)} .t-bad{color:var(--flag)} .t-warn{color:var(--warn)}
+
+/* ── шаги ───────────────────────────────────────────────────────────── */
+/* проза — в одной колонке чтения; во всю ширину выходят только
+   структуры: таблицы, карточки, врезки, цифры шапки */
+ol.steps,ol.flow{list-style:none;padding:0;counter-reset:st;max-width:var(--measure)}
+ol.steps>li,ol.flow>li{counter-increment:st;position:relative;padding:0 0 var(--s4) 42px;
+  margin:0 0 var(--s4);border-bottom:1px solid var(--rule-2)}
+ol.steps>li:last-child,ol.flow>li:last-child{border-bottom:0;margin-bottom:0}
+ol.steps>li::before,ol.flow>li::before{content:counter(st);position:absolute;left:0;top:1px;
+  width:26px;height:26px;border:1.5px solid var(--accent);color:var(--accent);border-radius:50%;
+  font:700 13px/23px var(--narrow);text-align:center;font-variant-numeric:tabular-nums}
+
+/* ── карточка предприятия ───────────────────────────────────────────── */
+article.c{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:var(--s5);margin:0 0 var(--s3);min-width:0;overflow-wrap:break-word}
+article.c>*{min-width:0}
+article.c .ch{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s3);
+  margin:0 0 var(--s3);padding:0 0 var(--s3);border-bottom:1px solid var(--rule-2)}
+article.c h3{margin:0;flex:1 1 14ch;min-width:0}
+article.c p{max-width:none;margin:0 0 var(--s3);font-size:15.5px}
+.why{color:var(--ink)}
+.eq{color:var(--ink-2);font-size:15px}
+.q{color:var(--ink-2);font-style:italic}
+.how,.res{display:block;color:var(--ink-2);font-size:14.5px;margin:0 0 var(--s2)}
+
+/* строка источника — подпись документа: каждое число говорит, откуда оно */
+.src{font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--muted);
+  margin:var(--s3) 0 0;padding:var(--s3) 0 0;border-top:1px solid var(--rule-2);
+  word-break:break-word}
+.src::before{content:"источник";display:block;font-family:var(--narrow);font-weight:700;
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+  margin:0 0 var(--s1)}
+
+/* ── метки-плашки ───────────────────────────────────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:var(--s1);margin:0 0 var(--s3);min-width:0}
+/* без nowrap: строка «Пенза 691 км · крюк: Москва +94 · Красноярск +1154»
+   не переносилась и распирала карточку за пределы экрана на телефоне */
+.chip{display:inline-flex;align-items:center;font-family:var(--sans);font-size:12.5px;
+  line-height:1.35;padding:5px var(--s2);border-radius:3px;border:1px solid var(--rule);
+  color:var(--ink-2);background:var(--sunk);max-width:100%}
+.chip.ok{color:var(--ok);background:var(--ok-w);border-color:transparent}
+.chip.bad{color:var(--flag);background:var(--flag-w);border-color:transparent}
+.chip.warn{color:var(--warn);background:var(--warn-w);border-color:transparent}
+.chip.geo,.chip.km{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
+.kr{font-variant-numeric:tabular-nums}
+
+/* ── поиск и реестр ─────────────────────────────────────────────────── */
+.srch{position:sticky;top:0;z-index:5;background:var(--paper);
+  padding:var(--s3) 0;margin:0 0 var(--s4);border-bottom:1px solid var(--rule)}
+.srch input{width:100%;max-width:460px;font:15px var(--sans);padding:10px var(--s3);
+  border:1px solid var(--rule);border-radius:3px;background:var(--card);color:var(--ink)}
+.srch input:focus{border-color:var(--accent);outline:none}
+.cnt{font-family:var(--narrow);font-weight:700;font-size:12px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:var(--s2) 0 0}
+details{border:1px solid var(--rule);border-radius:3px;margin:0 0 var(--s4);background:var(--card)}
+summary{font-family:var(--narrow);font-weight:700;font-size:16px;padding:var(--s4) var(--s5);
+  cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";color:var(--accent)}
+details[open] summary::before{content:"▾ "}
+details[open] summary{border-bottom:1px solid var(--rule-2)}
+details>article.c,details>div{margin:var(--s3) var(--s4)}
+
+/* ── документ-запрос ────────────────────────────────────────────────── */
+.doc{border:1px solid var(--rule);border-radius:3px;background:var(--card);margin:0 0 var(--s5)}
+.doc-head{display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center;justify-content:space-between;
+  padding:var(--s3) var(--s5);border-bottom:1px solid var(--rule);background:var(--sunk)}
+.doc>*:not(.doc-head){margin-left:var(--s5);margin-right:var(--s5)}
+.doc>*:last-child{margin-bottom:var(--s5)}
+button.copy,button.up{font-family:var(--narrow);font-weight:700;font-size:13.5px;
+  letter-spacing:.04em;padding:9px var(--s4);border:1px solid var(--accent);border-radius:3px;
+  background:transparent;color:var(--accent);cursor:pointer;min-height:38px}
+button.copy:hover,button.up:hover{background:var(--accent);color:var(--card)}
+/* .hide и .on ставит скрипт: .hide — отсев карточек поиском,
+   .on — появление кнопки «наверх». Без них поиск визуально не работает. */
+.hide{display:none!important}
+button.up{position:fixed;right:var(--s4);bottom:var(--s4);z-index:9;background:var(--card);
+  opacity:0;pointer-events:none;transition:opacity .15s ease}
+button.up.on{opacity:1;pointer-events:auto}
+
+/* ── мелочи ─────────────────────────────────────────────────────────── */
+/* .grid — контейнер карточек реестра. Одна колонка: в карточке плотный
+   технический текст на десяток строк, в узком столбце он нечитаем. */
+.grid{display:grid;grid-template-columns:1fr;gap:var(--s3)}
+.fill,.v,.l,.big,.line,.axes,.ax{font-variant-numeric:tabular-nums}
+hr{border:0;border-top:1px solid var(--rule);margin:var(--s6) 0}
+footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rule-hi);
+  font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+
+/* ── печать: лист остаётся листом ───────────────────────────────────── */
+@media print{
+  :root{--paper:#fff;--card:#fff;--sunk:#fff;--ink:#000;--ink-2:#222;--muted:#555;
+        --rule:#999;--rule-2:#ccc;--rule-hi:#000;--accent:#000;--accent-w:#fff}
+  body{font-size:10.5pt;padding:0}
+  /* специфичность: nav.files{display:flex} — это (0,1,1), поэтому голого
+     nav{display:none} мало, навигация остаётся на бумаге */
+  nav,nav.files,nav.top,button.up,.srch{display:none!important}
+  .wrap{max-width:none}
+  section{margin-bottom:18pt;break-inside:avoid-page}
+  h1,h2,h3{break-after:avoid-page}
+  .tw,article.c,.note,.key,table{break-inside:avoid}
+  thead th{position:static;background:#fff}
+  a{color:#000;text-decoration:none}
+  details{border:0} details summary{display:none} details>*{display:block!important}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media (max-width:640px){
+  body{padding-inline:max(var(--s4),env(safe-area-inset-left))}
+  article.c,.note,.key,.qa,.open{padding:var(--s4)}
+  .doc>*:not(.doc-head){margin-left:var(--s4);margin-right:var(--s4)}
+  .doc-head{padding:var(--s3) var(--s4)}
+}
+</style>
+<div class="wrap">
+<nav class="files"><a href="glavnoe.html">Главное</a><a href="papa.html">Всё по задаче</a><a class="cur" href="">Логистика и предложения</a><a href="razbor.html">Разбор записи</a><a href="istochniki.html">Откуда что взято</a></nav><nav class="top"><a href="#doroga">Логистика: расстояния, фуры, деньги</a><a href="#mysli">Что я предлагаю сделать иначе</a></nav>
+<header class="mast"><p class="eyebrow">Тюбинги клинчатых перемычек · давальческая обработка</p>
+<h1>Логистика и предложения сверх задания</h1>
+<p class="dek">Здесь то, чего ты не заказывал: расчёт логистики по трём заказам и мои предложения по организации работы. Всё, что ты просил — заводы, запрос, цена, ответы на вопросы — в основном файле.</p>
+</header>
+<div class="part" id="doroga"><div class="ph"><span class="n">Раздел 01</span><h1>Логистика: расстояния, фуры, деньги</h1><p>Этого ты не просил. Но заказы едут в Красноярск и в Москву, и от того, где стоит подрядчик, зависят миллионы. Здесь расстояния грузовым профилем, цена лишнего километра в рублях на деталь, транспортный бюджет, железная дорога, стружка и граница.</p></div>
+<section id="l-a1"><h2>1. Три заказа — две разные географии</h2>
+<div class="tw"><table>
+<thead><tr><th scope="col">Заказ</th><th scope="col" class="num">Деталей</th><th scope="col" class="num">Масса</th><th scope="col">Куда</th></tr></thead>
+<tbody>
+<tr><td>Ø8,5 м — подписан</td><td class="num">196</td><td class="num">~190 т</td><td><b>Красноярск</b></td></tr>
+<tr><td>Ø9,5 м</td><td class="num">224</td><td class="num">~228 т</td><td>Москва</td></tr>
+<tr><td>Ø10,5 м</td><td class="num">224</td><td class="num">~263 т</td><td>Москва</td></tr>
+<tr><td><b>Итого</b></td><td class="num"><b>644</b></td><td class="num"><b>~681 т</b></td><td></td></tr>
+</tbody></table></div>
+<p>Каждая деталь едет дважды: Пенза → площадка обработки → объект. Плечо одно только если обрабатывают в самой Пензе или в самом городе поставки.</p>
+<div class="key"><p>Твоя формулировка — «по дороге от Пензы до Москвы, отклонение 200 км в обе стороны» — верна для двух московских заказов, то есть для 448 деталей из 644. Для подписанного красноярского заказа она даёт неправильный ответ: линия идёт на восток, и правильные города там совсем другие. Раздел 6.</p></div>
+</section>
+<section id="l-a2"><h2>2. Базовые расстояния</h2>
+<div class="line">Пенза <em>664 км / 8,8 ч</em> Москва<br>Пенза <em>3622 км / 47 ч</em> Красноярск (только по России)<br>Красноярск <em>4152 км</em> Москва</div>
+<div class="note"><p><b>Про Казахстан.</b> Самый быстрый маршрут Пенза → Красноярск, который выдаёт навигатор, срезает угол по Северо-Казахстанской области: трасса Р-254 «Иртыш» идёт по территории Казахстана 190 км. Для чужого чугуна на давальческой схеме это лишняя граница. Объезд по России через Курган — Ишим — Абатское стоит <b>около 120 км</b>, меньше четырёх процентов плеча. Отказаться от Казахстана почти бесплатно, и везде ниже я считаю по российскому варианту. Довод не только бумажный: в 2026 году на казахстанской границе стоят очереди из тысяч машин из-за сплошных таможенных проверок, ожидание измеряется днями и неделями.</p></div>
+</section>
+<section id="l-a3"><h2>3. Сколько это фур</h2>
+<p>Деталь весит около тонны, а места занимает мало. Фура упирается в массу, а не в объём: двадцать деталей заказа Ø8,5 по габаритам — около 9 м³ при кузове 82 м³ (высота 2,45 м) или 90 м³ (высота 2,7 м), и даже с поправкой на кривизну сегмента это далеко не полный кузов. Кузов идёт наполовину пустым, платить будете за тонны.</p>
+<div class="tw"><table>
+<thead><tr><th scope="col">Заказ</th><th scope="col" class="num">Средняя деталь</th><th scope="col" class="num">Деталей в фуре (20 т)</th><th scope="col" class="num">Рейсов на плечо</th></tr></thead>
+<tbody>
+<tr><td>Ø8,5</td><td class="num">969 кг</td><td class="num">20</td><td class="num">10</td></tr>
+<tr><td>Ø9,5</td><td class="num">1018 кг</td><td class="num">19</td><td class="num">12</td></tr>
+<tr><td>Ø10,5</td><td class="num">1174 кг</td><td class="num">17</td><td class="num">14</td></tr>
+<tr><td><b>Итого</b></td><td class="num"></td><td class="num"></td><td class="num"><b>36 рейсов</b></td></tr>
+</tbody></table></div>
+<p>Первая транша подписанного заказа — 14 комплектов, это 98 деталей, <b>5 фур</b>. Объём перевозки скромный, узкое место не здесь.</p>
+<h3>Комплектность против загрузки</h3>
+<p>Комплект из 7 тюбингов весит 6,8 т (Ø8,5), 7,1 т (Ø9,5), 8,2 т (Ø10,5). Два комплекта — 13,6 / 14,3 / 16,4 т по трём заказам, фура недогружена. Три комплекта Ø8,5 — 20,3 т, уже на грани по осевым нагрузкам. Либо возить по массе и собирать кольца на объекте, либо мириться с недогрузом. Решать монтажникам, но вопрос надо задать заранее.</p>
+</section>
+<section id="l-a4"><h2>4. Что стоит перевозка</h2>
+<p>Ставка зависит от длины плеча, и для наших двух направлений она разная. Опорные цифры:</p>
+<ul>
+<li>Замеры ГК «Монополия» (29.12.2025): март 2025 — дно рынка, <b>63,7 ₽/км</b>; сентябрь — <b>73,8</b>; ноябрь — <b>76,6</b></li>
+<li>Апрель 2026, Main Transport: ставка для еврофуры 20 т дана <b>полосами по длине маршрута</b>, и все цены <b>с НДС</b>: до 500 км — 151 ₽/км, 500–1000 — <b>133</b>, 1000–2000 — 110, 2000–3000 — 96, от 3000 км — <b>87</b>. Обзор построен на 78 маршрутах из Москвы и Санкт-Петербурга</li>
+<li>ATI.SU на 13.07.2026: индекс FTL РФ на историческом максимуме, рост <b>28,8 % за год</b>. Индекс выражен в пунктах, не в рублях, и это другой ряд, чем у «Монополии», — сопоставлять их значения нельзя, годится только направление движения</li>
+<li>Pooling, первое полугодие 2026: <b>Москва — Красноярск 281 800 ₽</b> за рейс, Москва — Новосибирск 232 200 ₽. Источник называет их <b>самыми дорогими</b> обычными направлениями из Москвы; тоннаж и тип кузова не указаны</li>
+</ul>
+<div class="key"><p><b>Ставка берётся по полосе, в которую попадает плечо, и приводится к базе без НДС.</b> Одну ставку на оба направления ставить нельзя: 87 ₽/км относится только к плечам длиннее 3000 км, а московские 664 км попадают в полосу 500–1000 км со ставкой 133 ₽/км — разница в полтора раза. И все цены источника даны с НДС, тогда как вся экономика проекта считается без него.</p>
+<p>Правильно так: <b>Красноярск 3622 км → 87 ₽/км с НДС → 71 без НДС → 13,3 ₽/кг</b> на деталь; <b>Москва 664 км → 133 ₽/км с НДС → 109 без НДС → 3,7 ₽/кг</b>. Ставка НДС 22 % с 1 января 2026 года.</p>
+<p>Есть основание считать, что на магистрали за три тысячи километров ставка ниже: 281 800 ₽ на 4130 км (Москва → Красноярск; обратное направление 4152 км) — это 68 ₽/км. Но у этой цифры не раскрыт ни тоннаж, ни тип кузова, и она названа <em>самой дорогой</em> среди направлений, поэтому выводить из неё ставку нельзя. Поэтому <b>70 ₽/км на плечах длиннее 3000 км — это допущение, а не расчёт</b>, и ниже показаны обе колонки.</p>
+<p>Разница между ними — 24 % на самом дорогом числе документа. Один звонок перевозчику закрывает вопрос точнее, чем любые публичные источники.</p></div>
+<div class="tw"><table>
+<thead><tr><th scope="col"></th><th scope="col" class="num">Ставка по полосе</th><th scope="col" class="num">За рейс, с НДС</th><th scope="col" class="num">За рейс, без НДС</th><th scope="col" class="num">На деталь, без НДС</th></tr></thead>
+<tbody>
+<tr><td>Пенза → Москва, 664 км<br><span class="dim">полоса 500–1000 км</span></td><td class="num">133 ₽/км</td><td class="num">88 312 ₽</td><td class="num">72 387 ₽</td><td class="num"><b>3 810 ₽</b> при 19 в фуре<br>4 258 ₽ при 17</td></tr>
+<tr><td>Пенза → Красноярск, 3622 км<br><span class="dim">полоса от 3000 км</span></td><td class="num">87 ₽/км</td><td class="num">315 114 ₽</td><td class="num">258 290 ₽</td><td class="num"><b>12 915 ₽</b> при 20 в фуре</td></tr>
+<tr><td><b>Заказ Ø8,5 целиком, 10 рейсов</b></td><td class="num">87 ₽/км</td><td class="num"><b>3,15 млн ₽</b></td><td class="num"><b>2,58 млн ₽</b></td><td class="num">—</td></tr>
+</tbody></table></div>
+<div class="key"><p><b>Довезти деталь до Красноярска стоит 12 915 ₽ без НДС на деталь</b>, до Москвы — 3 810 ₽ при 19 деталях в фуре. При цели 30–40 тысяч за обработку транспорт добавляет от трети до половины. Это не второстепенная статья, это величина того же порядка, что и сама работа.</p>
+<p>Отсюда вопрос, который надо закрыть до переговоров с подрядчиками: <b>по подписанному заказу доставку в Красноярск оплачивает заказчик или мы, и заложена ли она в цену?</b> Если мы — это 2,5–3,2 млн ₽ на один заказ, и их надо видеть.</p></div>
+<p>До Москвы перевозка стоит около 3 тысяч ₽ на одну деталь. Здесь она действительно второстепенна.</p>
+<p style="color:var(--muted);font-size:15.5px">Фактического замера ставки именно на плече Пенза — Красноярск в открытых источниках нет — ни одной опубликованной. Рекламные «от 162 тысяч» на сайтах перевозчиков в расчёт не беру. Точную цену даст перевозчик за один звонок, и на этих деньгах звонок стоит сделать до переговоров с подрядчиками.</p>
+</section>
+<section id="l-a5"><h2>5. Цена лишнего хода</h2>
+<div class="big">
+<div><span class="v">460–510 ₽</span><span class="l">на деталь за каждые 100 км крюка по московским заказам</span></div>
+<div><span class="v">435 ₽</span><span class="l">то же самое по красноярскому заказу — плечо длиннее, ставка за километр ниже, деталей в фуре больше</span></div>
+<div><span class="v">8–15 тыс. км</span><span class="l">столько крюка нужно, чтобы транспорт съел разрыв в 40–70 тысяч, который вы закрываете</span></div>
+</div>
+<p>Важное уточнение к формуле «отклонение 200 км в сторону». Отклонение и крюк — не одно и то же. Город может стоять в 150 км от прямой, но дорога всё равно идёт вперёд, и лишними окажутся не 300 км, а 40. Тула отклоняется от прямой заметно, а крюк даёт всего 144 км. Поэтому я считал не ширину полосы, а именно лишние километры.</p>
+</section>
+<section id="l-a6"><h2>6. Для красноярского заказа коридор другой</h2>
+<p>Это главный результат расчёта.</p>
+<div class="line">Пенза <em>1236 км</em> Челябинск <em>2365 км</em> Красноярск  =  3601 км<br>Пенза <em style="color:var(--muted)">напрямую</em> Красноярск  =  3622 км</div>
+<p><b>Челябинск стоит прямо на трассе.</b> Крюк отрицательный, то есть его нет. То же самое:</p>
+<div class="tw"><table>
+<thead><tr><th scope="col">Город</th><th scope="col" class="num">Крюк по Красноярску</th><th scope="col" class="num">₽ на деталь</th></tr></thead>
+<tbody><tr><td>Челябинск</td><td class="num">−21 км</td><td class="num">0 ₽</td></tr><tr><td>Пенза</td><td class="num">0 км</td><td class="num">0 ₽</td></tr><tr><td>Красноярск</td><td class="num">0 км</td><td class="num">0 ₽</td></tr><tr><td>Сызрань</td><td class="num">+2 км</td><td class="num">7 ₽</td></tr><tr><td>Тольятти</td><td class="num">+3 км</td><td class="num">10 ₽</td></tr><tr><td>Новосибирск</td><td class="num">+7 км</td><td class="num">24 ₽</td></tr><tr><td>Бугульма</td><td class="num">+16 км</td><td class="num">56 ₽</td></tr><tr><td>Куса</td><td class="num">+36 км</td><td class="num">126 ₽</td></tr><tr><td>Ленинск-Кузнецкий</td><td class="num">+78 км</td><td class="num">273 ₽</td></tr><tr><td>Самара</td><td class="num">+84 км</td><td class="num">294 ₽</td></tr><tr><td>Томск</td><td class="num">+92 км</td><td class="num">322 ₽</td></tr><tr><td>Ульяновск</td><td class="num">+124 км</td><td class="num">434 ₽</td></tr><tr><td>Екатеринбург</td><td class="num">+184 км</td><td class="num">644 ₽</td></tr></tbody></table></div>
+<div class="key"><p><b>28 предприятий из 104 приоритетных стоят на красноярской линии с крюком меньше 200 км.</b> Урал по московским заказам добавляет 8–13 тысяч ₽ на одну деталь, Сибирь — 25–30 тысяч ₽ на одну деталь. Для подписанного заказа и то и другое почти бесплатно.</p>
+<p>Подрядчик в Челябинске, Екатеринбурге или Новосибирске, который не подходит под московские заказы, идеально подходит под подписанный заказ Ø8,5 — тот самый, который горит по срокам. И тяжёлые станки там есть, а в московском коридоре их мало.</p></div>
+<p>Обратное тоже верно: Москва, Подольск, Балашиха, Тула, Калуга по красноярскому заказу дают крюк 1120–1540 км, это 5,1–7,0 тыс ₽ на деталь.</p>
+<p style="color:var(--muted);font-size:15.5px">По сравнению с прошлым расчётом Магнитогорск и Белорецк ушли с этой линии: грузовой профиль объезжает горные дороги, и крюк вырос до 350–410 км. Екатеринбург тоже просел — с 48 до 184 км, потому что легковой маршрут срезал через Красноуфимск по дорогам низкой категории, куда фура не пойдёт.</p>
+</section>
+<section id="l-a7"><h2>7. Транспортный бюджет: где выбор подрядчика меняет деньги</h2>
+<p>36 рейсов, все плечи по 87 ₽/км — по единственной ставке, которая реально замерена. Если на магистрали ставка ниже, все строки уменьшатся, но порядок между ними сохранится.</p>
+<div class="tw"><table>
+<thead><tr><th scope="col">Где обрабатываем</th><th scope="col" class="num">Пробег</th><th scope="col" class="num">Стоимость</th><th scope="col" class="num">Разница</th></tr></thead>
+<tbody><tr><td>Всё в Пензе</td><td class="num">53 484 км</td><td class="num"><b>4.65 млн ₽</b></td><td class="num">—</td></tr><tr><td>Москва → Рязань, Красноярск → Челябинск</td><td class="num">53 586 км</td><td class="num">4.66 млн ₽</td><td class="num">+14 ₽/дет.</td></tr><tr><td>Москва → Сасово, Красноярск → Красноярск</td><td class="num">54 862 км</td><td class="num">4.77 млн ₽</td><td class="num">+186 ₽/дет.</td></tr><tr><td>Москва → Тула, Красноярск → Екатеринбург</td><td class="num">59 068 км</td><td class="num">5.14 млн ₽</td><td class="num">+754 ₽/дет.</td></tr><tr><td>Всё в Екатеринбурге</td><td class="num">116 424 км</td><td class="num">10.13 млн ₽</td><td class="num"><b>+8 503 ₽/дет.</b></td></tr><tr><td>Всё в Минске</td><td class="num">122 822 км</td><td class="num">10.69 млн ₽</td><td class="num"><b>+9 367 ₽/дет.</b></td></tr><tr><td>Всё в Петербурге</td><td class="num">121 204 км</td><td class="num">10.54 млн ₽</td><td class="num"><b>+9 149 ₽/дет.</b></td></tr><tr><td>Всё в Новосибирске</td><td class="num">197 984 км</td><td class="num">17.22 млн ₽</td><td class="num"><b>+19 521 ₽/дет.</b></td></tr></tbody></table></div>
+<div class="key"><p>Читается так: <b>транспорт по проекту стоит около 4,7 млн ₽, и от выбора подрядчика почти не зависит — пока подрядчик стоит на своей линии.</b> Разница между Пензой, Рязанью с Челябинском и Сасово — от 14 до 186 рублей на деталь, это шум на фоне разрыва в 40–70 тысяч.</p>
+<p>А один подрядчик на все три заказа не на линии — это плюс 5,5–12,5 млн ₽. Три последних строки — не рекомендация, а показ цены ошибки.</p></div>
+</section>
+<section id="l-a8"><h2>8. Обрабатывать до перевозки или после</h2>
+<p>Развилка только по красноярскому заказу, и очевидного ответа у неё нет.</p>
+<div class="axes">
+<div class="ax"><b>Рядом с литейкой — Пенза, Поволжье</b><span>Брак вскрывается в 5 км от литейщика, а не в 3600. Запоротую отливку не надо гонять обратно через страну. Замена отливок у «Комлита» работает только на коротком плече.</span></div>
+<div class="ax"><b>Рядом с объектом — Челябинск и восточнее, сам Красноярск</b><span>Обработанные поверхности с допуском на двугранные углы ±1′10″ и позиционным ⊕∅1 не едут 3600 км и не лежат потом на площадке. Не нужна временная противокоррозионная защита обработанных поверхностей на 6 суток пути плюс хранение (в ТУ 35-521-90 такого требования нет, это моё предложение; профильный стандарт — ГОСТ 9.014).</span></div>
+</div>
+<p>Массу снятого припуска я не знаю: её даёт разница между массой отливки и массой готовой детали, эти данные есть у «Комлита». Пока она не посчитана, аргумента «повезём легче» в пользу обработки в Пензе нет.</p>
+<p>Моё мнение: для первого заказа риск с браком тяжелее риска с транспортным повреждением — срок горит, возвращать отливку через страну некогда. Но если подрядчик найдётся в самом Красноярске, это лучший вариант из всех: второе плечо исчезает целиком.</p>
+</section>
+<section id="l-a9"><h2>9. Сроки в пути</h2>
+<ul>
+<li>Пенза → Москва: 8,8 часа хода, то есть сутки с погрузкой.</li>
+<li>Пенза → Красноярск: 47 часов хода. Одиночным водителем — <b>6 суток</b>, двумя — 3.</li>
+</ul>
+<p>С 1 сентября 2026 действует приказ Минтранса от 14.04.2026 № 160 взамен прежних № 424 и № 5: время управления автомобилем не более 9 часов в сутки, до 10 часов — не чаще двух раз в неделю; ежедневный отдых не менее 11 часов (сокращение до 9 не чаще трёх раз в неделю), еженедельный отдых 45 часов подряд. При 9 часах управления 47 часов хода дают шесть суток, то есть в неделю рейс укладывается, но без запаса.</p>
+<div class="note"><p><b>Отдельно про Москву.</b> Въезд машин с разрешённой максимальной массой больше 3,5 т в пределы МКАД ограничен круглосуточно и требует пропуска. Пропуск бесплатный, но оформляется заранее и требует регистрации машины в РНИС с передачей навигационных данных. Плюс отдельное условие допуска, о котором забывают: <b>экологический класс</b> — не ниже Евро-2 на МКАД и внутри, не ниже Евро-3 внутри Третьего кольца (постановление Москвы от 01.11.2022 № 2375-ПП, действует с 15.11.2022). Штраф за въезд без пропуска — 7500 ₽.</p>
+<p>Есть ещё сезонное ограничение для машин тяжелее 12 т — с 1 мая по 1 октября, по пятницам, субботам и воскресеньям с 6:00 до 24:00 (постановление № 379-ПП, п. 3). Часть источников считает этот пункт отменённым в 2019 году, часть приводит как действующий; первичный текст актуальной редакции подтвердить не удалось. Уточнять в Дептрансе, а не полагаться на мою формулировку.</p></div>
+<div class="note"><p><b>Летняя жара — про это забывают вообще все.</b> Летом при температуре выше +32 °C движение тяжеловесных машин по дорогам с асфальтобетонным покрытием разрешается только с 22:00 до 10:00. Порядок установлен приказом Минтранса от 12.08.2011 № 211 и уточнён приказом от 09.04.2025 № 126, действующим с 01.07.2025. По датам самого периода источники расходятся — 20 мая или 20 июня; перед летними отгрузками уточнять у Росавтодора. Норма живая: в июле 2026 такие ограничения вводились в Свердловской, Курганской, Челябинской, Оренбургской областях и в Башкортостане — то есть прямо на трассе в Красноярск. Вторая транша подписанного заказа идёт июнь — сентябрь, ровно в этот период. При таком режиме рейс в Красноярск растягивается ещё на пару суток.</p></div>
+</section>
+<section id="l-a10"><h2>10. Железная дорога</h2>
+<p>Ставки на это плечо в открытых источниках нет, и выдумывать её я не буду — её даёт экспедитор. Но всё остальное проверено по первоисточникам, и запрос теперь можно сделать предметным.</p>
+<h3>Что установлено точно</h3>
+<ul>
+<li><b>Прейскурант 10-01 не действует.</b> Он отменён с 1 января 2026 после 22 лет работы — прямо назван в перечне утративших силу актов. Вместо него действует <b>Тарифное руководство № 1</b>, утверждённое приказом ФАС от 06.11.2025 № 894/25 (Минюст 22.12.2025, № 84708), уже в редакции от 24.04.2026 с изменениями от 25.06.2026. Сославшись на старый прейскурант, вы получите непонимание с первой фразы.</li>
+<li><b>Груз дороже, чем кажется.</b> Чугунное литьё по ЕТСНГ — код <b>411348</b>, «литьё стальное и чугунное, не поименованное в алфавите», третий тарифный класс, минимальная весовая норма 38 т. И это не рядовой третий класс: позиция 411 прямо перечислена в таблице № 2 руководства среди грузов с <b>коэффициентом 1,74</b>, а не 1,54 — то есть верхняя подгруппа. Против второго класса это дороже в 1,74 раза, против первого — до трёх раз.</li>
+<li><b>Станции.</b> Отправление — <b>Пенза-2</b>, код ЕСР 630209 (в краткой записи 63020), Куйбышевская дорога. Приём — <b>Базаиха</b> в Красноярске, 892103 (89210), Красноярская дорога. На обеих есть контейнерные терминалы. Пенза-3 не годится — там только контейнеры 3–5 т.</li>
+<li><b>190 т — это 3 полувагона</b> (грузоподъёмность 69 т) против 10 фур. По объёму хватило бы полутора вагонов, упирается в массу.</li>
+<li><b>Индексация +8,5 % с 1 октября 2026</b> — распоряжение Правительства от 22.07.2026 № 1924-р. Вторая транша идёт июнь — сентябрь и под неё не попадает, но третий заказ и любые переносы попадают.</li>
+</ul>
+<h3>Сроки: считаются, и они длиннее автомобиля</h3>
+<p>Правила исчисления — приказ Минтранса от 07.08.2015 № 245, действующий. Норма суточного пробега на расстоянии 3000–4999 км: <b>380 км в сутки</b> для повагонных и контейнерных отправок без сортировки в пути, <b>230</b> — для контейнерных с сортировкой, <b>550</b> — для маршрутных отправок и контейнерных поездов. Плюс двое суток на операции по отправлению и прибытию, неполные сутки считаются за полные.</p>
+<div class="tw"><table>
+<thead><tr><th scope="col">Как везём</th><th scope="col" class="num">Норма</th><th scope="col" class="num">Срок на плече ~3600 км</th></tr></thead>
+<tbody>
+<tr><td>Повагонная отправка, 3 полувагона</td><td class="num">380 км/сут</td><td class="num"><b>12 суток</b></td></tr>
+<tr><td>Контейнеры без сортировки в пути</td><td class="num">380 км/сут</td><td class="num">12 суток</td></tr>
+<tr><td>Контейнерным поездом</td><td class="num">550 км/сут</td><td class="num"><b>9 суток</b></td></tr>
+<tr><td>Контейнеры с сортировкой в пути</td><td class="num">230 км/сут</td><td class="num">до 21 суток</td></tr>
+<tr><td colspan="2">Фурой</td><td class="num">6 суток, летом 8–9</td></tr>
+</tbody></table></div>
+<div class="note"><p>Две оговорки. Первая: считано по автомобильному расстоянию 3622 км — железнодорожное плечо другое, точный километраж берётся из Тарифного руководства № 4, и срок сдвинется. Вторая: в мае 2026 Минтранс вынес на общественное обсуждение проект поправок именно к этим нормам суточного пробега (проект ID 165567, редакция от 14.05.2026). По публикациям середины июня 2026 он оставался проектом; сведений об утверждении на сегодня найти не удалось. Направление правки важно: нормы предлагают снижать — повагонные с 330 до 305 км/сут на расстояниях свыше 2000 км, маршрутные до 450, а на участках с ограниченной пропускной способностью ещё ниже. Если примут, нормативный срок доставки по железной дороге вырастет, а не сократится. Дату экспедитор подтвердит сам.</p></div>
+<h3>Что спрашивать у экспедитора</h3>
+<ul>
+<li>повагонная отправка (3 полувагона) либо контейнерным поездом, ЕТСНГ 411348, ст. Пенза-2 (630209) → ст. Базаиха (892103), 190 т;</li>
+<li>разбивку по составляющим: провозная плата, предоставление вагона, порожний пробег, подача и уборка, погрузо-разгрузочные работы, разработка схемы крепления, автоподвоз с обоих концов;</li>
+<li>есть ли подъездной путь у «Комлита» на ул. Аустрина и у площадки обработки, или везти до станции автомобилем;</li>
+<li>срок доставки в сутках по нормативу и по факту — и сверить с графиком отгрузок.</li>
+</ul>
+<p><b>Крепление.</b> Типовой схемы размещения тюбингов в технических условиях нет — значит потребуется разработка и согласование в РЖД. Это отдельные деньги и отдельное время.</p>
+<p>Деталь 2083 × 1150 × 350 в 20-футовый контейнер ложится поперёк — внутренние размеры 5,9 × 2,35 × 2,39 м, в слой встаёт 5 штук. Сколько слоёв — вопрос схемы крепления; ограничение по массе: 28 т в контейнер можно грузить только под железную дорогу, автомобилем больше 25 т не увезти.</p>
+</section>
+<section id="l-a11"><h2>11. Погрузка</h2>
+<ul>
+<li><b>Кузов.</b> Бортовой или шторный со съёмными стойками. Глухой фургон не подойдёт: деталь 1,9 т грузится краном сверху или сбоку.</li>
+<li><b>Кран в пролёте от 5 т</b> с обеих сторон — это требование техзадания; деталь 1895 кг плюс строп и траверса. Это условие допуска для площадки, а не пожелание: нет крана в пролёте — разговор заканчивается.</li>
+<li><b>Габарит.</b> Деталь не негабаритная: 2083 мм ложится поперёк кузова при внутренней ширине 2,45 м. Спецразрешений не требуется.</li>
+<li><b>Крепление.</b> Груз тяжёлый и с криволинейной опорной поверхностью — нужны подкладки и упоры, иначе тюбинги пойдут по полу. Схему крепления просить у перевозчика письменно.</li>
+</ul>
+</section>
+<section id="l-a12"><h2>12. Стружка</h2>
+<p>644 детали, с каждой снимается металл. Точный объём — разница между массой отливки и массой готовой детали; эти данные есть и у «Комлита», и в чертежах.</p>
+<p>По давальческой схеме отходы принадлежат давальцу, если в договоре не написано иное. На практике подрядчики оставляют стружку себе молча. Чугунная стружка по ГОСТ 2787-75 — вид 24А/24Б (13А и 16А, которые часто путают, это стальные канаты и стальная стружка). Приёмные пункты в августе 2026 объявляют за стружку порядка 8 тыс ₽/т, за кусковой чугунный лом — около 20 тыс. Цена зависит от засорённости и объёма.</p>
+<div class="key"><p>Решение простое: <b>записать явным пунктом</b>. Либо стружка остаётся подрядчику и на эту величину снижается цена, либо сдаётся и деньги идут вам. Возить стружку из Красноярска в Пензу смысла нет — только считать её при цене.</p></div>
+</section>
+<section id="l-a13"><h2>13. Граница</h2>
+<p>13 из 104 приоритетных предприятий — Беларусь: Минск (6), Солигорск (3), Витебск, Гомель, Могилёв, Молодечно. Внутри ЕАЭС таможенного оформления нет, но давальческое сырьё через границу — отдельный учёт и отдельная переписка. По московским заказам крюк 1020–1650 км, это 4,7–7,5 тыс ₽ на деталь; по красноярскому — 8,4–10,1 тыс. Беларусь имеет смысл только под московские заказы и только при заметно более низкой цене.</p>
+<p>Караганда — тоже ЕАЭС, но крюк 4862 км по Москве.</p>
+<p>Ташкент — не ЕАЭС: переработка вне таможенной территории с разрешением и обеспечением, плюс крюк больше пяти тысяч километров по московским заказам. Не рассматривать.</p>
+</section>
+<section id="l-a14"><h2>14. Что из этого делать</h2>
+<ol class="steps">
+<li><b>Закрыть вопрос, кто платит доставку в Красноярск</b><span>2,58 млн ₽ без НДС и треть цены обработки на деталь. Всё остальное в логистике — мелочь по сравнению с этим.</span></li>
+<li><b>Разделить обзвон на два списка</b><span>Московские заказы: Пенза, Подольск, Рязань, Балашиха, Москва, Сасово, Электросталь, Гусь-Хрустальный, Выкса, Муром, Тула, Дмитров. Красноярский: Пенза, Челябинск, Красноярск, Новосибирск, Екатеринбург, Куса, Томск, Ленинск-Кузнецкий, плюс Поволжье — Сызрань, Тольятти, Бугульма, Самара, Ульяновск.</span></li>
+<li><b>Запросить железнодорожную ставку</b><span>Пенза → Красноярск на 190 т. Час работы экспедитора против потенциальных сотен тысяч.</span></li>
+<li><b>Добавить в запрос подрядчику два условия допуска</b><span>Кран в пролёте от 5 т и площадка для приёмки и отгрузки. Без этого их цена не имеет значения.</span></li>
+<li><b>Записать в договор судьбу стружки</b><span>Иначе она уйдёт молча.</span></li>
+<li><b>Если объект в Москве внутри МКАД</b><span>Заранее выяснить пропускной режим на площадке выгрузки.</span></li>
+</ol>
+</section>
+<section id="l-a15"><h2>Как считано и на чём</h2><div class="note"><p><b>Как именно считаны километры — и где расчёт может ошибаться.</b> Каждое плечо посчитано двумя независимыми способами: маршрутом по дорожной сети и грузовым коридором с ограничениями по массе 40 тонн, ширине 2,55 м и высоте 4 м. В таблицах и в реестре стоит МЕНЬШЕЕ из двух значений. Обычно они совпадают: из 221 сопоставленного плеча медиана расхождения — ноль процентов, среднее —половина процента, а на опорных направлениях разница в единицы километров (Пенза — Красноярск: 3622 против 3616; Москва — Красноярск: 4130 против 4145). Но на 64 плечах способы расходятся больше чем на 50 км, и на 47 из них грузовой коридор оказывается длиннее. Самое большое расхождение — Алматы — Красноярск: 2830 против 3229, разница 399 км. Проверка на плече Екатеринбург — Красноярск показывает, что в таких случаях завышает именно грузовой коридор: по сумме участков трасс Р-254 и Р-255 выходит около 2400 км, что ближе к меньшему значению 2466, чем к большему 2644. Причина в том, что длинные маршруты считаются кусками и на стыках накапливается лишнее. Поэтому берётся меньшее. Что это значит для денег: при ставке 87 ₽/км и двадцати деталях в фуре ошибка в 100 км стоит 8700 ₽ на рейс или 435 ₽ на деталь; в 200 км — 17 400 ₽ и 870 ₽. На фоне цели 30–40 тысяч ₽ за деталь это два-три процента: на выбор подрядчика не влияет, на итоговый счёт перевозчика — влияет. Точную цифру по конкретному плечу даст перевозчик за один звонок.</p></div>
+<ul>
+<li>Маршруты — Valhalla на данных OpenStreetMap, <b>грузовой профиль</b>: масса 40 т, ширина 2,55 м, высота 4 м, нагрузка на ось 10 т. Это важно: легковой профиль занижает плечи, потому что срезает по дорогам низкой категории, куда фура не пойдёт. На Екатеринбурге разница составила 86 км, на Магнитогорске и Белорецке — больше двухсот.</li>
+<li>Плечи длиннее 1500 км публичный маршрутизатор не считает целиком, поэтому они собраны из участков через опорные точки магистрали — Уфа, Челябинск, Ишим, Омск, Новосибирск. Для двух городов из шестидесяти он не отработал вовсе, там оставлены значения легкового профиля и они помечены звёздочкой.</li>
+<li>Пересечение с Казахстаном проверено геометрически: границы страны взяты из OpenStreetMap, каждая точка маршрута проверена на попадание внутрь. Для всех, кроме адресатов в Казахстане и Узбекистане, посчитан вариант, где казахстанских точек ноль.</li>
+<li>Города геокодированы по OpenStreetMap, расстояния — до центра города, внутригородская поправка до 10 км. «Комлит» находится в 4,7 км от точки, которую я брал за центр Пензы.</li>
+<li>Массы и состав заказов — из сводки техзадания, собранной из «Базы тюбингов» и сверенной с чертежами.</li>
+<li>Все расстояния проверены вторым независимым расчётом: Пенза → Красноярск по России сошлось в точку (3622 против 3620,9). 11 августа плечи пересчитаны заново грузовым профилем. У большинства городов разница осталась в пределах трёх процентов, но по Алматы она составила 12 %, по Майкопу, Краснодару и Твери — около 6 %. По Рубцовску прежнее значение было проложено через Казахстан и занижено на 489 км: фура так не проедет, там граница.</li>
+</ul>
+<h3>Источники</h3>
+<ul>
+<li>ГК «Монополия», «Итоги 2025 года на рынке грузоперевозок», 29.12.2025 — 63,7 / 73,8 / 76,6 ₽/км: <a href="https://monopoly.ru/blog/rynki/itogi-2025-goda-na-rynke-gruzoperevozok-balans-sprosa-i-novye-vyzovy/">monopoly.ru</a></li>
+<li>Main Transport через logistics360, 29.04.2026 — еврофура 20 т 87 ₽/км: <a href="https://logistics360.ru/news/czeny-na-ftl-perevozki-v-rossii-itogi-aprelya-2026/">logistics360.ru</a></li>
+<li>Pooling через «Точку продаж», первое полугодие 2026 — Москва—Красноярск 281 800 ₽: <a href="https://tpmag.ru/news/logistika/avtologistika-seredinyi-goda-zonyi-napryazheniya/">tpmag.ru</a></li>
+<li>ATI.SU, 15.07.2026 — индекс FTL РФ, +28,8 % за год: <a href="https://zen.ati.su/article/2026/07/15/stoimost-gruzoperevozok-v-rossii-vyrosla-pochti-na-tret-na-fone-defitsita-topliva-891498/">zen.ati.su</a></li>
+<li>РЖД-Партнёр, 16.12.2025 — прогноз «АвтоГрузЭкс» и ПЭК 85–88 ₽/км: <a href="https://www.rzd-partner.ru/auto/news/v-2026-godu-sebestoimost-avtoperevozok-mozhet-vyrasti-na-12/">rzd-partner.ru</a></li>
+<li>Приказ Минтранса от 14.04.2026 № 160 «Об установлении особенностей режима рабочего времени и времени отдыха водителей автомобилей», в силе с 01.09.2026: <a href="https://law.tks.ru/document/834975">law.tks.ru</a></li>
+<li>Пропускной режим для грузового транспорта в Москве: <a href="https://www.mos.ru/otvet-transport/kak-oformit-propusk-dlya-gruzovogo-transporta/">mos.ru</a></li>
+<li>Трасса Р-254 «Иртыш», участок по территории Казахстана: <a href="https://ru.wikipedia.org/wiki/%D0%98%D1%80%D1%82%D1%8B%D1%88_(%D0%B0%D0%B2%D1%82%D0%BE%D0%B4%D0%BE%D1%80%D0%BE%D0%B3%D0%B0)">Википедия</a></li>
+<li>Очереди на казахстанской границе, 14.06.2026: <a href="https://www.vedomosti.ru/society/news/2026/06/14/1205680-na-granitse-kazahstana">Ведомости</a></li>
+<li>Приказ ФАС от 06.11.2025 № 894/25, Тарифное руководство № 1, перечень утративших силу актов: <a href="https://sudact.ru/law/prikaz-fas-rossii-ot-06112025-n-89425/prilozhenie-n-2_1/">sudact.ru</a>; таблица коэффициентов тарифных классов: <a href="https://sudact.ru/law/prikaz-fas-rossii-ot-06112025-n-89425/prilozhenie-n-1/prilozhenie-n-1_1/tablitsa-n-2/">sudact.ru</a></li>
+<li>ЕТСНГ 411348, класс и весовая норма: <a href="https://www.alta.ru/information/etsng/411348/">alta.ru</a></li>
+<li>Станции: <a href="https://tr4.info/station/630209">Пенза II 630209</a>, <a href="https://tr4.info/station/892103">Базаиха 892103</a></li>
+<li>Приказ Минтранса от 07.08.2015 № 245, нормы суточного пробега: <a href="https://www.consultant.ru/document/cons_doc_LAW_195371/7e56a5d7bcd2354f625a48f146ddf2d50d752d0f/">consultant.ru</a></li>
+<li>Индексация тарифов РЖД +8,5 % с 01.10.2026, распоряжение № 1924-р: <a href="https://www.interfax.ru/russia/1105520">Интерфакс</a></li>
+<li>Экологический класс грузовиков в Москве, постановление 2375-ПП: <a href="https://elcode.ru/service/news/daydjest-novostey-zakonodatelstva/moskva-vneseny-utochneniya-v-regulirovanie-peredvi">elcode.ru</a></li>
+</ul>
+</section>
+<section id="l-a16"><h2>Полная таблица по городам</h2>
+<p>Все города, где есть предприятия из приоритетных списков реестра. Крюк — лишние километры относительно прямого хода Пенза → Москва (664 км) и Пенза → Красноярск (3622 км). Подсвечены ячейки, где крюк не больше 200 км. Рубли на деталь: по Москве — при 19 деталях в фуре (для заказа Ø10,5 их 17, там на 12 % больше), по Красноярску — при 20. <b>Ставка здесь одна на все плечи — 87 ₽/км, и это сделано намеренно:</b> колонка сравнивает города между собой, а сравнивать надо километры, а не смешанные тарифы. Для бюджета и для потолка цены ставка берётся по полосе для каждого плеча — см. раздел выше и «Потолок цены» в основном файле. Городов в таблице <strong>61</strong>, и это <strong>не все</strong> города приоритетных списков. Семи здесь нет — маршруты по ним грузовым профилем не считались: <strong>Рузаевка, Первоуральск, Волгоград, Златоуст, Старый Оскол, Вольск, Балаково</strong>. Четыре из них важны: в Рузаевке «НефтехГазМаш» — ближайший к Пензе завод из всех, 116 км; в Первоуральске «СМП.ГЕО» и в Волгограде «Волгограднефтемаш» стоят в разделе «Звонить первыми», в Златоусте «МИАН» — в списке звонков. Километры в их карточках посчитаны отдельно и в эту таблицу не сведены. Если по ним понадобится сравнение крюков — считать заново. Звёздочкой помечены два города, для которых грузовой маршрутизатор не отработал, — там расстояния по легковому профилю и потому занижены.</p>
+<div class="tw"><table><thead><tr><th scope="col">Город</th><th scope="col" class="num">Пред&shy;при&shy;ятий</th><th scope="col" class="num">Пенза → город, км</th><th scope="col">Дальше в Москву: км · крюк · ₽ на деталь</th><th scope="col">Дальше в Красно&shy;ярск: км · крюк · ₽ на деталь</th></tr></thead><tbody><tr><td class="ct-city">Пенза</td><td class="num">4</td><td class="num">0</td><td class="good"><span class="km">664 км</span><span class="kr">крюк <b>0</b> · 0 ₽</span></td><td class="good"><span class="km">3 622 км</span><span class="kr">крюк <b>0</b> · 0 ₽</span></td></tr><tr><td class="ct-city">Москва</td><td class="num">3</td><td class="num">664</td><td class="good"><span class="km">0 км</span><span class="kr">крюк <b>0</b> · 0 ₽</span></td><td><span class="km">4 130 км</span><span class="kr">крюк <b>+1 172</b> · 5 098 ₽</span></td></tr><tr><td class="ct-city">Подольск</td><td class="num">2</td><td class="num">645</td><td class="good"><span class="km">29 км</span><span class="kr">крюк <b>+10</b> · 46 ₽</span></td><td><span class="km">4 168 км</span><span class="kr">крюк <b>+1 191</b> · 5 181 ₽</span></td></tr><tr><td class="ct-city">Рязань</td><td class="num">2</td><td class="num">461</td><td class="good"><span class="km">215 км</span><span class="kr">крюк <b>+12</b> · 55 ₽</span></td><td><span class="km">4 079 км</span><span class="kr">крюк <b>+918</b> · 3 993 ₽</span></td></tr><tr><td class="ct-city">Балашиха</td><td class="num">1</td><td class="num">653</td><td class="good"><span class="km">53 км</span><span class="kr">крюк <b>+42</b> · 192 ₽</span></td><td><span class="km">4 086 км</span><span class="kr">крюк <b>+1 117</b> · 4 859 ₽</span></td></tr><tr><td class="ct-city">Сасово</td><td class="num">3</td><td class="num">293</td><td class="good"><span class="km">424 км</span><span class="kr">крюк <b>+53</b> · 243 ₽</span></td><td><span class="km">3 908 км</span><span class="kr">крюк <b>+579</b> · 2 519 ₽</span></td></tr><tr><td class="ct-city">Электросталь</td><td class="num">2</td><td class="num">636</td><td class="good"><span class="km">83 км</span><span class="kr">крюк <b>+55</b> · 252 ₽</span></td><td><span class="km">4 054 км</span><span class="kr">крюк <b>+1 068</b> · 4 646 ₽</span></td></tr><tr><td class="ct-city">Гусь-Хрустальный</td><td class="num">1</td><td class="num">496</td><td class="good"><span class="km">274 км</span><span class="kr">крюк <b>+106</b> · 485 ₽</span></td><td><span class="km">3 910 км</span><span class="kr">крюк <b>+784</b> · 3 410 ₽</span></td></tr><tr><td class="ct-city">Выкса</td><td class="num">1</td><td class="num">406</td><td class="good"><span class="km">386 км</span><span class="kr">крюк <b>+128</b> · 586 ₽</span></td><td><span class="km">3 852 км</span><span class="kr">крюк <b>+636</b> · 2 767 ₽</span></td></tr><tr><td class="ct-city">Муром</td><td class="num">1</td><td class="num">463</td><td class="good"><span class="km">341 км</span><span class="kr">крюк <b>+140</b> · 641 ₽</span></td><td><span class="km">3 807 км</span><span class="kr">крюк <b>+648</b> · 2 819 ₽</span></td></tr><tr><td class="ct-city">Тула</td><td class="num">2</td><td class="num">632</td><td class="good"><span class="km">176 км</span><span class="kr">крюк <b>+144</b> · 659 ₽</span></td><td><span class="km">4 249 км</span><span class="kr">крюк <b>+1 259</b> · 5 477 ₽</span></td></tr><tr><td class="ct-city">Дмитров</td><td class="num">1</td><td class="num">746</td><td class="good"><span class="km">118 км</span><span class="kr">крюк <b>+200</b> · 916 ₽</span></td><td><span class="km">4 146 км</span><span class="kr">крюк <b>+1 270</b> · 5 524 ₽</span></td></tr><tr><td class="ct-city">Липецк</td><td class="num">1</td><td class="num">443</td><td><span class="km">453 км</span><span class="kr">крюк <b>+232</b> · 1 062 ₽</span></td><td><span class="km">4 062 км</span><span class="kr">крюк <b>+883</b> · 3 841 ₽</span></td></tr><tr><td class="ct-city">Нижний Новгород</td><td class="num">1</td><td class="num">464</td><td><span class="km">449 км</span><span class="kr">крюк <b>+249</b> · 1 140 ₽</span></td><td><span class="km">3 723 км</span><span class="kr">крюк <b>+565</b> · 2 458 ₽</span></td></tr><tr><td class="ct-city">Кудьма</td><td class="num">1</td><td class="num">449</td><td><span class="km">465 км</span><span class="kr">крюк <b>+250</b> · 1 145 ₽</span></td><td><span class="km">3 727 км</span><span class="kr">крюк <b>+554</b> · 2 410 ₽</span></td></tr><tr><td class="ct-city">Заволжье</td><td class="num">1</td><td class="num">523</td><td><span class="km">462 км</span><span class="kr">крюк <b>+321</b> · 1 470 ₽</span></td><td><span class="km">3 806 км</span><span class="kr">крюк <b>+707</b> · 3 075 ₽</span></td></tr><tr><td class="ct-city">Иваново</td><td class="num">1</td><td class="num">718</td><td><span class="km">320 км</span><span class="kr">крюк <b>+374</b> · 1 713 ₽</span></td><td><span class="km">3 998 км</span><span class="kr">крюк <b>+1 094</b> · 4 759 ₽</span></td></tr><tr><td class="ct-city">Калуга</td><td class="num">2</td><td class="num">794</td><td><span class="km">208 км</span><span class="kr">крюк <b>+338</b> · 1 548 ₽</span></td><td><span class="km">4 365 км</span><span class="kr">крюк <b>+1 537</b> · 6 686 ₽</span></td></tr><tr><td class="ct-city">Ульяновск</td><td class="num">4</td><td class="num">323</td><td><span class="km">838 км</span><span class="kr">крюк <b>+497</b> · 2 276 ₽</span></td><td class="good"><span class="km">3 420 км</span><span class="kr">крюк <b>+121</b> · 526 ₽</span></td></tr><tr><td class="ct-city">Сызрань</td><td class="num">1</td><td class="num">253</td><td><span class="km">914 км</span><span class="kr">крюк <b>+503</b> · 2 303 ₽</span></td><td class="good"><span class="km">3 368 км</span><span class="kr">крюк <b>−1</b> · -4 ₽</span></td></tr><tr><td class="ct-city">Новое Атлашево</td><td class="num">1</td><td class="num">456</td><td><span class="km">718 км</span><span class="kr">крюк <b>+510</b> · 2 335 ₽</span></td><td><span class="km">3 482 км</span><span class="kr">крюк <b>+316</b> · 1 375 ₽</span></td></tr><tr><td class="ct-city">Рыбинск</td><td class="num">1</td><td class="num">965</td><td><span class="km">361 км</span><span class="kr">крюк <b>+662</b> · 3 031 ₽</span></td><td><span class="km">4 254 км</span><span class="kr">крюк <b>+1 597</b> · 6 947 ₽</span></td></tr><tr><td class="ct-city">Тольятти</td><td class="num">1</td><td class="num">347</td><td><span class="km">1 008 км</span><span class="kr">крюк <b>+691</b> · 3 164 ₽</span></td><td class="good"><span class="km">3 275 км</span><span class="kr">крюк <b>0</b> · 0 ₽</span></td></tr><tr><td class="ct-city">Зеленодольск</td><td class="num">1</td><td class="num">605</td><td><span class="km">805 км</span><span class="kr">крюк <b>+746</b> · 3 416 ₽</span></td><td><span class="km">3 385 км</span><span class="kr">крюк <b>+368</b> · 1 601 ₽</span></td></tr><tr><td class="ct-city">Самара</td><td class="num">1</td><td class="num">417</td><td><span class="km">1 079 км</span><span class="kr">крюк <b>+832</b> · 3 810 ₽</span></td><td class="good"><span class="km">3 287 км</span><span class="kr">крюк <b>+82</b> · 357 ₽</span></td></tr><tr><td class="ct-city">Витебск</td><td class="num">1</td><td class="num">1 156</td><td><span class="km">528 км</span><span class="kr">крюк <b>+1 020</b> · 4 671 ₽</span></td><td><span class="km">4 854 км</span><span class="kr">крюк <b>+2 388</b> · 10 388 ₽</span></td></tr><tr><td class="ct-city">Череповец</td><td class="num">2</td><td class="num">1 172</td><td><span class="km">539 км</span><span class="kr">крюк <b>+1 047</b> · 4 794 ₽</span></td><td><span class="km">4 442 км</span><span class="kr">крюк <b>+1 992</b> · 8 665 ₽</span></td></tr><tr><td class="ct-city">Бугульма</td><td class="num">1</td><td class="num">623</td><td><span class="km">1 117 км</span><span class="kr">крюк <b>+1 076</b> · 4 927 ₽</span></td><td class="good"><span class="km">3 012 км</span><span class="kr">крюк <b>+13</b> · 57 ₽</span></td></tr><tr><td class="ct-city">Могилёв</td><td class="num">1</td><td class="num">1 194</td><td><span class="km">592 км</span><span class="kr">крюк <b>+1 122</b> · 5 138 ₽</span></td><td><span class="km">4 799 км</span><span class="kr">крюк <b>+2 371</b> · 10 314 ₽</span></td></tr><tr><td class="ct-city">Гомель</td><td class="num">1</td><td class="num">1 177</td><td><span class="km">715 км</span><span class="kr">крюк <b>+1 228</b> · 5 623 ₽</span></td><td><span class="km">4 834 км</span><span class="kr">крюк <b>+2 389</b> · 10 392 ₽</span></td></tr><tr><td class="ct-city">Марьина Горка</td><td class="num">1</td><td class="num">1 384</td><td><span class="km">757 км</span><span class="kr">крюк <b>+1 477</b> · 6 763 ₽</span></td><td><span class="km">4 749 км</span><span class="kr">крюк <b>+2 511</b> · 10 923 ₽</span></td></tr><tr><td class="ct-city">Ижевск</td><td class="num">3</td><td class="num">957</td><td><span class="km">1 194 км</span><span class="kr">крюк <b>+1 487</b> · 6 809 ₽</span></td><td><span class="km">3 146 км</span><span class="kr">крюк <b>+481</b> · 2 092 ₽</span></td></tr><tr><td class="ct-city">Санкт-Петербург</td><td class="num">7</td><td class="num">1 411</td><td><span class="km">750 км</span><span class="kr">крюк <b>+1 497</b> · 6 855 ₽</span></td><td><span class="km">5 017 км</span><span class="kr">крюк <b>+2 806</b> · 12 206 ₽</span></td></tr><tr><td class="ct-city">Минск</td><td class="num">6</td><td class="num">1 436</td><td><span class="km">806 км</span><span class="kr">крюк <b>+1 578</b> · 7 226 ₽</span></td><td><span class="km">5 017 км</span><span class="kr">крюк <b>+2 831</b> · 12 315 ₽</span></td></tr><tr><td class="ct-city">Сосновый Бор</td><td class="num">2</td><td class="num">1 480</td><td><span class="km">818 км</span><span class="kr">крюк <b>+1 634</b> · 7 482 ₽</span></td><td><span class="km">4 945 км</span><span class="kr">крюк <b>+2 803</b> · 12 193 ₽</span></td></tr><tr><td class="ct-city">Молодечно</td><td class="num">1</td><td class="num">1 454</td><td><span class="km">851 км</span><span class="kr">крюк <b>+1 641</b> · 7 514 ₽</span></td><td><span class="km">5 062 км</span><span class="kr">крюк <b>+2 894</b> · 12 589 ₽</span></td></tr><tr><td class="ct-city">Солигорск</td><td class="num">3</td><td class="num">1 436</td><td><span class="km">874 км</span><span class="kr">крюк <b>+1 646</b> · 7 537 ₽</span></td><td><span class="km">5 054 км</span><span class="kr">крюк <b>+2 868</b> · 12 476 ₽</span></td></tr><tr><td class="ct-city">Ишимбай</td><td class="num">2</td><td class="num">972</td><td><span class="km">1 501 км</span><span class="kr">крюк <b>+1 809</b> · 8 283 ₽</span></td><td><span class="km">2 940 км</span><span class="kr">крюк <b>+290</b> · 1 262 ₽</span></td></tr><tr><td class="ct-city">Краснодар</td><td class="num">1</td><td class="num">1 340</td><td><span class="km">1 334 км</span><span class="kr">крюк <b>+2 010</b> · 9 204 ₽</span></td><td><span class="km">4 821 км</span><span class="kr">крюк <b>+2 539</b> · 11 045 ₽</span></td></tr><tr><td class="ct-city">Куса</td><td class="num">1</td><td class="num">1 104</td><td><span class="km">1 633 км</span><span class="kr">крюк <b>+2 073</b> · 9 492 ₽</span></td><td class="good"><span class="km">2 551 км</span><span class="kr">крюк <b>+33</b> · 144 ₽</span></td></tr><tr><td class="ct-city">Майкоп</td><td class="num">1</td><td class="num">1 396</td><td><span class="km">1 391 км</span><span class="kr">крюк <b>+2 123</b> · 9 721 ₽</span></td><td><span class="km">4 875 км</span><span class="kr">крюк <b>+2 649</b> · 11 523 ₽</span></td></tr><tr><td class="ct-city">Петрозаводск</td><td class="num">1</td><td class="num">1 725</td><td><span class="km">1 062 км</span><span class="kr">крюк <b>+2 123</b> · 9 721 ₽</span></td><td><span class="km">4 843 км</span><span class="kr">крюк <b>+2 946</b> · 12 815 ₽</span></td></tr><tr><td class="ct-city">Челябинск</td><td class="num">3</td><td class="num">1 236</td><td><span class="km">1 763 км</span><span class="kr">крюк <b>+2 335</b> · 10 692 ₽</span></td><td class="good"><span class="km">2 365 км</span><span class="kr">крюк <b>−21</b> · -91 ₽</span></td></tr><tr><td class="ct-city">Екатеринбург</td><td class="num">5</td><td class="num">1 340</td><td><span class="km">1 673 км</span><span class="kr">крюк <b>+2 349</b> · 10 756 ₽</span></td><td class="good"><span class="km">2 466 км</span><span class="kr">крюк <b>+184</b> · 800 ₽</span></td></tr><tr><td class="ct-city">Пермь</td><td class="num">1</td><td class="num">1 349</td><td><span class="km">1 607 км</span><span class="kr">крюк <b>+2 292</b> · 10 495 ₽</span></td><td><span class="km">2 824 км</span><span class="kr">крюк <b>+551</b> · 2 397 ₽</span></td></tr><tr><td class="ct-city">Лысьва</td><td class="num">1</td><td class="num">1 369</td><td><span class="km">1 703 км</span><span class="kr">крюк <b>+2 408</b> · 11 026 ₽</span></td><td><span class="km">2 845 км</span><span class="kr">крюк <b>+592</b> · 2 575 ₽</span></td></tr><tr><td class="ct-city">Белорецк</td><td class="num">1</td><td class="num">1 314</td><td><span class="km">1 843 км</span><span class="kr">крюк <b>+2 493</b> · 11 415 ₽</span></td><td><span class="km">2 656 км</span><span class="kr">крюк <b>+348</b> · 1 514 ₽</span></td></tr><tr><td class="ct-city">Нижний Тагил <span title="грузовой профиль недоступен, значение по легковому" style="color:var(--muted)">*</span></td><td class="num">1</td><td class="num">1 375</td><td><span class="km">1 799 км</span><span class="kr">крюк <b>+2 510</b> · 11 493 ₽</span></td><td><span class="km">2 526 км</span><span class="kr">крюк <b>+279</b> · 1 214 ₽</span></td></tr><tr><td class="ct-city">Магнитогорск</td><td class="num">2</td><td class="num">1 363</td><td><span class="km">1 892 км</span><span class="kr">крюк <b>+2 591</b> · 11 864 ₽</span></td><td><span class="km">2 667 км</span><span class="kr">крюк <b>+408</b> · 1 775 ₽</span></td></tr><tr><td class="ct-city">Качканар</td><td class="num">1</td><td class="num">1 451</td><td><span class="km">1 857 км</span><span class="kr">крюк <b>+2 644</b> · 12 107 ₽</span></td><td><span class="km">3 000 км</span><span class="kr">крюк <b>+829</b> · 3 606 ₽</span></td></tr><tr><td class="ct-city">Александровск</td><td class="num">1</td><td class="num">1 583</td><td><span class="km">1 919 км</span><span class="kr">крюк <b>+2 838</b> · 12 995 ₽</span></td><td><span class="km">3 062 км</span><span class="kr">крюк <b>+1 023</b> · 4 450 ₽</span></td></tr><tr><td class="ct-city">Караганда</td><td class="num">1</td><td class="num">2 499</td><td><span class="km">2 983 км</span><span class="kr">крюк <b>+4 818</b> · 22 061 ₽</span></td><td><span class="km">1 864 км</span><span class="kr">крюк <b>+741</b> · 3 223 ₽</span></td></tr><tr><td class="ct-city">Ташкент <span title="грузовой профиль недоступен, значение по легковому" style="color:var(--muted)">*</span></td><td class="num">1</td><td class="num">2 737</td><td><span class="km">3 433 км</span><span class="kr">крюк <b>+5 506</b> · 25 212 ₽</span></td><td><span class="km">3 427 км</span><span class="kr">крюк <b>+2 542</b> · 11 058 ₽</span></td></tr><tr><td class="ct-city">Новосибирск</td><td class="num">3</td><td class="num">2 839</td><td><span class="km">3 367 км</span><span class="kr">крюк <b>+5 542</b> · 25 377 ₽</span></td><td class="good"><span class="km">784 км</span><span class="kr">крюк <b>+1</b> · 4 ₽</span></td></tr><tr><td class="ct-city">Барнаул</td><td class="num">1</td><td class="num">3 074</td><td><span class="km">3 603 км</span><span class="kr">крюк <b>+6 013</b> · 27 533 ₽</span></td><td><span class="km">941 км</span><span class="kr">крюк <b>+393</b> · 1 710 ₽</span></td></tr><tr><td class="ct-city">Томск</td><td class="num">1</td><td class="num">3 120</td><td><span class="km">3 656 км</span><span class="kr">крюк <b>+6 112</b> · 27 987 ₽</span></td><td class="good"><span class="km">587 км</span><span class="kr">крюк <b>+85</b> · 370 ₽</span></td></tr><tr><td class="ct-city">Ленинск-Кузнецкий</td><td class="num">1</td><td class="num">3 068</td><td><span class="km">3 712 км</span><span class="kr">крюк <b>+6 116</b> · 28 005 ₽</span></td><td class="good"><span class="km">625 км</span><span class="kr">крюк <b>+71</b> · 309 ₽</span></td></tr><tr><td class="ct-city">Новокузнецк</td><td class="num">1</td><td class="num">3 301</td><td><span class="km">3 823 км</span><span class="kr">крюк <b>+6 460</b> · 29 580 ₽</span></td><td><span class="km">746 км</span><span class="kr">крюк <b>+425</b> · 1 849 ₽</span></td></tr><tr><td class="ct-city">Красноярск</td><td class="num">2</td><td class="num">3 622</td><td><span class="km">4 152 км</span><span class="kr">крюк <b>+7 110</b> · 32 556 ₽</span></td><td class="good"><span class="km">0 км</span><span class="kr">крюк <b>0</b> · 0 ₽</span></td></tr><tr><td class="ct-city">Алматы</td><td class="num">1</td><td class="num">3 527</td><td><span class="km">4 029 км</span><span class="kr">крюк <b>+6 892</b> · 31 558 ₽</span></td><td><span class="km">2 830 км</span><span class="kr">крюк <b>+2 735</b> · 11 897 ₽</span></td></tr><tr><td class="ct-city">Черемхово</td><td class="num">1</td><td class="num">4 527</td><td><span class="km">5 071 км</span><span class="kr">крюк <b>+8 934</b> · 40 908 ₽</span></td><td><span class="km">921 км</span><span class="kr">крюк <b>+1 826</b> · 7 943 ₽</span></td></tr></tbody></table></div>
+</section>
+</div>
+<div class="part" id="mysli"><div class="ph"><span class="n">Раздел 02</span><h1>Что я предлагаю сделать иначе</h1><p>Мои выводы, а не твои задания. Здесь про мощность и сроки, про то, почему проверка цены через нормо-час не сработала, как за один звонок отличить завод от посредника, и где в договоре на давальческой схеме теряются деньги.</p></div>
+<section><h2>Сколько это станко-часов — и почему одного завода мало</h2><p class="sub">Здесь важен не станок, а мощность: искать надо не завод с подходящим станком, а завод, который успеет сделать объём в срок. Всё построено на твоей цифре 8–10 часов на деталь — если она другая, всё ниже пересчитывается пропорционально.</p><div class="tw"><table><thead><tr><th scope="col">Режим работы</th><th scope="col" class="num">Часов в месяц на станок</th><th scope="col" class="num">Сколько месяцев на одном станке</th></tr></thead><tbody><tr><td>Одна смена, 22 рабочих дня</td><td class="num">176</td><td class="num">29–37</td></tr><tr><td>Две смены</td><td class="num">352</td><td class="num">15–18</td></tr><tr><td>Три смены, круглосуточно</td><td class="num">528</td><td class="num">10–12</td></tr></tbody></table></div><div class="key"><p><b>Весь объём — 5 200–6 400 нормо-часов.</b> 644 детали по 8–10 часов. Это значит, что завод с одним подходящим станком физически не сделает заказ быстрее чем за полтора года в две смены. Чтобы уложиться в шесть месяцев, нужно 2,5–3 станка одновременно; в три месяца — пять-шесть. Подписанный Ø8,5 отдельно — это 1 570–1 960 часов, то есть два-три станка на два месяца или один станок на полгода.</p></div><div class="note"><p><b>Что из этого следует практически.</b> Вопрос заводу должен звучать не «есть ли у вас станок», а «сколько таких станков и в сколько смен вы готовы их дать под этот заказ». Завод с одним портальным центром, загруженным на 100 % в три смены — а именно так ответил ульяновский ФОРШ — не подрядчик, каким бы хорошим ни был станок. И почти наверняка объём придётся делить между двумя-тремя площадками. Тогда логика поиска меняется: московские заказы на одну площадку в коридоре Пенза — Москва, красноярский на другую, ближе к востоку. Это ровно то разделение списков, которое уже сделано в логистике.</p></div><h2>Цена через нормо-час: почему эта проверка не сработала</h2><p class="sub">Проверку ставки нормо-часа пришлось отбросить, и вот почему. Это было неправдой по трём причинам сразу.</p><div class="note"><p><b>Что было не так.</b> Первое: твои 8–10 часов, как я сам же написал в разборе, описывают одношпиндельную схему — один универсальный станок делает всё подряд, с краном между операциями. А ставки, с которыми я это сравнивал, средние по цеху. Второе: час большого портального центра с ЧПУ стоит совсем других денег, чем средний час мастерской, и 8000–12500 ₽ для такой машины — не абсурд, а нормальная цифра. Третье: ставку «Гефеста» 3000 ₽ я брал с НДС, а цены подрядчиков идут без НДС — это разные базы, складывать их нельзя.</p></div><div class="key"><p><b>Что осталось верным.</b> Вывод про 80–100 тысяч держится, но на другом основании — на расчёте прохода, а не на ставке часа. Потолок — 38–50 тысяч ₽ за деталь по подписанному заказу и 50–72 по московским, без НДС — посчитан от цены продажи минус литьё минус транспорт, и он не зависит от того, на каком станке считать. При 80–100 тысячах проход обращается в ноль или уходит в минус. Это по-прежнему не «дорого», а отсутствие сделки. Просто теперь у этого вывода одна опора, а не две.</p></div><div class="key"><p><b>А вот что из этого получается полезного для торга.</b> Если подрядчик считает по 8000–12500 ₽ за нормо-час, он закладывает пятикоординатный портальный центр. Спроси прямо: зачем. Тюбингу нужна фрезеровка четырёх плоскостей, сверловка, резьба и канавка — это продольно-фрезерный или расточной, а не пятикоординатник. Ставка такого станка в разы ниже. Вопрос звучит так: «на каком станке вы считали и почему не на продольно-фрезерном». Если ответ про пятикоординатник — значит, тебе продают избыточную технологию, и цену можно двигать не торгом, а сменой станка.</p></div><div class="note"><p><b>Что нужно от тебя, чтобы закрыть вопрос окончательно.</b> Те самые 8–10 часов: на каком станке считалось и что в них входило. По межотраслевым нормативам Минтруда на фрезеровку четырёх плоскостей выходит 1,3–2,5 часа, на сверловку с резьбой ещё 0,9–1,5, итого 5–8 нормо-часов штучного с наладкой и контролем. Если твои 8–10 — это весь маршрут на одном универсальном станке, то цифры сходятся. Если только фрезеровка — значит трудоёмкость выше, и целевая цена другая.</p></div><h2>Как отличить настоящий завод от посредника за один звонок</h2><p class="sub">Это пришлось выучить на своих ошибках: одиннадцать предприятий из проверенных публикуют настоящие цифры настоящих станков, которые им не принадлежат. По телефону это вскрывается тремя вопросами.</p><ol class="steps"><li><b>По какому адресу физически стоит станок</b><span>Посредник отвечает уклончиво или называет город без улицы. У завода адрес цеха совпадает с юридическим адресом, и он называет его сразу.</span></li><li><b>Сколько человек в механическом цехе и в сколько смен работаете</b><span>Фирма с восемью сотрудниками не обслуживает парк из трёхсот станков. Если на сайте сотни единиц оборудования, а в цехе десять человек — станки чужие.</span></li><li><b>Кто подписывает договор и на чьём балансе оборудование</b><span>Прямой вопрос, который посредник не любит. Если работа размещается у третьих лиц — это не отказ от сделки, но цена, сроки и ответственность за брак строятся совсем иначе.</span></li></ol><div class="note"><p><b>Проверка до звонка занимает минуту.</b> Вбей название в любой реестр юрлиц и посмотри три строки: год регистрации, выручку и численность. Парк на сотни миллионов не бывает у фирмы с выручкой пять миллионов и одним сотрудником. Именно так вскрылись «Стальпроммаш» из Калуги с выручкой 4,6 млн и «Завод контрактной механической обработки» из Петербурга, который оказался одним человеком в квартире, переименованным из ООО «Лэфт Энд Райт» четырнадцать месяцев назад.</p></div></section>
+<section>
+  <h2>Договор: где теряются деньги</h2>
+  <p><strong>Право удержания.</strong> По ст. 712 ГК подрядчик вправе законно удержать нашу отливку при споре об оплате — 681 тонна чугуна становится заложником. Лечится прямым отказом от права удержания в договоре, поштучной индивидуализацией в накладной с номером плавки и потолком на количество отливок, одновременно находящихся у подрядчика.</p>
+  <p><strong>Риск случайной гибели.</strong> По п. 1 ст. 705 ГК он по умолчанию на нас как на стороне, предоставившей материал. Норма диспозитивная — в договоре переписать.</p>
+  <p><strong>Ответственность за сохранность — наш рычаг.</strong> Ст. 714 и 906 ГК: у подрядчика, которому передано имущество для выполнения работ, обязательство по хранению возникает в силу закона, и применяются правила главы 47. Подрядчик-предприниматель отвечает независимо от вины. Прописать прямо. Отказ от права удержания, кстати, разрешает п. 3 ст. 359 ГК — это не спорная конструкция, а прямая норма.</p>
+  <p><strong>Стружка.</strong> 34–109 тонн на пакет: патентные 10–16 % дают 68–109 т, но они относятся к кольцевому тюбингу, а прямой расчёт по площадям бортов перемычки даёт 5–9 %, то есть 34–61 т. Точная цифра выйдет из разницы масс отливки и готовой детали. Если не написать, кому достаётся, достанется подрядчику.</p>
+  <p><strong>Брак при обработке.</strong> Кто платит за отливку, испорченную на станке, и что делаем, если припуска не хватило и поверхность не вычистилась до чистого металла. В давальческой схеме это главный источник споров, а у нас точность отливки записана как «13Т-0-0-13», где степень точности поверхностей не нормирована — ряд припуска формально не определён, и при споре ссылаться будет не на что.</p>
+  <p><strong>Коробление после обработки.</strong> Ни в ГОСТ Р 57054-2016, ни в чертеже нет требований по старению отливок. Если деталь поведёт и двугранные углы уйдут из ±1′10″ уже после приёмки, предъявить будет нечего. Срок и порядок предъявления по геометрии записать отдельно.</p>
+  <p><strong>Простой из-за непоставки отливки.</strong> Мехобработка не может опережать литьё, а простой оплаченного станка при давальческой схеме обычно ложится на давальца. «Комлит» — единственный литейщик на 681 тонну, и он с убытком. Пункт нужен.</p>
+  <div class="key"><p><strong>И это не только юридическая гигиена, а рычаг по цене.</strong> Часть разрыва между 80–100 и 30–40 — это премия за неопределённость, которую подрядчик держит на себе: чужая отливка, незнакомая деталь, непонятно кто виноват при браке. Если забрать этот риск себе явно — ограничить его ответственность потолком, письменно принять литейный брак на себя, застраховать отливки за свой счёт — основание для премии исчезает. Это торг о том, что даём мы, а не расспросы о том, как устроены они.</p></div>
+</section>
+<section><h2>По литью — если у тебя это ещё не закрыто</h2><p class="sub">Литьё — твоя часть, и ты в ней разбираешься лучше меня. Это не задача, которую ты ставил, и не совет, как её вести. Просто при разборе чертежей вылезли четыре вещи, которые касаются литья, а не обработки. Если всё это у тебя давно решено — пропусти.</p><ol class="steps"><li><b>Технологические приливы под базовую плоскость</b><span>ГОСТ Р 57054-2016 их разрешает, а размеры назначает изготовитель отливки. Вопрос не «сделайте», а «где вы готовы поставить»: прилив в углу борта — это тепловой узел, и литейщику виднее, где он не даст усадочной раковины.</span></li><li><b>Припуск в моделях</b><span>В чертеже точность отливки записана как 13Т-0-0-13. Две позиции из четырёх — нули, то есть ряд припуска формально не определён, и сколько металла лить сверху решает литейщик по своему усмотрению.</span></li><li><b>Дописать документацию — это бесплатно</b><span>Проставить степень коробления и степень точности поверхностей вместо этих нулей, а припуск на сторону зафиксировать в договоре. Пока их нет, формально никто не отвечает за то, что отливка вычистится до чистого металла при обработке.</span></li><li><b>График литья и оснастка</b><span>Помесячно под нужный темп, и готовность модельной оснастки по Ø9,5 и Ø10,5. Механическая обработка не может идти впереди литья — это единственная причина, по которой литьё вообще попало в этот документ.</span></li></ol></section>
+<section id="z-ochered">
+  <p class="plabel">Часть 1</p>
+  <h2>Очередь рассылки: кому и когда</h2>
+  <p class="sub">Редакция С-1 от 14.08.2026. Нумеруется отдельно от текста запроса — тот идёт под своей редакцией Р-1. Двадцать адресов делятся на три очереди, и у каждой одно правило, по которому в неё попадают. Всё разом отправлять не нужно: первые ответы меняют сам вопрос. Эти двадцать отобраны по станку. Отдельно от них есть четыре адреса, отобранные по обстоятельствам, — «Комлит», «Саста», ЛМЗ и МЗОР: они в очередь не входят, потому что разговор с ними другой и запрос им идёт не этот. Они разобраны в «Адресах по обстоятельствам».</p>
+
+  <h4>Очередь 1 — шесть адресов. Отправлять в день, когда закрыты пять вопросов</h4>
+  <p><strong>Правило:</strong> габарит и грузоподъёмность стола опубликованы, обе величины покрывают деталь вместе с приспособлением, и по юрлицу нет денежных оговорок. Это единственная группа, где до звонка известно всё, кроме цены.</p>
+  <div class="tw"><table><thead><tr><th scope="col">Предприятие</th><th scope="col">Город</th><th scope="col">Чем отличается от остальных</th></tr></thead><tbody>
+  <tr><td><strong>ОАО «ЭЗТМ»</strong></td><td>Электросталь</td><td>Единственный, у кого прямо названо глубокое сверление до Ø120 мм — ровно наше нагнетательное отверстие. Изделие до 8500 × 2500 × 2500 мм, 65 тонн</td></tr>
+  <tr><td><strong>ООО «ТПК Брик»</strong></td><td>Самара</td><td>Единственный, у кого подтверждена грузоподъёмность стола (6000 кг) и в списке литейных материалов стоят СЧ20 и СЧ25. Оговорка одна: на фрезерном столе шириной 1200 мм пойдёт только прижим по торцам, контурная плита ложится на расточную Skoda</td></tr>
+  <tr><td><strong>АО «ПНИТИ»</strong></td><td>Пермь</td><td>BMC-5131 с угловой головой, стол 5000 × 2900 мм, 20 тонн. Угловая голова — прямо под радиальные борта</td></tr>
+  <tr><td><strong>ООО «МЗТМ»</strong></td><td>Магнитогорск</td><td>Оба передела своим оборудованием: фрезерный стол 4000 × 2000 до 14 тонн и расточной 4000 × 3000 до 60 тонн</td></tr>
+  <tr><td><strong>ООО «Эльмаш»</strong></td><td>Нижний Новгород</td><td>Чугун и давальческая схема названы на сайте прямым текстом. Портальное оборудование, зона 3200 × 1600 × 1000 мм, заготовка до 10 тонн</td></tr>
+  <tr><td><strong>ООО Компания «Чебо»</strong></td><td>Новое Атлашево</td><td>Расточной 2500 × 1500 мм до 5 тонн. По фрезерной группе размеров нет — это первый вопрос письма</td></tr>
+  </tbody></table></div>
+
+  <h4>Очередь 2 — семь адресов. Через пять рабочих дней после первой</h4>
+  <p><strong>Правило:</strong> станок по габариту деталь берёт, но перед разговором о цене надо закрыть один вопрос — чей это станок, сколько он держит, или что вообще с заводом. Письмо то же самое, но этот вопрос ставится первым абзацем. <strong>Условие отправки:</strong> из первой очереди пришло меньше трёх ответов с ценой и трудоёмкостью. Если пришло три и больше — вторая очередь не нужна, дальше идёт сравнение.</p>
+  <div class="tw"><table><thead><tr><th scope="col">Предприятие</th><th scope="col">Город</th><th scope="col">Что спросить до цены</th></tr></thead><tbody>
+  <tr><td><strong>ООО «СММ-ТяжМаш»</strong></td><td>Сосновый Бор</td><td>Фрезерная группа мелкая, работа пойдёт на расточном PAMA — как на нём получить плоскости бортов. И возьмут ли гражданский заказ. Телефон не опубликован, писать через форму на сайте</td></tr>
+  <tr><td><strong>ООО «ЗМО №1»</strong></td><td>Лысьва</td><td>Чьи два портала: у юрлица основных средств 26,1 млн ₽, а PM3080HZ и PM2040HA стоят кратно больше</td></tr>
+  <tr><td><strong>ООО ПК «НТМЗ»</strong></td><td>Нижний Тагил</td><td>На чьём балансе станки: у юрлица основных средств 4,7 млн ₽, единственный учредитель — АО «НПП „Машпром“». Техника при этом сильная: YSM 7030, стол 6600 × 2400 мм, 25 тонн</td></tr>
+  <tr><td><strong>ООО «МИАН»</strong></td><td>Златоуст</td><td>Что с заводом после 2021 года — свежих данных в открытых источниках нет</td></tr>
+  <tr><td><strong>ООО «МСЗ-Механика»</strong></td><td>Электросталь</td><td>Грузоподъёмность стола МС625МФ и возьмут ли гражданский заказ: это контур Росатома с пропускным режимом. Взамен они сами делают оснастку — приспособление можно заказать у них же</td></tr>
+  <tr><td><strong>ООО «Металлист-Тольятти»</strong></td><td>Тольятти</td><td>Грузоподъёмность стола — на сайте нет ни одной цифры по массе. И чьё оборудование: основных средств 27,5 млн ₽, площадка похожа на арендованную</td></tr>
+  <tr><td><strong>ООО «Тулапрессмаш»</strong></td><td>Тула</td><td>Грузоподъёмность стола не опубликована ни для одного станка. Условия оплаты: налоговый долг около 3 млн ₽, работать по факту сдачи</td></tr>
+  </tbody></table></div>
+
+  <h4>Очередь 3 — семь адресов. Ещё через пять рабочих дней, на том же условии</h4>
+  <p><strong>Правило:</strong> у каждого есть причина, по которой он не попал в первые две. Отправлять, только если после двух очередей так и не набралось трёх сопоставимых цен. Причина при этом не всегда техническая: у трёх из семи она денежная, а у двух — наоборот, они интересны нулевым плечом и стоят здесь только из-за станка.</p>
+  <div class="tw"><table><thead><tr><th scope="col">Предприятие</th><th scope="col">Город</th><th scope="col">Почему не раньше</th></tr></thead><tbody>
+  <tr><td><strong>АО «ТЯЖМАШ»</strong></td><td>Сызрань</td><td>Грузоподъёмность столов не опубликована, а работа со стороны открыто не предлагается. В 2004 году обрабатывали чужие тюбинги Ø14 м — то есть отказ не предрешён</td></tr>
+  <tr><td><strong>ПАО «ЧКПЗ»</strong></td><td>Челябинск</td><td>Техника одна из лучших в списке — Skoda W200, стол 3500 × 3500 мм, 60 тонн. Но в апреле 2026 кредитор объявил намерение банкротить: заёмные 44,3 млрд ₽, кредиторская задолженность 69,9 млрд ₽. Работать можно, авансировать нельзя</td></tr>
+  <tr><td><strong>ООО «Вариант-999»</strong></td><td>Красноярск</td><td>Обработка прямо в точке поставки подписанного заказа, крюк ноль километров — по перевозке лучший вариант из всех. Против: иск на 347,4 млн ₽, это три четверти их чистых активов, и все 32 центра трёхосевые, то есть радиальные борта под углом потребуют угловой оснастки</td></tr>
+  <tr><td><strong>ООО «НПО «НефтехГазМаш»</strong></td><td>Рузаевка</td><td>Ближайший из всех — 116 км от Пензы. Но деталь идёт не на ЧПУ, а на строгальной группе 4000 × 1250 × 1120 мм: у их станков с ЧПУ зона 1500 × 1000 мм, наша длина туда не входит. Плюс запас по ширине 50 мм на сторону — прижим только по торцам</td></tr>
+  <tr><td><strong>АО «Пензадизельмаш»</strong></td><td>Пенза</td><td>Плечо нулевое, но станка под 2083 × 1150 мм в опубликованном парке нет. Разговор строить как обмен загрузкой: у них есть отдел кооперации и они сами выводят номенклатуру на сторону</td></tr>
+  <tr><td><strong>ООО «Завод РТО»</strong></td><td>Оренбург</td><td>Wotan Rapid 3 держит 2 тонны. Деталь 1895 кг проходит с запасом в 105 кг, а вместе с приспособлением — нет. Спросить, на чём делают детали тяжелее двух тонн: на той же странице объявлена масса до 25 тонн, но без названия станка</td></tr>
+  <tr><td><strong>ООО «ДжиЭрСи»</strong></td><td>Щёлково</td><td>Два ограничения сразу: единственный станок, куда деталь входит, — координатно-расточной 2Е470А на 2500 кг, это меньше 2900 кг детали с приспособлением; и наибольший диаметр сверления у него 40 мм при нашем Ø120</td></tr>
+  </tbody></table></div>
+
+  <h4>Как список меняется дальше</h4>
+  <ul class="list">
+    <li><strong>Завод ответил — он уходит из очереди</strong> и переходит в сравнение цен. Повторно писать не нужно.</li>
+    <li><strong>Вопрос из его строки закрылся — он поднимается на очередь выше.</strong> Например, «Тулапрессмаш» назвал грузоподъёмность стола и она покрывает 3300 кг — он уходит в первую очередь и попадает в ближайшую отправку.</li>
+    <li><strong>Любое изменение — новая редакция с датой:</strong> С-2, С-3 и дальше. Номер редакции ставится в письме, чтобы по ответу было видно, какой список у подрядчика на руках.</li>
+    <li><strong>Очереди 2 и 3 отправляются не по календарю, а по условию.</strong> Пять рабочих дней — это минимум ожидания, а не срок: если из первой очереди пришло три сопоставимых ответа, дальше рассылать не нужно вовсе.</li>
+  </ul>
+</section>
+<section id="z-cena">
+  <p class="plabel">Часть 2</p>
+  <h2>Про цену</h2>
+
+  <div class="key">
+    <p><strong>Твоя оценка экономии верна и даже занижена.</strong> Разница между 90 и 35 тысячами — 55 тысяч на детали: <strong>10,8 млн ₽</strong> на подписанном Красноярске и <strong>35,4 млн ₽</strong> на всех трёх заказах, то есть около 430 тысяч долларов, а не 100.</p>
+  </div>
+
+  <p><strong>Цель 30–40 тысяч достижима, но впритык.</strong> Проверка ставок дала неожиданный результат: <strong>предприятия, у которых станок физически берёт нашу плиту, ставку нормо-часа не публикуют вообще</strong>. Ни Балтийский завод, ни Коломенский механический, ни «Саста» с продольно-фрезерными 2000 × 6000 — у всех вместо цены «пришлите чертёж». Единственное исключение во всей выборке — «Гефест» в Колпино: 3000 ₽ нормо-час с НДС, то есть 2500 без, при фрезерной зоне 1250 × 4000 мм и заготовках до 16 тонн. Всё, что публикуется дешевле 1800 ₽, относится к станкам со столом порядка 1000 × 550 мм и нагрузкой 800 кг; переносить эти ставки на деталь в 1,9 тонны нельзя. Вывод практический: ставку не вычислить со стороны — её надо получить из ответов на запрос, поэтому в форме ответа она стоит отдельной строкой вместе с трудоёмкостью. То есть цель собирается из понятных частей, но запаса на оснастку, контроль и брак в ней почти нет.</p>
+
+  <p><strong>Чего говорить подрядчику нельзя.</strong> «Вы просите впятеро выше рынка» — это сравнение со ставками цехов мелких деталей, там другая работа. Обоснованно можно говорить другое: одна цена на все семь позиций — это не расчёт. АК-1 весит 1539 кг и имеет 10 нормированных пар углов, АКП-4 весит 676 кг и имеет 8. Единая цена означает, что посчитали по самой тяжёлой позиции и распространили на все.</p>
+
+  <div class="note">
+    <span class="tag">Что требовать вместо спора о ставке</span>
+    <p><strong>Про НДС выяснено: 80–100 тысяч названы без НДС</strong>, сверху ещё 22 % — это 11,3–14,2 млн ₽ на пакете. Отдельно спросить систему налогообложения: подрядчик на упрощёнке при той же цифре в договоре фактически дороже на 18 % суммы, потому что вычета нет.</p>
+    <p>Спорить о ставке бессмысленно, пока не известна трудоёмкость. 80–100 тысяч — это 8000–12500 ₽ за нормо-час, если работа занимает 8–10 часов, и всего 2700–4000 ₽, если она занимает 25–30. Вторая цифра рыночная. Поэтому требовать надо не скидку, а расшифровку: маршрутную карту с операциями и штучным временем по каждой, отдельной строкой ставку нормо-часа, отдельно оснастку и такелаж. Когда ставка названа — положить рядом прайс «Гефеста»: 3000 ₽ с НДС при габарите 1250 × 4000 мм и массе до 16 тонн, тоже не деревня, а Петербург.</p>
+  </div>
+</section>
+<section id="z-inache">
+  <p class="plabel">Часть 3</p>
+  <h2>Что стоит сделать иначе</h2>
+  <p class="lede">Четыре хода. Первый важнее остальных вместе взятых.</p>
+
+  <h3>1. Замерить время на многоместной наладке</h3>
+  <p>Всё в этой задаче стоит на числе 8–10 станко-часов. Оно из твоего опыта по схеме «одна деталь за цикл» и ни разу не измерено на многоместной наладке, когда на столе лежат сразу две-три детали и оба борта режутся встречными бабками.</p>
+  <p>Расчёт даёт около 4 часов вместо 9. Если это так — исчезает не цена, а вся конструкция задачи: не нужен второй станок, не нужна покупка за десятки миллионов, а московские договоры можно подписывать по цене, которую знаешь, а не угадываешь.</p>
+  <p>Проверяется одной отливкой, трёхместным приспособлением по имеющимся 3D-моделям, чужим станком и секундомером. Три-четыре недели.</p>
+  <div class="note">
+    <span class="tag">Проверить на конкретном станке</span>
+    <p>Сводятся ли горизонтальные шпиндели на 750 мм. У <span class="mono">6620</span> минимальный развод 1550 мм — тогда «два борта за проход» не работает.</p>
+  </div>
+
+  <h3>2. Технологические приливы вместо ложементов</h3>
+  <p>ГОСТ Р 57054-2016 п. 6.3.9 разрешает прямо: «Для удобства обработки тюбингов может создаваться базовая плоскость путём отливки технологических приливов в углах бортов тюбинга. Расположение и размеры приливов устанавливает предприятие-изготовитель. После обработки технологические приливы должны быть удалены».</p>
+  <p>Четыре прилива <strong>на наружной спинке</strong> — не на торцах бортов, иначе база смотрит в ту же сторону, что и борта, и переворот детали ничего не даёт. Фрезеруются в один проход первым установом. Дальше всё базируется на четырёх обработанных пятаках, а не на кривой литой поверхности. Двадцать один ложемент превращается в три-шесть плит с переставными упорами.</p>
+  <p>Разговор с «Комлитом» вести не «сделайте», а <strong>«где вы готовы поставить»</strong>: прилив в углу борта — тепловой узел, там риск усадочной раковины. Решать надо до раскроя моделей на Ø9,5 и Ø10,5.</p>
+
+  <h3>3. Покупать два передела, а не деталь</h3>
+  <p>Фрезерование — одна ведомость операций, сверление с зенкованием и резьбой — другая. Разные строки, разные цены.</p>
+  <p>Дело не в арифметике ставок, а в том, что <strong>меняется круг тех, кто вообще может ответить</strong>. «Сделать деталь целиком» требует цеха, где есть и продольно-фрезерный на 2,1 × 1,15 м, и радиально-сверлильный с вылетом 1,6 м, и готовность отвечать за чужую отливку в 1,9 тонны. Таких единицы — отсюда и три найденных подрядчика с их ценой. «Только отфрезеровать борта» возьмёт любой ремонтно-механический цех на загрузку простаивающего станка.</p>
+
+  <h3>4. Три строки в договор</h3>
+  <p><strong>Право удержания.</strong> По ст. 712 ГК подрядчик вправе законно удержать нашу отливку при споре об оплате. Лечится прямым отказом от права удержания в договоре — п. 3 ст. 359 ГК это позволяет — плюс потолком на количество отливок, одновременно находящихся у подрядчика.</p>
+  <p><strong>Риск случайной гибели</strong> по п. 1 ст. 705 ГК по умолчанию лежит на нас как на стороне, предоставившей материал. Норма диспозитивная, в договоре переписать.</p>
+  <p><strong>Стружка</strong> — 10–16 % массы детали, то есть 68–109 тонн на пакет. Если не написать, кому она достаётся, достанется подрядчику.</p>
+</section>
+</div>
+<footer><p>Логистика и предложения сверх задания. Основной файл с заводами, запросом и ценой — отдельно.</p></footer>
+<button class="up" id="up" type="button">Наверх</button>
+</div>
+<script>
+(function(){
+  var q=document.getElementById('q'), cnt=document.getElementById('cnt'),
+      cards=[].slice.call(document.querySelectorAll('#reestr article.c'));
+  if(q){
+    var base=cards.length;
+    cnt.textContent=base+' предприятий';
+    q.addEventListener('input',function(){
+      var v=q.value.trim().toLowerCase(), n=0;
+      cards.forEach(function(c){
+        var hit=!v||(c.getAttribute('data-s')||'').indexOf(v)>-1;
+        c.classList.toggle('hide',!hit); if(hit)n++;
+      });
+      cnt.textContent=v?(n+' из '+base):(base+' предприятий');
+      document.querySelectorAll('#reestr details').forEach(function(d){ if(v) d.open=true; });
+    });
+  }
+  var up=document.getElementById('up');
+  addEventListener('scroll',function(){ up.classList.toggle('on', scrollY>700); },{passive:true});
+  up.addEventListener('click',function(){ scrollTo({top:0,behavior:'smooth'}); });
+})();
+</script>
+</html>

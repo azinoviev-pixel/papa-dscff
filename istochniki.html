@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ru">
+<!-- источники и метод: пятая страница портала -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Тюбинги — откуда что взято</title>
+<style>
+/* ── токены ─────────────────────────────────────────────────────────── */
+:root{
+  --paper:#F7F7F4; --card:#FFFFFF; --sunk:#F1F1EE;
+  --ink:#15181B; --ink-2:#464C53; --muted:#697077;
+  --rule:#CFD3D6; --rule-2:#E4E7E9; --rule-hi:#15181B;
+  --accent:#17486B; --accent-w:#E7EDF2;
+  --flag:#A3392A;  --flag-w:#F7E9E6;
+  --ok:#2C5F40;    --ok-w:#E6EFE9;
+  --warn:#7A5320;  --warn-w:#F4EDE0;
+
+  --serif:"PT Serif",Charter,"Iowan Old Style",Georgia,serif;
+  --narrow:"PT Sans Narrow","Arial Narrow","Helvetica Neue",system-ui,sans-serif;
+  --sans:"PT Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+    --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+    --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+    --accent:#7FB2D4; --accent-w:#1D2C38;
+    --flag:#E08A7B;  --flag-w:#33211E;
+    --ok:#7FBF9B;    --ok-w:#1C2A22;
+    --warn:#DCBB84;  --warn-w:#2A2318;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+  --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+  --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+  --accent:#7FB2D4; --accent-w:#1D2C38;
+  --flag:#E08A7B;  --flag-w:#33211E;
+  --ok:#7FBF9B;    --ok-w:#1C2A22;
+  --warn:#DCBB84;  --warn-w:#2A2318;
+}
+
+/* ── основание ──────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+html,body{margin:0;max-width:100%;overflow-x:clip}
+img,svg{max-width:100%;height:auto}
+body{
+  background:var(--paper); color:var(--ink);
+  font:16.5px/1.62 var(--serif);
+  font-variant-numeric:lining-nums proportional-nums;
+  padding-inline:max(var(--s5),env(safe-area-inset-left));
+}
+.wrap{max-width:1060px;margin-inline:auto;padding-bottom:var(--s8)}
+::selection{background:var(--accent-w);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+
+/* ── типографика ────────────────────────────────────────────────────── */
+h1,h2,h3,h4{font-family:var(--narrow);font-weight:700;letter-spacing:-.005em;
+  color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,5.2vw,46px);line-height:1.06}
+h2{font-size:clamp(22px,3.4vw,31px);line-height:1.12;margin:0 0 var(--s3)}
+h3{font-size:clamp(17px,2.2vw,20px);line-height:1.22;margin:0 0 var(--s2)}
+h4{font-size:16px;line-height:1.3;margin:0 0 var(--s2)}
+p{margin:0 0 var(--s4);max-width:var(--measure)}
+a{color:var(--accent);text-underline-offset:2px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+b,strong{font-weight:700}
+em{font-style:italic}
+ul,ol{margin:0 0 var(--s4);padding-left:1.35em;max-width:var(--measure)}
+li{margin:0 0 var(--s2)}
+code,.mono{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums}
+
+/* надписи в духе основной надписи чертежа.
+   .part сюда НЕ входит: это обёртка целого раздела, а не подпись —
+   иначе весь раздел уходит в прописные. Подпись раздела — .plabel */
+.eyebrow,.plabel,.label,.tag,.lbl{
+  font-family:var(--narrow);font-weight:700;font-size:12px;line-height:1.2;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:0 0 var(--s2)}
+.dim,.sub,.dek,.lede,.src,.how{color:var(--ink-2)}
+.sub,.dek,.lede{font-size:16px;max-width:var(--measure);margin:0 0 var(--s5)}
+.dim{font-size:14px;font-family:var(--sans)}
+
+/* ── шапка страницы ─────────────────────────────────────────────────── */
+header.mast{padding:var(--s7) 0 var(--s5);border-bottom:2px solid var(--rule-hi);margin-bottom:var(--s7)}
+header.mast h1{margin:0 0 var(--s3)}
+header.mast .dek{margin:0}
+
+/* ── навигация ──────────────────────────────────────────────────────── */
+nav.files{display:flex;gap:var(--s1);flex-wrap:wrap;margin:0;padding:var(--s3) 0;
+  border-bottom:1px solid var(--rule)}
+nav.files a{font-family:var(--narrow);font-size:14.5px;font-weight:700;letter-spacing:.01em;
+  min-height:38px;display:inline-flex;align-items:center;padding:0 var(--s3);
+  color:var(--ink-2);text-decoration:none;border-bottom:2px solid transparent}
+nav.files a:hover{color:var(--accent)}
+nav.files a.cur{color:var(--accent);border-bottom-color:var(--accent)}
+
+nav.top{display:flex;gap:var(--s1);flex-wrap:wrap;margin:0 0 var(--s6);padding:var(--s2) 0;
+  border-bottom:1px solid var(--rule-2)}
+nav.top a{font-family:var(--sans);font-size:13.5px;min-height:34px;display:inline-flex;
+  align-items:center;padding:0 var(--s2);color:var(--muted);text-decoration:none;border-radius:3px}
+nav.top a:hover{color:var(--accent);background:var(--accent-w)}
+
+/* ── деление и его шапка ────────────────────────────────────────────────
+   .part — крупное деление документа, внутри несколько section.
+   .ph    — его шапка: метка «Раздел N», заголовок и вводный абзац.
+   Жирную линию несёт только .part, иначе она задваивается с шапкой. */
+section{margin:0 0 var(--s7);scroll-margin-top:var(--s4)}
+.part{border-top:2px solid var(--rule-hi);padding-top:var(--s5);margin:var(--s8) 0 var(--s6)}
+.part:first-of-type{border-top:0;margin-top:var(--s6);padding-top:0}
+.ph{margin:0 0 var(--s6)}
+.ph .n{display:block;font-family:var(--narrow);font-weight:700;font-size:12px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:0 0 var(--s2)}
+.ph h1{font-size:clamp(26px,4.4vw,38px);margin:0 0 var(--s3)}
+.ph p{color:var(--ink-2);margin:0}
+
+/* ── цифры в шапке ──────────────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));
+  gap:var(--s3);margin:var(--s5) 0 0;max-width:none}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:var(--s4);display:flex;flex-direction:column;justify-content:flex-start}
+.stat b{display:block;font-family:var(--narrow);font-size:31px;line-height:1;
+  font-variant-numeric:tabular-nums;margin:0 0 var(--s2)}
+.stat span{font-family:var(--sans);font-size:13px;line-height:1.34;color:var(--ink-2)}
+
+/* ── таблицы ────────────────────────────────────────────────────────── */
+.tw{overflow-x:auto;margin:0 0 var(--s5);border:1px solid var(--rule);border-radius:3px;
+  background:var(--card)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14.5px;
+  font-variant-numeric:tabular-nums}
+thead th{font-family:var(--narrow);font-weight:700;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:var(--s3) var(--s3);border-bottom:2px solid var(--rule-hi);white-space:nowrap;
+  background:var(--sunk);position:sticky;top:0}
+td{padding:var(--s3);border-bottom:1px solid var(--rule-2);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+th.num,td.num,.num{text-align:right;font-variant-numeric:tabular-nums}
+td b,td strong{font-weight:700}
+.ct{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.5}
+.ct-city{font-weight:700}
+td.good{color:var(--ok);font-weight:700}
+
+/* ── врезки ─────────────────────────────────────────────────────────── */
+.note,.key,.qa,.open{border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;background:var(--card);padding:var(--s4) var(--s5);margin:0 0 var(--s5)}
+.key{border-left-color:var(--flag);background:var(--flag-w)}
+.note>p:last-child,.key>p:last-child,.qa>p:last-child,.open>p:last-child{margin-bottom:0}
+.note p,.key p,.qa p,.open p{max-width:none}
+.tag{display:inline-block;margin:0 0 var(--s2)}
+.t-ok{color:var(--ok)} .t-bad{color:var(--flag)} .t-warn{color:var(--warn)}
+
+/* ── шаги ───────────────────────────────────────────────────────────── */
+/* проза — в одной колонке чтения; во всю ширину выходят только
+   структуры: таблицы, карточки, врезки, цифры шапки */
+ol.steps,ol.flow{list-style:none;padding:0;counter-reset:st;max-width:var(--measure)}
+ol.steps>li,ol.flow>li{counter-increment:st;position:relative;padding:0 0 var(--s4) 42px;
+  margin:0 0 var(--s4);border-bottom:1px solid var(--rule-2)}
+ol.steps>li:last-child,ol.flow>li:last-child{border-bottom:0;margin-bottom:0}
+ol.steps>li::before,ol.flow>li::before{content:counter(st);position:absolute;left:0;top:1px;
+  width:26px;height:26px;border:1.5px solid var(--accent);color:var(--accent);border-radius:50%;
+  font:700 13px/23px var(--narrow);text-align:center;font-variant-numeric:tabular-nums}
+
+/* ── карточка предприятия ───────────────────────────────────────────── */
+article.c{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:var(--s5);margin:0 0 var(--s3);min-width:0;overflow-wrap:break-word}
+article.c>*{min-width:0}
+article.c .ch{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s3);
+  margin:0 0 var(--s3);padding:0 0 var(--s3);border-bottom:1px solid var(--rule-2)}
+article.c h3{margin:0;flex:1 1 14ch;min-width:0}
+article.c p{max-width:none;margin:0 0 var(--s3);font-size:15.5px}
+.why{color:var(--ink)}
+.eq{color:var(--ink-2);font-size:15px}
+.q{color:var(--ink-2);font-style:italic}
+.how,.res{display:block;color:var(--ink-2);font-size:14.5px;margin:0 0 var(--s2)}
+
+/* строка источника — подпись документа: каждое число говорит, откуда оно */
+.src{font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--muted);
+  margin:var(--s3) 0 0;padding:var(--s3) 0 0;border-top:1px solid var(--rule-2);
+  word-break:break-word}
+.src::before{content:"источник";display:block;font-family:var(--narrow);font-weight:700;
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+  margin:0 0 var(--s1)}
+
+/* ── метки-плашки ───────────────────────────────────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:var(--s1);margin:0 0 var(--s3);min-width:0}
+/* без nowrap: строка «Пенза 691 км · крюк: Москва +94 · Красноярск +1154»
+   не переносилась и распирала карточку за пределы экрана на телефоне */
+.chip{display:inline-flex;align-items:center;font-family:var(--sans);font-size:12.5px;
+  line-height:1.35;padding:5px var(--s2);border-radius:3px;border:1px solid var(--rule);
+  color:var(--ink-2);background:var(--sunk);max-width:100%}
+.chip.ok{color:var(--ok);background:var(--ok-w);border-color:transparent}
+.chip.bad{color:var(--flag);background:var(--flag-w);border-color:transparent}
+.chip.warn{color:var(--warn);background:var(--warn-w);border-color:transparent}
+.chip.geo,.chip.km{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
+.kr{font-variant-numeric:tabular-nums}
+
+/* ── поиск и реестр ─────────────────────────────────────────────────── */
+.srch{position:sticky;top:0;z-index:5;background:var(--paper);
+  padding:var(--s3) 0;margin:0 0 var(--s4);border-bottom:1px solid var(--rule)}
+.srch input{width:100%;max-width:460px;font:15px var(--sans);padding:10px var(--s3);
+  border:1px solid var(--rule);border-radius:3px;background:var(--card);color:var(--ink)}
+.srch input:focus{border-color:var(--accent);outline:none}
+.cnt{font-family:var(--narrow);font-weight:700;font-size:12px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:var(--s2) 0 0}
+details{border:1px solid var(--rule);border-radius:3px;margin:0 0 var(--s4);background:var(--card)}
+summary{font-family:var(--narrow);font-weight:700;font-size:16px;padding:var(--s4) var(--s5);
+  cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";color:var(--accent)}
+details[open] summary::before{content:"▾ "}
+details[open] summary{border-bottom:1px solid var(--rule-2)}
+details>article.c,details>div{margin:var(--s3) var(--s4)}
+
+/* ── документ-запрос ────────────────────────────────────────────────── */
+.doc{border:1px solid var(--rule);border-radius:3px;background:var(--card);margin:0 0 var(--s5)}
+.doc-head{display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center;justify-content:space-between;
+  padding:var(--s3) var(--s5);border-bottom:1px solid var(--rule);background:var(--sunk)}
+.doc>*:not(.doc-head){margin-left:var(--s5);margin-right:var(--s5)}
+.doc>*:last-child{margin-bottom:var(--s5)}
+button.copy,button.up{font-family:var(--narrow);font-weight:700;font-size:13.5px;
+  letter-spacing:.04em;padding:9px var(--s4);border:1px solid var(--accent);border-radius:3px;
+  background:transparent;color:var(--accent);cursor:pointer;min-height:38px}
+button.copy:hover,button.up:hover{background:var(--accent);color:var(--card)}
+/* .hide и .on ставит скрипт: .hide — отсев карточек поиском,
+   .on — появление кнопки «наверх». Без них поиск визуально не работает. */
+.hide{display:none!important}
+button.up{position:fixed;right:var(--s4);bottom:var(--s4);z-index:9;background:var(--card);
+  opacity:0;pointer-events:none;transition:opacity .15s ease}
+button.up.on{opacity:1;pointer-events:auto}
+
+/* ── мелочи ─────────────────────────────────────────────────────────── */
+/* .grid — контейнер карточек реестра. Одна колонка: в карточке плотный
+   технический текст на десяток строк, в узком столбце он нечитаем. */
+.grid{display:grid;grid-template-columns:1fr;gap:var(--s3)}
+.fill,.v,.l,.big,.line,.axes,.ax{font-variant-numeric:tabular-nums}
+hr{border:0;border-top:1px solid var(--rule);margin:var(--s6) 0}
+footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rule-hi);
+  font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+
+/* ── печать: лист остаётся листом ───────────────────────────────────── */
+@media print{
+  :root{--paper:#fff;--card:#fff;--sunk:#fff;--ink:#000;--ink-2:#222;--muted:#555;
+        --rule:#999;--rule-2:#ccc;--rule-hi:#000;--accent:#000;--accent-w:#fff}
+  body{font-size:10.5pt;padding:0}
+  /* специфичность: nav.files{display:flex} — это (0,1,1), поэтому голого
+     nav{display:none} мало, навигация остаётся на бумаге */
+  nav,nav.files,nav.top,button.up,.srch{display:none!important}
+  .wrap{max-width:none}
+  section{margin-bottom:18pt;break-inside:avoid-page}
+  h1,h2,h3{break-after:avoid-page}
+  .tw,article.c,.note,.key,table{break-inside:avoid}
+  thead th{position:static;background:#fff}
+  a{color:#000;text-decoration:none}
+  details{border:0} details summary{display:none} details>*{display:block!important}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media (max-width:640px){
+  body{padding-inline:max(var(--s4),env(safe-area-inset-left))}
+  article.c,.note,.key,.qa,.open{padding:var(--s4)}
+  .doc>*:not(.doc-head){margin-left:var(--s4);margin-right:var(--s4)}
+  .doc-head{padding:var(--s3) var(--s4)}
+}
+</style>
+<div class="wrap"><div class="part" id="istoki">
+<nav class="files"><a href="glavnoe.html">Главное</a><a href="papa.html">Всё по задаче</a><a href="idei.html">Логистика и предложения</a><a href="razbor.html">Разбор записи</a><a class="cur" href="">Откуда что взято</a></nav>
+
+<header class="mast"><p class="eyebrow">Тюбинги клинчатых перемычек · давальческая обработка</p>
+<h1>Откуда что взято</h1>
+<p class="dek">Эта страница для дела не нужна — она на случай, если захочется проверить,
+откуда взялось конкретное число или почему в списке именно эти заводы. Здесь сами
+первоисточники, которые можно открыть, метод поиска и то, что проверка изменила
+по ходу работы.</p></header>
+
+<section id="pervo"><h2>Первоисточники: что именно читалось</h2>
+<p class="sub">Всё, на чём стоят остальные четыре страницы. Читалось напрямую, а не по пересказу.</p><p class="sub" style="margin-top:var(--s3)"><b>Про эту страницу в интернете.</b> Сами файлы — чертёж, ТУ, «База тюбингов», запись разговора и фотографии — на сайт не выкладываются: это конструкторская документация, и её место не в открытом доступе. Здесь названо, что именно читалось и какой лист или ячейка дали каждое число, — чтобы можно было проверить по своему экземпляру. Файлы лежат в рабочей папке.</p>
+<div class="tw"><table><thead><tr><th scope="col">Что</th><th scope="col">Открыть</th><th scope="col">Подробности</th></tr></thead><tbody>
+<tr><td><b>Чертежи комплекта</b></td><td><span class="mono">PDF, 7 листов</span><br><span class="dim">листами: <span class="mono">1</span> · <span class="mono">2</span> · <span class="mono">3</span> · <span class="mono">4</span> · <span class="mono">5</span> · <span class="mono">6</span> · <span class="mono">7</span></span></td><td>«Перемычка 85.4», обозначение 85.4 6439 016, семь листов, экспорт из AutoCAD. Отсюда взяты ширины, число отверстий, допуски двугранных углов, марки чугуна, массы, сечение канавки</td></tr>
+<tr><td><b>База тюбингов</b></td><td><span class="mono">Excel</span></td><td>«База_Тюбингов_031024.xlsx», лист «База_Тюб_260424». Состав комплектов, массы и габариты по трём диаметрам. Габаритные ширины заданы формулами — и каждое слагаемое нашлось размером на своём листе чертежа</td></tr>
+<tr><td><b>Твоя запись</b></td><td><span class="mono">Аудио</span></td><td>27.06.2026, 26 минут 22 секунды. Из неё взяты все задания, цены 80–100 и цель 30–40, темп, коридор Пенза–Москва, три уже отказавших подрядчика</td></tr>
+<tr><td><b>Расшифровка</b></td><td><span class="mono">NoteGPT</span> · <span class="mono">сведённая</span> · <span class="mono">черновая</span></td><td>Основная — NoteGPT, по ней разобраны все двадцать два задания по таймкодам. Рядом лежат две мои: сведённая и черновая с Whisper. Расхождения между ними сверялись по звуку</td></tr>
+<tr><td><b>Фотографии</b></td><td><span class="mono">1</span> · <span class="mono">2</span> · <span class="mono">3</span></td><td>Схема кольца и контекст тоннеля. По ним понятна геометрия перемычки и как кольцо собирается</td></tr>
+<tr><td><b>Патент RU2661929C2</b></td><td><a href="https://patents.google.com/patent/RU2661929C2/ru" target="_blank" rel="noopener">patents.google.com</a></td><td>«Способ изготовления чугунных тюбингов». Заявитель ООО НПФ «Днепротехсервис», приоритет 15.12.2015, выдан 23.07.2018, прекращён 16.12.2018 за неуплату пошлины. Среди авторов — Зиновьев Алексей Михайлович. Из него взяты состав операций и то, что станков нужно три, а не один</td></tr>
+<tr><td><b>ТУ 35-521-90</b></td><td><span class="mono">PDF, 146 листов</span></td><td>«Тюбинги чугунные. Комплекты тюбинговых колец», Метрогипротранс. Прислано отцом 14.08.2026. Это тот документ, на который ссылается штамп чертежа словами «остальные технические условия согласно ТУ 35-521-90». Отсюда: марка чугуна (п. 1.3.1 — СЧ20), шероховатость (п. 1.3.9 — Rz 80 и Rz 40), технологические приливы (п. 1.3.8 — «выполняются»), класс точности отливки (п. 1.3.10), зенковка 90+2° и чеканочная канавка 45+2° с уклоном 1:20…1:30. <b>И чертежи по двум другим заказам:</b> Ø9,5 — приложения 65–73 (листы 105–113, позиции МРП-2Д…МРП-6Д), Ø10,5 — приложения 74–82 (листы 114–122, позиции 105 АКП-1…АКП-5)</td></tr>
+<tr><td><b>ГОСТ Р 57054-2016</b></td><td><span class="dim">по номеру в любой правовой базе</span></td><td>«Тюбинги чугунные. Комплекты тюбинговых колец». Пункты 6.3.2, 6.3.7, 6.3.9, 6.4.1–6.4.3, 9.6–9.8, 10.1–10.6. Отсюда — технологические приливы под базовую плоскость, класс точности отливки и страховка на 745 мм, если 750 не вытянули</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="chertezh"><h2>Как читался чертёж</h2>
+<p>Чертёж — экспорт из AutoCAD, поэтому в PDF остался текстовый слой: размеры лежат
+в файле как текст, а не картинкой. Их можно вытащить полистно и не переписывать глазами,
+где легко ошибиться цифрой.</p>
+<p>Но текстовый слой отдаёт числа без привязки к тому, к чему они относятся. Поэтому
+всё, что стоит в рамках допусков и в таблицах углов, вырезалось растром и читалось
+при увеличении: рамка позиционного допуска у надписи «9 отв ⌀41±1,0», таблицы двугранных
+углов на каждом листе, марки чугуна в штампах, сечение канавки.</p>
+<p><b>Как это дало ответ по ширине.</b> В базе ширина позиции записана формулой — например,
+750+400. Долго было неясно, 750 это габарит или что-то другое. Проверка полистно показала:
+750 ±0,4 стоит на всех семи листах, а рядом с ним на каждом листе стоит второе слагаемое
+своей формулы — 400 на листах АК-1Д, 550 и 400 на АК-2, 625 и 200 на АКП-3, 75 и 600 на АКП-4.
+То есть 750 — контролируемый размер между кольцевыми бортами, а габарит детали складывается
+из двух размеров. Это же закрыло спор по позиции АКП-3: на листах 5–6 стоит 625, а размера
+550 там нет, значит ширина 825 мм, а не 750.</p>
+</section>
+
+<section id="poisk"><h2>Откуда взялись 348 предприятий</h2>
+<p>Искалось не по названию завода, а по станку — как ты и сказал в записи. Название
+ничего не говорит: «механический завод» может быть цехом на двадцать человек с настольными
+станками, а нужная машина может стоять у ремонтного производства кузнечного завода.</p>
+<p><b>Что именно искалось.</b> Страницы производственных возможностей: модель станка,
+размер стола, ходы, наибольшая масса заготовки, наибольший диаметр сверления. Плюс
+перечень обрабатываемых материалов — есть ли там чугун, — и берут ли работу на давальческой
+схеме. Читались сами страницы заводов, а не каталоги-агрегаторы: у агрегаторов данные
+устаревают и повторяются друг у друга.</p>
+<p><b>Отсекающее число одно: ширина 1150 мм.</b> Длину 2083 мм берёт почти любой продольный
+станок, а вот 1150 в ширину отсекает большую часть парка. Второе число — масса: деталь 1895 кг
+плюс приспособление, около 3000 кг на столе.</p>
+<p>Всё, что просмотрено, осталось в реестре — чтобы не искать второй раз то, что уже отсеяно,
+и чтобы было видно, по какому признаку отсеяно. Реестр в конце страницы
+<a href="papa.html#reestr">«Всё по задаче»</a>, там есть поиск по городу, станку, названию и телефону.</p>
+<div class="tw"><table><thead><tr><th scope="col">Раздел реестра</th><th scope="col">Карточек</th><th scope="col">Что это значит</th></tr></thead><tbody>
+<tr><td>Звонить первыми</td><td>12</td><td>Станок назван моделью, деталь входит, юрлицо проверено</td></tr>
+<tr><td>Деталь входит по опубликованным габаритам</td><td>52</td><td>Завод публикует предельные размеры, и деталь в них укладывается. Модели станков раскрыты не у всех</td></tr>
+<tr><td>Подходят с оговоркой</td><td>31</td><td>Входит, но с условием: два установа, свес по столу, неподтверждённая масса</td></tr>
+<tr><td>Резерв для обзвона</td><td>207</td><td>Профиль подходящий, парк не опубликован. Первый вопрос — какие станки и какая рабочая зона</td></tr>
+<tr><td>Не подходят</td><td>41</td><td>Оставлены, чтобы не искать повторно. У каждого написано, по какому числу не проходит</td></tr>
+<tr><td>Производители тюбингов</td><td>5</td><td>Убраны из рассылки сознательно: ты делаешь тюбинги сам, такой завод — не подрядчик, а конкурент по тем же торгам</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="dvadcat"><h2>Как из 348 получились 20 для звонка</h2>
+<p>Три признака одновременно, и ни один по отдельности не проходит:</p>
+<ol class="steps">
+<li><b>ЧПУ.</b> Ты сказал прямо, что нужен станок с ЧПУ, — на нём борта под индивидуальными
+углами режутся программой, а не переналадкой под каждый угол.</li>
+<li><b>Опубликованный размер стола берёт деталь.</b> Не «завод большой», а конкретное число
+на сайте: длина от 2083 мм, ширина от 1150 мм. Считалось по самому тяжёлому предположению —
+по наибольшей позиции из трёх заказов.</li>
+<li><b>За компанией стоит юрлицо, способное таким станком владеть.</b> Портальный центр
+стоит десятки миллионов, и если у юрлица основных средств на четыре миллиона, то станок
+либо чужой, либо его нет.</li>
+</ol>
+<p>Дальше к этим двадцати приложено четвёртое число — <b>площадка под приспособление</b>.
+Деталь входит не одна: с прижимами по контуру плита выходит 2200 × 1270 мм, с прижимами
+только по торцам — 2200 × 1150 мм. Проверка по всем двадцати столам разобрана
+в <a href="razbor.html">техническом разборе</a>: по габариту проходит пятнадцать заводов,
+с подтверждённой массой — одиннадцать.</p>
+</section>
+
+<section id="urlica"><h2>Как проверялись юрлица</h2>
+<p>По каждому кандидату из списка звонков смотрелось одно и то же: основные средства,
+выручка, число сотрудников, исполнительные производства, банкротные дела, дата регистрации,
+кто учредитель. Смысл не в кредитном рейтинге, а в двух вопросах: <b>чей станок</b>
+и <b>можно ли платить вперёд</b>.</p>
+<p>Что это дало на практике: трое сняты из кандидатов совсем — у одного основных средств
+ноль при заявленном парке, второй оказался не тем заводом, у третьего один сотрудник.
+У четверых остался открытый вопрос «чьё оборудование», и он вынесен в список звонков
+первой строкой. У одного — прямое предупреждение не авансировать: кредитор объявил
+намерение банкротить.</p>
+<p>Отдельно проверялось правопреемство там, где юрлицо менялось: преобразование —
+это не ликвидация, права и обязанности переходят полностью, но договор надо заключать
+с новым ИНН, а старый в реквизитах использовать нельзя.</p>
+</section>
+
+<section id="chisla"><h2>Как проверялись числа</h2>
+<div class="tw"><table><thead><tr><th scope="col">Что проверялось</th><th scope="col">Как</th></tr></thead><tbody>
+<tr><td>Габариты и массы комплекта</td><td>Каждая позиция базы сверена с соответствующим листом чертежа. Комплект по чертежам 6786 кг, по базе 6784 кг — расхождение 2 кг на комплект, то есть в пределах округления</td></tr>
+<tr><td>Число отверстий</td><td>Пересчитано по листам: 20 у АК-1Д, 170 на комплект. Прежние 172 получались, если считать резьбовое G2-B за дополнительное Ø41</td></tr>
+<tr><td>Цена продажи 177,6 ₽/кг</td><td>Выведена из чужого контракта и показана делением: 73 562 335,28 ₽ ÷ 339,423 т = 216,7 ₽/кг с НДС, ÷ 1,22 = 177,6 без НДС</td></tr>
+<tr><td>Транспорт</td><td>Ставки взяты по полосам длины плеча, а не одной цифрой на все направления, и приведены к базе без НДС — перевозчик публикует их с НДС. Арифметика пересчитана сплошняком: 61 строка крюков и 59 строк рублей на деталь, расхождений ноль</td></tr>
+<tr><td>Список звонков против реестра</td><td>Каждое число в списке звонков сверено с карточкой реестра того же завода. Расхождений ноль</td></tr>
+<tr><td>Связность четырёх страниц</td><td>Ключевые числа проверены на присутствие и совпадение во всех файлах, внутренние ссылки — на существование. Битых ссылок ноль</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="izmenilos"><h2>Что проверка изменила</h2>
+<p class="sub">Не для отчёта, а чтобы было видно: числа не переписаны из первого попавшегося
+источника. Каждая строка — место, где первая версия оказалась неверной.</p>
+<div class="tw"><table><thead><tr><th scope="col">Было</th><th scope="col">Стало</th><th scope="col">Из-за чего</th></tr></thead><tbody>
+<tr><td>Ширина детали 750 мм</td><td><b>1150 мм</b> у всех трёх заказов</td><td>750 — размер между бортами, он стоит на всех семи листах. Габарит складывается из двух размеров, и оба нашлись на чертеже</td></tr>
+<tr><td>Ширина позиции АКП-3 — 750 или 825, по документам не определить</td><td><b>825 мм</b></td><td>На листах 5–6 стоит 625, а размера 550 там нет</td></tr>
+<tr><td>Отверстий на комплект 172</td><td><b>170</b></td><td>Резьбовое G2-B считалось за дополнительное Ø41</td></tr>
+<tr><td>Потолок цены один на все три заказа</td><td><b>Отдельно по каждому:</b> 38–50 тысяч ₽ по подписанному Ø8,5, 50–62 по Ø9,5, 57–72 по Ø10,5</td><td>Усреднять нельзя: плечо в Красноярск даёт 13,3 ₽/кг транспорта против 3,7 в Москву, а деталь Ø8,5 легче московских. Подписанный заказ вдвое жёстче</td></tr>
+<tr><td>Транспорт по одной ставке 87 ₽/км на все плечи</td><td><b>По полосе длины плеча</b>, приведённой к базе без НДС</td><td>Перевозчик публикует ставки полосами и прямо пишет, что они с НДС</td></tr>
+<tr><td>Приспособление «около 1100 кг»</td><td><b>1000–1430 кг</b>, на столе с деталью 2900–3300</td><td>Число стояло без расчёта, а на нём держался критерий отбора заводов. Посчитаны плита, прижимы, упоры и крепёж</td></tr>
+<tr><td>«Восемь–десять часов на деталь — это дорого впятеро»</td><td>Вывод снят</td><td>Сравнение шло со ставками цехов, где стол 500 × 500 мм. Тонную отливку они не возьмут, переносить их ставки нельзя</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="net"><h2>Чего в этих материалах нет</h2>
+<ul class="list">
+<li><b>Никто не обзвонен.</b> Ни один телефон не набран. Свободных мощностей, сроков
+и реальных цен не знает никто — они появятся только из ответов.</li>
+<li><b>Чертежи есть по всем трём заказам, но архивные.</b> До 14 августа по Ø9,5 и Ø10,5 была только
+база; потом отец прислал ТУ 35-521-90, и там нашлись листы обоих. Массы комплектов сошлись до килограмма:
+8223 кг по Ø10,5, 7129 по Ø9,5. Но это листы архивного сборника: они не доказывают, что именно эта редакция
+действует по вашим заказам. И отверстия там <b>Ø47</b>, а не Ø41 как на подписанном, — по инструменту
+это разные работы.</li>
+<li><b>Ставку нормо-часа почти никто не публикует.</b> Проверка дала неожиданный результат:
+у предприятий, чей станок физически берёт нашу плиту, цены нет на сайте вообще —
+вместо неё «пришлите чертёж». Поэтому ставка стоит отдельной строкой в форме ответа.</li>
+<li><b>Часть карточек реестра сверена с живыми сайтами, часть нет.</b> Где данные брались
+из каталога, а не со страницы завода, в карточке это написано.</li>
+</ul>
+</section>
+
+<footer><p>Собрано 14 августа 2026. Если какое-то число вызывает сомнение — оно почти наверняка
+разобрано в <a href="glavnoe.html">«Ключевых числах»</a> на главной или в
+<a href="razbor.html">техническом разборе</a>, с указанием листа чертежа или строки базы.</p></footer>
+</div></div>
+</html>

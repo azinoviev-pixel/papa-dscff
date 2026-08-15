@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="ru">
+<!-- собрано из шести рабочих документов, один файл, ничего внешнего -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Тюбинги — технический разбор записи</title>
+<style>
+/* ── токены ─────────────────────────────────────────────────────────── */
+:root{
+  --paper:#F7F7F4; --card:#FFFFFF; --sunk:#F1F1EE;
+  --ink:#15181B; --ink-2:#464C53; --muted:#697077;
+  --rule:#CFD3D6; --rule-2:#E4E7E9; --rule-hi:#15181B;
+  --accent:#17486B; --accent-w:#E7EDF2;
+  --flag:#A3392A;  --flag-w:#F7E9E6;
+  --ok:#2C5F40;    --ok-w:#E6EFE9;
+  --warn:#7A5320;  --warn-w:#F4EDE0;
+
+  --serif:"PT Serif",Charter,"Iowan Old Style",Georgia,serif;
+  --narrow:"PT Sans Narrow","Arial Narrow","Helvetica Neue",system-ui,sans-serif;
+  --sans:"PT Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+    --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+    --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+    --accent:#7FB2D4; --accent-w:#1D2C38;
+    --flag:#E08A7B;  --flag-w:#33211E;
+    --ok:#7FBF9B;    --ok-w:#1C2A22;
+    --warn:#DCBB84;  --warn-w:#2A2318;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+  --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+  --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+  --accent:#7FB2D4; --accent-w:#1D2C38;
+  --flag:#E08A7B;  --flag-w:#33211E;
+  --ok:#7FBF9B;    --ok-w:#1C2A22;
+  --warn:#DCBB84;  --warn-w:#2A2318;
+}
+
+/* ── основание ──────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+html,body{margin:0;max-width:100%;overflow-x:clip}
+img,svg{max-width:100%;height:auto}
+body{
+  background:var(--paper); color:var(--ink);
+  font:16.5px/1.62 var(--serif);
+  font-variant-numeric:lining-nums proportional-nums;
+  padding-inline:max(var(--s5),env(safe-area-inset-left));
+}
+.wrap{max-width:1060px;margin-inline:auto;padding-bottom:var(--s8)}
+::selection{background:var(--accent-w);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+
+/* ── типографика ────────────────────────────────────────────────────── */
+h1,h2,h3,h4{font-family:var(--narrow);font-weight:700;letter-spacing:-.005em;
+  color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,5.2vw,46px);line-height:1.06}
+h2{font-size:clamp(22px,3.4vw,31px);line-height:1.12;margin:0 0 var(--s3)}
+h3{font-size:clamp(17px,2.2vw,20px);line-height:1.22;margin:0 0 var(--s2)}
+h4{font-size:16px;line-height:1.3;margin:0 0 var(--s2)}
+p{margin:0 0 var(--s4);max-width:var(--measure)}
+a{color:var(--accent);text-underline-offset:2px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+b,strong{font-weight:700}
+em{font-style:italic}
+ul,ol{margin:0 0 var(--s4);padding-left:1.35em;max-width:var(--measure)}
+li{margin:0 0 var(--s2)}
+code,.mono{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums}
+
+/* надписи в духе основной надписи чертежа.
+   .part сюда НЕ входит: это обёртка целого раздела, а не подпись —
+   иначе весь раздел уходит в прописные. Подпись раздела — .plabel */
+.eyebrow,.plabel,.label,.tag,.lbl{
+  font-family:var(--narrow);font-weight:700;font-size:12px;line-height:1.2;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:0 0 var(--s2)}
+.dim,.sub,.dek,.lede,.src,.how{color:var(--ink-2)}
+.sub,.dek,.lede{font-size:16px;max-width:var(--measure);margin:0 0 var(--s5)}
+.dim{font-size:14px;font-family:var(--sans)}
+
+/* ── шапка страницы ─────────────────────────────────────────────────── */
+header.mast{padding:var(--s7) 0 var(--s5);border-bottom:2px solid var(--rule-hi);margin-bottom:var(--s7)}
+header.mast h1{margin:0 0 var(--s3)}
+header.mast .dek{margin:0}
+
+/* ── навигация ──────────────────────────────────────────────────────── */
+nav.files{display:flex;gap:var(--s1);flex-wrap:wrap;margin:0;padding:var(--s3) 0;
+  border-bottom:1px solid var(--rule)}
+nav.files a{font-family:var(--narrow);font-size:14.5px;font-weight:700;letter-spacing:.01em;
+  min-height:38px;display:inline-flex;align-items:center;padding:0 var(--s3);
+  color:var(--ink-2);text-decoration:none;border-bottom:2px solid transparent}
+nav.files a:hover{color:var(--accent)}
+nav.files a.cur{color:var(--accent);border-bottom-color:var(--accent)}
+
+nav.top{display:flex;gap:var(--s1);flex-wrap:wrap;margin:0 0 var(--s6);padding:var(--s2) 0;
+  border-bottom:1px solid var(--rule-2)}
+nav.top a{font-family:var(--sans);font-size:13.5px;min-height:34px;display:inline-flex;
+  align-items:center;padding:0 var(--s2);color:var(--muted);text-decoration:none;border-radius:3px}
+nav.top a:hover{color:var(--accent);background:var(--accent-w)}
+
+/* ── деление и его шапка ────────────────────────────────────────────────
+   .part — крупное деление документа, внутри несколько section.
+   .ph    — его шапка: метка «Раздел N», заголовок и вводный абзац.
+   Жирную линию несёт только .part, иначе она задваивается с шапкой. */
+section{margin:0 0 var(--s7);scroll-margin-top:var(--s4)}
+.part{border-top:2px solid var(--rule-hi);padding-top:var(--s5);margin:var(--s8) 0 var(--s6)}
+.part:first-of-type{border-top:0;margin-top:var(--s6);padding-top:0}
+.ph{margin:0 0 var(--s6)}
+.ph .n{display:block;font-family:var(--narrow);font-weight:700;font-size:12px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin:0 0 var(--s2)}
+.ph h1{font-size:clamp(26px,4.4vw,38px);margin:0 0 var(--s3)}
+.ph p{color:var(--ink-2);margin:0}
+
+/* ── цифры в шапке ──────────────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));
+  gap:var(--s3);margin:var(--s5) 0 0;max-width:none}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:var(--s4);display:flex;flex-direction:column;justify-content:flex-start}
+.stat b{display:block;font-family:var(--narrow);font-size:31px;line-height:1;
+  font-variant-numeric:tabular-nums;margin:0 0 var(--s2)}
+.stat span{font-family:var(--sans);font-size:13px;line-height:1.34;color:var(--ink-2)}
+
+/* ── таблицы ────────────────────────────────────────────────────────── */
+.tw{overflow-x:auto;margin:0 0 var(--s5);border:1px solid var(--rule);border-radius:3px;
+  background:var(--card)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14.5px;
+  font-variant-numeric:tabular-nums}
+thead th{font-family:var(--narrow);font-weight:700;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:var(--s3) var(--s3);border-bottom:2px solid var(--rule-hi);white-space:nowrap;
+  background:var(--sunk);position:sticky;top:0}
+td{padding:var(--s3);border-bottom:1px solid var(--rule-2);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+th.num,td.num,.num{text-align:right;font-variant-numeric:tabular-nums}
+td b,td strong{font-weight:700}
+.ct{margin:0;font-family:var(--sans);font-size:13.5px;line-height:1.5}
+.ct-city{font-weight:700}
+td.good{color:var(--ok);font-weight:700}
+
+/* ── врезки ─────────────────────────────────────────────────────────── */
+.note,.key,.qa,.open{border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;background:var(--card);padding:var(--s4) var(--s5);margin:0 0 var(--s5)}
+.key{border-left-color:var(--flag);background:var(--flag-w)}
+.note>p:last-child,.key>p:last-child,.qa>p:last-child,.open>p:last-child{margin-bottom:0}
+.note p,.key p,.qa p,.open p{max-width:none}
+.tag{display:inline-block;margin:0 0 var(--s2)}
+.t-ok{color:var(--ok)} .t-bad{color:var(--flag)} .t-warn{color:var(--warn)}
+
+/* ── шаги ───────────────────────────────────────────────────────────── */
+/* проза — в одной колонке чтения; во всю ширину выходят только
+   структуры: таблицы, карточки, врезки, цифры шапки */
+ol.steps,ol.flow{list-style:none;padding:0;counter-reset:st;max-width:var(--measure)}
+ol.steps>li,ol.flow>li{counter-increment:st;position:relative;padding:0 0 var(--s4) 42px;
+  margin:0 0 var(--s4);border-bottom:1px solid var(--rule-2)}
+ol.steps>li:last-child,ol.flow>li:last-child{border-bottom:0;margin-bottom:0}
+ol.steps>li::before,ol.flow>li::before{content:counter(st);position:absolute;left:0;top:1px;
+  width:26px;height:26px;border:1.5px solid var(--accent);color:var(--accent);border-radius:50%;
+  font:700 13px/23px var(--narrow);text-align:center;font-variant-numeric:tabular-nums}
+
+/* ── карточка предприятия ───────────────────────────────────────────── */
+article.c{background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:var(--s5);margin:0 0 var(--s3);min-width:0;overflow-wrap:break-word}
+article.c>*{min-width:0}
+article.c .ch{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s3);
+  margin:0 0 var(--s3);padding:0 0 var(--s3);border-bottom:1px solid var(--rule-2)}
+article.c h3{margin:0;flex:1 1 14ch;min-width:0}
+article.c p{max-width:none;margin:0 0 var(--s3);font-size:15.5px}
+.why{color:var(--ink)}
+.eq{color:var(--ink-2);font-size:15px}
+.q{color:var(--ink-2);font-style:italic}
+.how,.res{display:block;color:var(--ink-2);font-size:14.5px;margin:0 0 var(--s2)}
+
+/* строка источника — подпись документа: каждое число говорит, откуда оно */
+.src{font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--muted);
+  margin:var(--s3) 0 0;padding:var(--s3) 0 0;border-top:1px solid var(--rule-2);
+  word-break:break-word}
+.src::before{content:"источник";display:block;font-family:var(--narrow);font-weight:700;
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+  margin:0 0 var(--s1)}
+
+/* ── метки-плашки ───────────────────────────────────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:var(--s1);margin:0 0 var(--s3);min-width:0}
+/* без nowrap: строка «Пенза 691 км · крюк: Москва +94 · Красноярск +1154»
+   не переносилась и распирала карточку за пределы экрана на телефоне */
+.chip{display:inline-flex;align-items:center;font-family:var(--sans);font-size:12.5px;
+  line-height:1.35;padding:5px var(--s2);border-radius:3px;border:1px solid var(--rule);
+  color:var(--ink-2);background:var(--sunk);max-width:100%}
+.chip.ok{color:var(--ok);background:var(--ok-w);border-color:transparent}
+.chip.bad{color:var(--flag);background:var(--flag-w);border-color:transparent}
+.chip.warn{color:var(--warn);background:var(--warn-w);border-color:transparent}
+.chip.geo,.chip.km{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
+.kr{font-variant-numeric:tabular-nums}
+
+/* ── поиск и реестр ─────────────────────────────────────────────────── */
+.srch{position:sticky;top:0;z-index:5;background:var(--paper);
+  padding:var(--s3) 0;margin:0 0 var(--s4);border-bottom:1px solid var(--rule)}
+.srch input{width:100%;max-width:460px;font:15px var(--sans);padding:10px var(--s3);
+  border:1px solid var(--rule);border-radius:3px;background:var(--card);color:var(--ink)}
+.srch input:focus{border-color:var(--accent);outline:none}
+.cnt{font-family:var(--narrow);font-weight:700;font-size:12px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:var(--s2) 0 0}
+details{border:1px solid var(--rule);border-radius:3px;margin:0 0 var(--s4);background:var(--card)}
+summary{font-family:var(--narrow);font-weight:700;font-size:16px;padding:var(--s4) var(--s5);
+  cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";color:var(--accent)}
+details[open] summary::before{content:"▾ "}
+details[open] summary{border-bottom:1px solid var(--rule-2)}
+details>article.c,details>div{margin:var(--s3) var(--s4)}
+
+/* ── документ-запрос ────────────────────────────────────────────────── */
+.doc{border:1px solid var(--rule);border-radius:3px;background:var(--card);margin:0 0 var(--s5)}
+.doc-head{display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center;justify-content:space-between;
+  padding:var(--s3) var(--s5);border-bottom:1px solid var(--rule);background:var(--sunk)}
+.doc>*:not(.doc-head){margin-left:var(--s5);margin-right:var(--s5)}
+.doc>*:last-child{margin-bottom:var(--s5)}
+button.copy,button.up{font-family:var(--narrow);font-weight:700;font-size:13.5px;
+  letter-spacing:.04em;padding:9px var(--s4);border:1px solid var(--accent);border-radius:3px;
+  background:transparent;color:var(--accent);cursor:pointer;min-height:38px}
+button.copy:hover,button.up:hover{background:var(--accent);color:var(--card)}
+/* .hide и .on ставит скрипт: .hide — отсев карточек поиском,
+   .on — появление кнопки «наверх». Без них поиск визуально не работает. */
+.hide{display:none!important}
+button.up{position:fixed;right:var(--s4);bottom:var(--s4);z-index:9;background:var(--card);
+  opacity:0;pointer-events:none;transition:opacity .15s ease}
+button.up.on{opacity:1;pointer-events:auto}
+
+/* ── мелочи ─────────────────────────────────────────────────────────── */
+/* .grid — контейнер карточек реестра. Одна колонка: в карточке плотный
+   технический текст на десяток строк, в узком столбце он нечитаем. */
+.grid{display:grid;grid-template-columns:1fr;gap:var(--s3)}
+.fill,.v,.l,.big,.line,.axes,.ax{font-variant-numeric:tabular-nums}
+hr{border:0;border-top:1px solid var(--rule);margin:var(--s6) 0}
+footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rule-hi);
+  font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+
+/* ── печать: лист остаётся листом ───────────────────────────────────── */
+@media print{
+  :root{--paper:#fff;--card:#fff;--sunk:#fff;--ink:#000;--ink-2:#222;--muted:#555;
+        --rule:#999;--rule-2:#ccc;--rule-hi:#000;--accent:#000;--accent-w:#fff}
+  body{font-size:10.5pt;padding:0}
+  /* специфичность: nav.files{display:flex} — это (0,1,1), поэтому голого
+     nav{display:none} мало, навигация остаётся на бумаге */
+  nav,nav.files,nav.top,button.up,.srch{display:none!important}
+  .wrap{max-width:none}
+  section{margin-bottom:18pt;break-inside:avoid-page}
+  h1,h2,h3{break-after:avoid-page}
+  .tw,article.c,.note,.key,table{break-inside:avoid}
+  thead th{position:static;background:#fff}
+  a{color:#000;text-decoration:none}
+  details{border:0} details summary{display:none} details>*{display:block!important}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media (max-width:640px){
+  body{padding-inline:max(var(--s4),env(safe-area-inset-left))}
+  article.c,.note,.key,.qa,.open{padding:var(--s4)}
+  .doc>*:not(.doc-head){margin-left:var(--s4);margin-right:var(--s4)}
+  .doc-head{padding:var(--s3) var(--s4)}
+}
+</style>
+<div class="wrap">
+<nav class="files"><a href="glavnoe.html">Главное</a><a href="papa.html">Всё по задаче</a><a href="idei.html">Логистика и предложения</a><a class="cur" href="">Разбор записи</a><a href="istochniki.html">Откуда что взято</a></nav><nav class="top"><a href="#voprosy">Разбор записи по таймкодам</a></nav>
+<header class="mast"><p class="eyebrow">Тюбинги клинчатых перемычек · давальческая обработка</p>
+<h1>Технический разбор записи</h1>
+<p class="dek">Разбор записи от 27 июня по таймкодам: марки станков, приспособления, потолок цены, график, материал. Это дополнение к основному файлу, а не замена ему.</p>
+</header>
+<div class="part" id="voprosy"><div class="ph"><span class="n">Раздел 01</span><h1>Разбор записи по таймкодам</h1><p>Подробный технический разбор: каждый раздел начинается твоей же фразой из записи 27 июня с таймкодом. Это справочная страница — по делу она не нужна, но если захочется разобраться в цифрах, всё здесь.</p></div>
+<section id="r-s1"><p class="plabel">Раздел 1</p><h2>Мехобработка тюбингов: ответы по всем вопросам из твоей записи</h2>
+<p><strong>14.08.2026</strong></p>
+<p>Разобрал запись от 27.06 целиком, по таймкодам. Ниже — ответ на каждый вопрос и каждую задачу, которые ты поставил, в том же порядке, в каком ты их называл. Готовый текст запроса подрядчикам — в конце, отдельным блоком. Отправлять его можно после того, как закроются пять вопросов, которые меняют сам предмет запроса.</p>
+</section>
+<section id="r-s1a"><p class="plabel">Раздел 2</p><h2>«Надо найти предприятие, которое может обрабатывать эти тюбинги» (02:16, 15:29)</h2>
+<p>Собрано <strong>348 предприятий</strong> — <a href="papa.html#reestr">реестр целиком лежит в основном файле</a>. Изначально нашлось 365, после чистки дублей, ликвидированных и посредников осталось 348.</p>
+<div class="tw"><table><thead><tr><th scope="col">Раздел реестра</th><th scope="col">Сколько</th><th scope="col">Что значит</th></tr></thead><tbody>
+<tr><td>Звонить первыми</td><td>12</td><td>деталь входит и есть повод для разговора: нулевое плечо, давальческая схема, подтверждённый станок</td></tr>
+<tr><td>Деталь входит по опубликованным габаритам</td><td>52</td><td>размеры с сайта завода перекрывают нашу деталь</td></tr>
+<tr><td>Подходят с оговоркой</td><td>31</td><td>деталь входит, но что-то мешает: неподтверждённая масса на столе, ход впритык, вопросы к юрлицу</td></tr>
+<tr><td>Резерв для обзвона</td><td>207</td><td>профиль подходит, парк не опубликован. Вердикт по ним не выносился</td></tr>
+<tr><td>Не подходят</td><td>41</td><td>зафиксированы, чтобы не искать их повторно</td></tr>
+<tr><td>Производители тюбингов</td><td>5</td><td>делают тюбинги сами — не подрядчики, а конкуренты. Оставлены для справки</td></tr>
+</tbody></table></div>
+<p>Искали не по названию завода, а <strong>по станку</strong> — как ты и сказал. Критерий: рабочая зона под деталь 2083 × 1150 × 350 мм массой 1895 кг; с приспособлением на столе выходит около 3000 кг — значит станок должен держать на столе не меньше 3000 кг, кран от 5 т.</p>
+<h4>Кому писать первыми — 20 адресов</h4>
+<p>Сам список с городами, телефонами и тем, что спрашивать, — в таблице «Кому звонить» на главной странице. Там же оговорено, у кого из двадцати станки под нашу деталь не подтверждены и о чём с ними тогда разговаривать. Порядок рассылки — тремя очередями, он расписан отдельно в «Что я предлагаю сделать иначе». Здесь он не повторяется.</p>
+<p style="margin-top:12px"><strong>Кого убрали и почему.</strong> Из списка исключены заводы, которые сами делают тюбинги: Механоремонтный комплекс ММК, «Сиблитмаш» и качканарский «Металлист». Ты делаешь тюбинги сам, поэтому такой завод — не подрядчик, а конкурент по изделию и по тем же торгам. Отдельно по этой же причине убран из рассылки ОАО «Пуховичский опытно-экспериментальный завод»: он выпускает до 1000 т тюбингов в месяц и возит их в том числе в Красноярск. Тульское ООО «Металлист» оставлено — оно делает крепёж к тюбингам, а не сами тюбинги.</p>
+<h4>Про твой коридор Пенза–Москва ±200 км (06:33)</h4>
+<p>Логику понимаю — не возить лишнего. Это разобрано отдельно и посчитано по дорожной сети: <a href="#r-s9b">раздел 9а</a>. Коротко: 100 км лишнего хода стоят 460–510 ₽ на деталь по Москве и 350 ₽ по Красноярску, то есть по московским заказам твой коридор подтверждается, а подписанный красноярский заказ требует другого коридора — на восток, где Челябинск стоит прямо на трассе.</p>
+</section>
+<section id="r-s2"><p class="plabel">Раздел 3</p><h2>«Сформулировать запрос, чтобы нашёл все предприятия» (08:24) и «в запрос надо сказать…» (18:12)</h2>
+<p>Готовый текст — в разделе 10. Три вещи, которые я туда добавил сверх того, что ты диктовал, и почему:</p>
+<p><strong>Допуск ±1′10″.</strong> В записи ты его не называл — говорил «просто плоскости, фреза плоская». А в чертеже он стоит на всех семи листах, отдельной таблицей пар плоскостей. Если спрашивать без него, подрядчик даст низкую цену и потом не выдержит допуск: потеряешь не деньги, а полгода.</p>
+<p><strong>Разделение на два передела.</strong> Фрезерование и сверление — разные строки с разными ценами. Почему — в разделе 6.</p>
+<p><strong>Цена по каждой из семи позиций отдельно.</strong> Комплект неоднороден: АК-1 весит 1539 кг и имеет 10 нормированных пар углов, АКП-4 весит 676 кг и имеет 8. Одна цена на все семь означает, что посчитали по самой тяжёлой и распространили на остальные.</p>
+</section>
+<section id="r-s3"><p class="plabel">Раздел 4</p><h2>«Самое правильное — сказать, какие марки станков должны быть» (24:22)</h2>
+<p>Ты назвал это самым правильным способом искать, и это верно. Отвечаю подробно.</p>
+<p><strong>Одной маркой не обойтись — работ три, и это три класса оборудования.</strong> Так же записано и в патенте RU2661929C2, где ты среди авторов: фрезерование бортов, канавок и опорных бобышек — на продольно-фрезерном и фрезерно-расточном; сверление с цековкой — на радиально-сверлильном; отдельно резьба в тампонажном отверстии.</p>
+<h4>Передел 1. Два кольцевых борта, размер 750 ±0,4</h4>
+<p>Отсекающий параметр — <strong>расстояние между торцами горизонтальных шпинделей</strong>: чтобы резать оба борта одновременно встречными бабками, нужно свести примерно на 950–1050 мм.</p>
+<div class="tw"><table><thead><tr><th scope="col">Станок</th><th scope="col">Между торцами горизонтальных шпинделей</th><th scope="col">Годится</th></tr></thead><tbody>
+<tr><td>6605</td><td>340…740 мм</td><td>нет</td></tr>
+<tr><td>6606</td><td>470…870 мм</td><td>нет, не дотягивает</td></tr>
+<tr><td><strong>6Г608</strong></td><td>550…1050 мм</td><td>да</td></tr>
+<tr><td><strong>6Г610</strong></td><td>750…1250 мм</td><td>да</td></tr>
+<tr><td>6620 / 6625</td><td>1550…2250 / 2115…2815 мм</td><td>не сводятся на 750</td></tr>
+</tbody></table></div>
+<p>Здесь огромный станок хуже среднего. При этом если резать борта поочерёдно, годится любой станок класса Н: <strong>750 ±0,4 — это 12-й квалитет</strong>, точность тут не узкое место.</p>
+<h4>Передел 2. Радиальные борта под индивидуальными углами</h4>
+<p>Три пути: поворотная бабка на самом станке, угловое приспособление с зашитым углом, либо расточно-фрезерный с поворотным столом.</p>
+<p><strong>6620 / 6625 (УЗТС)</strong> — единственные из подборки, кто берёт произвольный угол штатно: горизонтальная бабка поворачивается ±30°, вертикальная ±45°, по 30 кВт на каждом из четырёх шпинделей, стол 2000×6300 и 2500×8500, заготовка 50 и 65 т.</p>
+<p><strong>Ловушка, которую надо знать.</strong> У <strong>2А636 и 2А637</strong> точность 5 угловых секунд нормирована <strong>только в четырёх положениях через 90°</strong> — произвольный клиновой угол так не выставить. Привод главного движения у них 22 кВт, суммарная мощность 35–36 кВт — при потребности от 30 кВт на резание запаса нет.</p>
+<p>И вторая ловушка: в каталогах повсеместно пишут «дискретность поворота 0,001°». <strong>Это шаг задания, а не точность.</strong> Реальная угловая точность у станков 4–40 угловых секунд. Спрашивать надо именно точность в секундах и в скольких положениях она нормирована.</p>
+<p><strong>ГРС 13/15 ЧПУ</strong> (Екатеринбург): столы от 1800×1800 до 2500×3000, заготовка 12–25 т, ходы X до 6000, Y до 3500, Z до 3200, 37–55 кВт, момент 2502–4132 Н·м, ось B с рабочей подачей — то есть управляемая, а не деление через 90°. Угловая точность в открытых материалах не публикуется, запрашивать письмом.</p>
+<h4>Передел 3. Отверстия, гнёзда, резьба</h4>
+<p>Точность здесь не нужна вообще: <strong>позиционный допуск отверстий ⊕∅1 в максимуме материала</strong> делается кондуктором.</p>
+<p>Но есть жёсткий фильтр — <strong>резьба G2-B</strong>: наружный диаметр 59,614 мм, шаг 2,309 мм. Радиально-сверлильный класса Ø50 её не нарезает.</p>
+<div class="tw"><table><thead><tr><th scope="col">Станок</th><th scope="col">Наибольшая резьба</th><th scope="col">Годится под G2</th></tr></thead><tbody>
+<tr><td>Z3050 (Китай)</td><td>М20×2,5 по чугуну</td><td>нет</td></tr>
+<tr><td>2К550В</td><td>М45–М48</td><td>нет</td></tr>
+<tr><td>2А554</td><td>М54×4 по чугуну</td><td>на грани, не брать</td></tr>
+<tr><td><strong>2М57</strong></td><td>вылет 500…2000, плита 1630×2020</td><td>для Ø8,5 да; для детали 2083 мм плита и вылет малы</td></tr>
+<tr><td><strong>2А576</strong></td><td>М80×4, плита 1250×2800, вылет 500–2500</td><td>да, ~4,0 млн ₽ после капремонта</td></tr>
+<tr><td><strong>Csepel RFh-100/300</strong></td><td>Ø120 по чугуну, вылет 540–3000, плита 3160×1550, до 15 т</td><td>да, весь пакет</td></tr>
+</tbody></table></div>
+<p>«Сиблитмаш» именно RFh-100/300 и докупил вторым — на их сайте прямо написано «на операцию сверловки и нарезки резьбы G2». Та же резьба, что в наших чертежах.</p>
+<h4>Про российское новое</h4>
+<p>Индексы <strong>6М610 / 6М612 / 6М616 сняты с производства в 1990 году</strong>. МЗОР сегодня продаёт эту линейку под индексами <strong>МС610 / МС612 / МС616</strong> в двух исполнениях: МФ4 (ЧПУ с автоматической сменой инструмента) и Ф11-20.3 (индикация с преднабором). Число бабок задаётся исполнением: −20 одна, −20.2 две, −20.3 три.</p>
+<div class="tw"><table><thead><tr><th scope="col">Модель</th><th scope="col">Стол</th><th scope="col">Между стойками</th><th scope="col">Заготовка над столом</th><th scope="col">Обрабатываемая поверхность</th></tr></thead><tbody>
+<tr><td>МС610</td><td>1000×3150</td><td>1680</td><td>900</td><td><strong>3150 × 1000 × 875</strong></td></tr>
+<tr><td>МС612</td><td>1250×4000</td><td>1950</td><td>1150</td><td>4000 × 1250 × 1150</td></tr>
+<tr><td>МС616</td><td>1600×5000</td><td>2300</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<p><strong>МС610 не подходит:</strong> предельная ширина обработки 1000 мм, а у нас до 1150. Нужен МС612 и выше.</p>
+<h4>Куда это приспособление физически встаёт: проверка всех двадцати столов</h4>
+<p>Требование «стол не менее 3000 кг» и плита 2200 × 1270 мм — это <strong>наш</strong> расчёт, а не паспорт станка. Поэтому его надо было приложить к каждому кандидату из списка звонков и посмотреть, что отсеется. Считалось по трём числам: деталь 2083 × 1150 × 350 мм массой 1895 кг; плита с прижимами по всему контуру 2200 × 1270 мм; плита с прижимами только по торцам 2200 × 1150 мм. На стол ложится 2900–3300 кг.</p>
+<div class="tw"><table><thead><tr><th scope="col">Завод</th><th scope="col">Плита по контуру 2200 × 1270</th><th scope="col">Масса 2900–3300 кг</th><th scope="col">Станок, на который ложится деталь</th></tr></thead><tbody>
+<tr><td>ЭЗТМ, Электросталь</td><td>да</td><td>65 т — да</td><td>фрезерные с ЧПУ, изделие до 8500 × 2500 × 2500 мм</td></tr>
+<tr><td>СММ-ТяжМаш, Сосновый Бор</td><td>да</td><td>100 т — да</td><td>PAMA SPEEDRAM 4000, стол 4000 × 4000 мм</td></tr>
+<tr><td>ЗМО №1, Лысьва</td><td>да</td><td>40 и 20 т — да</td><td>PM3080HZ 8000 × 3500 и PM2040HA 4000 × 2500 мм</td></tr>
+<tr><td>ПНИТИ, Пермь</td><td>да</td><td>20 т — да</td><td>BMC-5131, стол 5000 × 2900 мм</td></tr>
+<tr><td>МЗТМ, Магнитогорск</td><td>да</td><td>14 т — да</td><td>фрезерные центры, стол 4000 × 2000 мм</td></tr>
+<tr><td>МИАН, Златоуст</td><td>да</td><td>10 т — да</td><td>портальные ОЦ до 3100 × 2200 × 1000 мм</td></tr>
+<tr><td>ЧКПЗ, Челябинск</td><td>да</td><td>12 т — да; Skoda W200 — 60 т</td><td>VB-2516 и HAAS EC-2000, обработка до 2500 × 1600 мм</td></tr>
+<tr><td>НТМЗ, Нижний Тагил</td><td>да</td><td>25 т — да</td><td>YSM 7030, стол 6600 × 2400 мм</td></tr>
+<tr><td>Эльмаш, Нижний Новгород</td><td>да</td><td>10 т — да</td><td>портальное оборудование, зона 3200 × 1600 × 1000 мм</td></tr>
+<tr><td>Чебо, Новое Атлашево</td><td>да</td><td>5 т — да</td><td>расточной, 2500 × 1500 мм</td></tr>
+<tr><td>Вариант-999, Красноярск</td><td>да</td><td>13 т — да</td><td>32 трёхосевых ОЦ, 4000 × 2500 × 1300 мм</td></tr>
+<tr><td>ТЯЖМАШ, Сызрань</td><td>да</td><td><strong>не опубликована</strong></td><td>портальные ОЦ, наибольший стол 4500 × 12 000 мм</td></tr>
+<tr><td>Тулапрессмаш, Тула</td><td>да</td><td><strong>не опубликована</strong></td><td>AWEA LP4025YZF, стол 4020 × 2400 мм</td></tr>
+<tr><td>Металлист-Тольятти</td><td>да</td><td><strong>не опубликована</strong></td><td>фрезерная и расточная, 6000 × 2000 × 1250 мм</td></tr>
+<tr><td>МСЗ-Механика, Электросталь</td><td>да</td><td><strong>не опубликована</strong></td><td>МС625МФ, деталь до 6000 × 2500 × 1000 мм</td></tr>
+<tr><td>ТПК Брик, Самара</td><td><strong>нет</strong> — только по торцам</td><td>6000 кг — да</td><td>портальный HV2514, стол 2500 × <strong>1200</strong> мм</td></tr>
+<tr><td>НефтехГазМаш, Рузаевка</td><td><strong>нет</strong> — только по торцам</td><td>не опубликована</td><td>строгальная группа, 4000 × <strong>1250</strong> × 1120 мм</td></tr>
+<tr><td>Завод РТО, Оренбург</td><td>да по габариту</td><td><strong>2 т — нет</strong></td><td>Wotan Rapid 3, поворотный стол 3000 × 2000 мм</td></tr>
+<tr><td>ДжиЭрСи, Щёлково</td><td>да по габариту</td><td><strong>2,5 т — нет</strong></td><td>координатно-расточной 2Е470А, стол 1400 × 2240 мм</td></tr>
+<tr><td>Пензадизельмаш, Пенза</td><td><strong>станка нет</strong></td><td>не спрашивали</td><td>под 2083 × 1150 мм в опубликованном парке нет ни одного</td></tr>
+</tbody></table></div>
+<p><strong>Что из этого следует.</strong> Габарит стола почти нигде не узкое место: по габариту деталь вместе с приспособлением по обеим схемам прижима проходит у пятнадцати заводов из двадцати, а с подтверждённой массой — у одиннадцати. Узких мест два, и оба не про длину и ширину.</p>
+<ul>
+<li><strong>Грузоподъёмность стола не опубликована у четырёх заводов</strong> — ТЯЖМАШ, «Тулапрессмаш», «Металлист-Тольятти», «МСЗ-Механика». Это не приговор, но и не проходной балл: пока числа нет, ставить их рядом с ПНИТИ или ЭЗТМ нельзя. Вопрос идёт первой строкой письма. У «НефтехГазМаша» по строгальной группе массы тоже нет, но там на первом месте другой вопрос — про ЧПУ.</li>
+<li><strong>У двух заводов деталь входит, а деталь вместе с приспособлением — нет.</strong> «Завод РТО»: Wotan Rapid 3 держит 2 тонны, деталь весит 1895 кг, то есть одна она проходит с запасом в 105 кг, а плита сверх неё уже нет. «ДжиЭрСи»: единственный их станок, куда деталь входит вообще, — координатно-расточной 2Е470А на 2500 кг, и это тоже меньше 2900. Для обоих остаётся один путь — крепить деталь прямо к столу без плиты. Возможно ли это при наших четырёх опорных бобышках, решает подрядчик, а не мы.</li>
+</ul>
+<p><strong>Отдельно по «ДжиЭрСи».</strong> У 2Е470А наибольший диаметр сверления 40 мм, а нагнетательное отверстие у нас Ø120. Значит даже если вопрос с массой решится, сверлильный передел у них всё равно не закрывается.</p>
+<p><strong>Отдельно по «Вариант-999».</strong> Все 32 центра трёхосевые. По габариту и массе они берут деталь свободно, но радиальные борта стоят под индивидуальными углами, а трёхосевой станок без поворотной головы такой борт одним установом не режет. Нужен либо угловой блок с зашитым углом на каждую геометрию, либо переустанов — то есть ровно та оснастка, счёт которой разобран выше. При этом выигрыш у них максимальный по перевозке: обработка прямо в точке поставки подписанного заказа, крюк ноль километров. Сравнивать это надо в деньгах, а не выбирать по одному признаку.</p>
+<p><strong>Поправка к нашему же списку.</strong> У «Тулапрессмаша» подходящих станков не три, а два. TDG-Е-SF 2116 записан со столом 2000 × 1500 мм, а деталь длиной 2083 мм на такой стол не ложится: не хватает 83 мм. Ход по X 2100 мм этого не меняет — ход двигает стол, а не удлиняет его. Работа у них пойдёт на AWEA LP4025YZF или на горизонтальном 2Б6180ГМФ4 со столом 1800 × 2200 мм.</p>
+<h4>Про импорт</h4>
+<p>Коды ТН ВЭД 8457 / 8458 / 8459 стоят в санкционных приложениях. Новые Soraluce, Zayer, TOS, Škoda в Россию легально не идут. Остаётся: б/у, уже стоящее в России, либо Россия, Белоруссия, Китай.</p>
+<h4>Про «Шкоду», на которой ты работал (04:11)</h4>
+<p>Серия W, число в индексе — диаметр расточного шпинделя. По конкретному продаваемому экземпляру W160: шпиндель Ø160, поворотный стол 2000×2000 с нагрузкой до 20 т, ход X 3000, пиноль 1250, привод шпинделя до 55 кВт, вес станка 68 т.</p>
+<p>Это машина под 20-тонные отливки. <strong>Наша самая тяжёлая деталь 1895 кг — класс избыточен на две ступени.</strong> Если такой станок у подрядчика есть и свободен, деталь делается за один установ; покупать такой специально под тюбинги смысла нет.</p>
+<h4>Что писать в запрос вместо марки — шесть цифр</h4>
+<ol class="list">
+<li>свободная зона обработки: сама деталь <strong>2083 × 1150 мм</strong>, а с приспособлением — <strong>2200 × 1270 мм</strong>, если прижимы по контуру, или <strong>2200 × 1150 мм</strong>, если только по торцам. Это решает, проходит ли деталь на столе шириной 1200–1250 мм;</li>
+<li>расстояние от стола до торца шпинделя не меньше <strong>800 мм</strong> — борт 350, плита 50, фреза Ø200 с оправкой 300, зазор 80, итого 780;</li>
+<li>стол должен держать <strong>не меньше 3000 кг</strong> — деталь 1895 кг плюс приспособление: плита 2200 × 1270 при толщине 30–50 мм это 660–1100 кг, прижимы и крепёж ещё около 330;</li>
+<li>привод главного движения желательно от <strong>30 кВт</strong>: по расчёту для СЧ25 фрезой Ø200 при ширине 200 и глубине 10 мм нужно около 16 кВт на двигателе, фрезой Ø250 при глубине 12 — около 26. Меньшая мощность работу не отменяет, но удлиняет;</li>
+<li>если угол берётся столом или бабкой — <strong>точность в угловых секундах</strong> и в скольких положениях нормирована (нужно не хуже 30″ в любом положении);</li>
+<li>радиально-сверлильный: вылет от <strong>1100 мм</strong>, плита под деталь 2083 мм, наибольшая резьба по чугуну <strong>не ниже М64</strong> — резьба G2-B имеет наружный диаметр 59,6 мм, и станок с пределом М54 её не берёт.</li>
+</ol>
+</section>
+<section id="r-s4"><p class="plabel">Раздел 5</p><h2>«Можно найти предприятие тысяч за 30–40» (05:40)</h2>
+<h4>Твоя оценка экономии верна и даже занижена</h4>
+<p>Ты считал: 196 штук по 1000 $ против 500 $ — экономия около 100 тыс. $ на одном заказе.</p>
+<p>По центральным точкам (90 → 35 тыс. ₽) разница <strong>55 тыс. ₽ на детали</strong>:</p>
+<div class="tw"><table><thead><tr><th scope="col"></th><th scope="col">Деталей</th><th scope="col">Экономия</th></tr></thead><tbody>
+<tr><td>Красноярск, подписан</td><td>196</td><td><strong>10,8 млн ₽</strong></td></tr>
+<tr><td>Все три заказа</td><td>644</td><td><strong>35,4 млн ₽</strong> ≈ 430 тыс. $</td></tr>
+</tbody></table></div>
+<p>То есть на всём пакете это не 100 тысяч долларов, а около 430.</p>
+<h4>Реальна ли цель</h4>
+<p>Считать надо <strong>в рублях за килограмм</strong>, иначе сравнение бессмысленно: тюбинги в закупках весят от 189 до 1895 кг, и цена за штуку у них разная просто из-за массы. Наша средняя деталь — 681 т / 644 = <strong>1057 кг</strong>.</p>
+<div class="tw"><table><thead><tr><th scope="col">Цена обработки</th><th scope="col">₽/кг</th><th scope="col">Весь пакет</th></tr></thead><tbody>
+<tr><td>80–100 тыс. ₽</td><td>76–95</td><td>51,5–64,4 млн ₽</td></tr>
+<tr><td>30–40 тыс. ₽</td><td>28–38</td><td>19,3–25,8 млн ₽</td></tr>
+</tbody></table></div>
+<p>Публичные ставки контрактных цехов — <strong>1500–3000 ₽ за нормо-час</strong>: Металлтекс 1500–2200, завод «Адам» 2600 на фрезерных и 3000 на сверлении и резьбе, МЗ «Гефест» от 3000. <b>Важно.</b> Ни один из них не подтверждён как способный взять деталь в 1,9 тонны: у «Гефеста» две таблицы на сайте спорят между собой — по одной фрезерная ширина 1250 мм (наши 1150 входят), по другой всего 800 мм (не входят), — а сверление у него заявлено до Ø75, тогда как у нас на каждом листе стоит нагнетательное отверстие Ø120. Ставки на крупногабаритную обработку чугуна публично не публикует никто — брать из первого же предложения подрядчика. Ставки 500–1200 ₽/ч из интернета относятся к цехам со столом 500×500, они тонную отливку не возьмут.</p>
+<p>При 5–8 нормо-часах станочное время стоит <strong>8–24 тыс. ₽</strong>. Цель 30–40 тыс. = станочное время плюс 15–25 тыс. на наладку по семи типоразмерам, оснастку, контроль углов, консервацию и риск. <strong>Цель собирается из понятных частей, но запаса в ней нет.</strong></p>
+<p>Запрос 80–100 тыс. — это ещё 2,5–5 ставок сверху. Объясняется не сложностью детали, а тремя вещами: универсальный станок вместо специализированной пары, наладка на партию всего 28 штук по каждой позиции, и премия за незнакомую работу.</p>
+<h4>Чего в переговорах говорить нельзя</h4>
+<p><strong>«Вы просите впятеро выше рынка»</strong> — это сравнение со ставками цехов мелких деталей, там другая работа, и подрядчик это разберёт за минуту.</p>
+<p>Что говорить можно и обоснованно: <strong>одна цена на все семь позиций — это не расчёт</strong>, а страховка от незнания.</p>
+<h4>Про НДС — отдельная строка, которую нельзя пропустить</h4>
+<p>С 1 января ставка <strong>22 %</strong>. Вопрос закрыт: <strong>80–100 тысяч названы без НДС</strong>. Значит, сверху добавится ещё 11,3–14,2 млн ₽ на пакете, и сравнивать предложения надо по цене без НДС у всех — иначе сравниваются разные базы.</p>
+<p>И второе: если подрядчик на упрощёнке, то при той же цифре в договоре он фактически дороже на 18 % суммы, потому что вычета нет. На 51,5–64,4 млн ₽ это <strong>9–12 млн ₽</strong>.</p>
+<h4>Стружка</h4>
+<p>Стружка — <strong>34–109 т на пакет</strong>. Патентные 10–16 % относятся к кольцевому тюбингу, а прямой расчёт по площадям бортов перемычки даёт 5–9 % — точная цифра выйдет из разницы масс отливки и готовой детали, эти данные есть у «Комлита». Чугунная стружка по ГОСТ 2787-75 — вид 24А/24Б; приёмные пункты в августе 2026 объявляют за неё около 8 тыс ₽/т, то есть <strong>0,3–0,9 млн ₽</strong> на пакет. При давальческой схеме по умолчанию достаётся подрядчику, если в договоре не написано иное.</p>
+</section>
+<section id="r-s4b"><p class="plabel">Раздел 5а</p><h2>Потолок цены: при какой обработке проход обращается в ноль</h2>
+<h4>Ты спрашивал, реальна ли цена 30–40. Правильный вопрос другой</h4>
+<p>«Реальна ли цена» упирается в чужие цены, о которых спрашивать нельзя и не нужно. «Какая цена допустима» считается по своим числам за час — и это и есть потолок в переговорах. Ниже он посчитан.</p>
+<p>Всё <strong>без НДС, на одной базе</strong>. Цена продажи, литьё, транспорт и обработка — все четыре числа без налога, иначе картина искажается.</p>
+<p>В колонке «обработка» цена стоит <strong>без НДС</strong> — ты подтвердил, что 80–100 тысяч подрядчики называют именно без налога. Поэтому никакие пересчёты к ней не применяются, число входит в расчёт как есть. Ставка НДС с 1 января 2026 года — 22 % (Федеральный закон от 28.11.2025 № 425-ФЗ, расчётная ставка 22/122).</p>
+<div class="tw"><table><thead><tr><th scope="col" rowspan="2">Обработка,<br>тыс ₽/дет.</th><th scope="col" colspan="2">Ø8,5 — подписан, Красноярск</th><th scope="col" colspan="2">Ø9,5 — Москва</th><th scope="col" colspan="2">Ø10,5 — Москва</th></tr><tr><th scope="col">лёгкое литьё</th><th scope="col">тяжёлое</th><th scope="col">лёгкое литьё</th><th scope="col">тяжёлое</th><th scope="col">лёгкое литьё</th><th scope="col">тяжёлое</th></tr></thead><tbody>
+<tr><td>30</td><td>16,8</td><td>5,2</td><td>32,7</td><td>20,5</td><td>42,4</td><td>28,4</td></tr>
+<tr><td>35</td><td>11,8</td><td><b>0,2</b></td><td>27,7</td><td>15,5</td><td>37,4</td><td>23,4</td></tr>
+<tr><td>40</td><td>6,8</td><td><b>−4,8</b></td><td>22,7</td><td>10,5</td><td>32,4</td><td>18,4</td></tr>
+<tr><td>45</td><td>1,8</td><td>−9,8</td><td>17,7</td><td>5,5</td><td>27,4</td><td>13,4</td></tr>
+<tr><td>50</td><td>−3,2</td><td>−14,8</td><td>12,7</td><td>0,5</td><td>22,4</td><td>8,4</td></tr>
+<tr><td>65</td><td>−18,2</td><td>−29,8</td><td>−2,3</td><td>−14,5</td><td>7,4</td><td>−6,6</td></tr>
+<tr><td>80</td><td>−33,2</td><td>−44,8</td><td>−17,3</td><td>−29,5</td><td>−7,6</td><td>−21,6</td></tr>
+<tr><td>100</td><td>−53,2</td><td>−64,8</td><td>−37,3</td><td>−49,5</td><td>−27,6</td><td>−41,6</td></tr>
+</tbody></table></div>
+<p>Проход в тысячах ₽ на одной детали, без НДС. Транспорт по полосе ставки для каждого плеча, без НДС: 13,3 ₽/кг в Красноярск, 3,7 в Москву. Массы средние по заказу: 969 / 1018 / 1174 кг.</p>
+<div class="key"><p><strong>Потолок по каждому заказу свой, и усреднять их нельзя:</strong> Ø8,5 (Красноярск) — <b>38–50 тыс ₽</b> за деталь, Ø9,5 — 50–62, Ø10,5 — 57–72. Ниже потолка проход есть, выше — сделка убыточна.</p>
+<p><strong>Главное отсюда — про подписанный заказ.</strong> Он самый жёсткий из трёх: плечо 3622 км даёт 13,3 ₽/кг транспорта против 3,7 в Москву, а деталь у него легче московских (969 кг против 1174), то есть та же наценка за килограмм приносит меньше рублей. Твоя цель 30–40 тысяч укладывается в него только при лёгком литье: при тяжёлом уже <b>35 тысяч дают ноль, а 40 — минус 4,8 тысячи на детали</b>. По московским заказам запас шире: там 40 тысяч оставляют от 10,5 до 32,4 тысячи прохода.</p>
+<p>А 80–100 тысяч, которые просят найденные подрядчики, лежат за потолком по всем трём заказам при любом раскладе. Это не «дорого» и не переговорная позиция — на таких числах сделки нет.</p>
+</div>
+<h4>Чего в этом расчёте не хватает</h4>
+<p>Три числа взяты по аналогии, и заменить их можешь только ты:</p>
+<ol>
+<li><strong>Цена продажи — из чужого договора.</strong> 177,6 ₽/кг это тюбинги Ø5,6 м для другого заказчика. По нашим трём заказам цена продажи известна тебе, мне нет. Подставишь свою — таблица пересчитается за минуту.</li>
+<li><strong>Литьё — по публичному прайсу, а не по цене «Комлита».</strong> И прайс дан для отливок 500–1000 кг, а наши тяжелее, там «расчёт индивидуальный».</li>
+<li><strong>Коэффициент перехода от отливки к детали точно не известен.</strong> Патент даёт 10–16 % стружки, прямой расчёт по площадям бортов — 5–9 %. Разница между этими двумя цифрами двигает потолок на 12,6 тысячи ₽ за деталь: литьё 108 ₽/кг, разброс коэффициента 0,11, средняя деталь 1057 кг. По самой крупной детали в 1895 кг — 22,5 тысячи.</li>
+</ol>
+<p>Это не мелочи: подставив три своих числа, ты получишь не оценку, а решение — и по этим трём заказам, и по тем, которые ещё не подписаны.</p>
+</section>
+<section id="r-s5"><p class="plabel">Раздел 6</p><h2>«Надо сделать таких приспособлений по 2–3 на тюбинг, штук 15 на диаметр» (02:46)</h2>
+<h4>Счёт «45» завышен, но и «одно приспособление» неверно</h4>
+<p>Правильный счёт двухмерный: <strong>геометрии × переустановы</strong>.</p>
+<p><strong>По геометриям.</strong> В комплекте не семь разных деталей, а <strong>четыре геометрии</strong>: три зеркальные пары (АК-1, АК-2, АКП-3) и симметричная АКП-4. Четыре геометрии × три диаметра = <strong>12</strong>. Но зеркальная деталь ложится на ту же оснастку только при симметричной схеме установки и наличии ЧПУ с зеркальной программой; на станке с ручным управлением нужен второй комплект переставленных упоров.</p>
+<p><strong>По переустановам.</strong> Патент называет три станка — значит минимум два-три установа, а не один.</p>
+<p><strong>Итого реалистично 24–36 комплектов наладки.</strong> Из них базовых приспособлений — по одному на станок, единицы; остальное сменные упоры, подкладки и кондукторы.</p>
+<p>Скорее всего, твои «2–3 приспособления на деталь» — это как раз переустановы. Тогда спора нет.</p>
+<h4>Что нашлось в чертежах и сильно упрощает картину</h4>
+<p><strong>Размер 750 ±0,4 стоит на всех семи листах.</strong> То, что в базе записано как «ширина» 750 / 825 / 950 / 1150 — это габарит <strong>с клиновым выносом</strong>, а расстояние между двумя параллельными кольцевыми бортами у всех позиций одинаковое.</p>
+<p>Значит операция фрезерования параллельных бортов идентична для всех семи деталей комплекта. Индивидуальны только радиальные борта.</p>
+<p>Больше того: 750 — один из трёх стандартных типоразмеров ширины тюбингового кольца по ГОСТ Р 57054-2016 (750 / 1000 / 1500). Значит искать надо среди тех, кто работал с шириной от 1150 мм: 750 — это размер между бортами, а не габарит нашей детали.</p>
+<h4>Самое дешёвое решение — не оснастка, а литьё</h4>
+<p>Просить их не надо — они уже положены. <strong>ТУ 35-521-90, п. 1.3.8</strong> говорит не «может», а «выполняются»: «На поверхности продольных бортов в углах тюбинга для создания базовой плоскости <strong>выполняются</strong> технологические приливы, размеры и расположение которых устанавливает завод-изготовитель». То есть это требование тех же ТУ, по которым изделие делается. <strong>ГОСТ Р 57054-2016, п. 6.3.9</strong> формулирует мягче:</p>
+<div class="key"><p>«Для удобства обработки тюбингов может создаваться базовая плоскость путём отливки технологических приливов в углах бортов тюбинга. Расположение и размеры приливов устанавливает предприятие-изготовитель. После обработки технологические приливы должны быть удалены.»</p></div>
+<p>Размеры приливов назначает изготовитель, но отливает «Комлит» — то есть договариваться надо с ним, а изменение чертежа проходит через заказчика. Патент это подтверждает: в состав фрезерной операции входит обработка четырёх опорных бобышек.</p>
+<p>Четыре прилива <strong>на наружной спинке в углах</strong> — не на торцах бортов, иначе обработанная база смотрит в ту же сторону, что и борта, и переворот детали ничего не даёт. Фрезеруются в один проход первым установом, дальше всё базируется на четырёх обработанных пятаках, а не на кривой литой поверхности. Двадцать один ложемент превращается в три-шесть плит с переставными упорами.</p>
+<p><strong>Условие, без которого не работает:</strong> три точки базы должны лежать по одну сторону разъёма формы. Иначе база унаследует допуск смещения и поедет так же, как литая поверхность.</p>
+<p><strong>Разговор с «Комлитом» вести не «сделайте», а «где вы готовы поставить»</strong> — прилив в углу борта это тепловой узел, там риск усадочной раковины, а завод с убытком 134 млн новый вид брака не возьмёт.</p>
+<p>Решать надо до раскроя моделей на Ø9,5 и Ø10,5.</p>
+<h4>Дыра в нашей же документации</h4>
+<p>На чертеже стоит <strong>«13Т-0-0-13 ГОСТ Р 53464-2009»</strong>. Вторая и третья позиции — нули: степень коробления и степень точности поверхностей <strong>не нормированы</strong>. Такая запись стандартом допускается, но последствия прямые:</p>
+<ul>
+<li><strong>ряд припуска по таблице Е.1 берётся именно из степени точности поверхностей.</strong> Она нулевая — значит ряда нет, и сколько металла лить сверху, «Комлит» решает на глаз;</li>
+<li><strong>коробление ничем не ограничено</strong> — а именно оно убивает базу по трём точкам на литой поверхности.</li>
+</ul>
+<p>Для масштаба: допуск литого размера по классу 13т — 12 мм на длине 630–1000, 14 мм на 1000–1600, <strong>16 мм на 1600–2500</strong>.</p>
+<p>Два ориентира по припуску, которые между собой не сходятся и которые надо развести до подписания: по п. 7.2.1 (половинные значения для противоположных поверхностей, служащих взаимными базами) выходит около 6 мм на сторону; по патентным 10–16 % стружки — существенно больше. Разница между 8 и 12 мм — это фрезерное время в полтора раза.</p>
+<p>И ещё: по приложению Ж того же стандарта <strong>на станках с ручным управлением припуск берётся на строку больше, чем на ЧПУ</strong>. То есть цифра зависит от того, к кому пойдёт обработка, и это прямой аргумент в разговоре с литейщиком.</p>
+<h4>Страховка, о которой стоит знать</h4>
+<p>ГОСТ Р 57054-2016, п. 6.4.3: если по высоте H минусовое отклонение превышено больше чем на 0,2 мм, допускается собирать кольца с размерами 1495 / 995 / <strong>745 ±0,2</strong> мм — комплектно, с маркировкой и уведомлением заказчика. То есть если 750 не вытянули, кольцо сдаётся на 745, а не идёт в лом.</p>
+</section>
+<section id="r-s6"><p class="plabel">Раздел 7</p><h2>«Мы теоретически тоже можем обрабатывать» (02:16)</h2>
+<p>Здесь главный ход, который нашёлся за всю работу.</p>
+<h4>Покупать не деталь, а два передела</h4>
+<p>Фрезерование бортов и канавок — одна ведомость операций. Сверление Ø41, зенкование гнёзд Ø76/Ø58 с конусом 60° и резьба G2-B — другая. Разные строки, разные цены, возможно разные исполнители, но обязательно <strong>в одном пролёте</strong>.</p>
+<p><strong>Механизм не в арифметике ставок, а в том, что меняется круг тех, кто вообще может ответить.</strong> «Сделать деталь целиком» требует цеха, где одновременно есть продольно-фрезерный на 2,1 × 1,15 м, радиально-сверлильный с вылетом 1,6 м и готовность отвечать за чужую отливку в 1,9 тонны. Таких единицы — отсюда и три найденных подрядчика с их ценой. «Только отфрезеровать борта» возьмёт любой ремонтно-механический цех на загрузку простаивающего станка.</p>
+<p><strong>Подтверждение прямое.</strong> У «Сиблитмаша» на участке обработки тюбингов стоят <strong>четыре продольно-фрезерных</strong> (УФ 0966, два ГФ 1539, 13А683) и <strong>четыре радиально-сверлильных</strong> (два 2М57, два RFh-100/300). Соотношение 4:4 означает, что у профильного производителя сверление занимает столько же мощности, сколько фрезерование, и решается отдельным дешёвым классом оборудования.</p>
+<p><strong>И то же самое видно в наших чертежах:</strong> позиционный допуск отверстий ⊕∅1 в максимуме материала, гнёзда +5/−3, конус ±1°. Сверлильный передел по точности не требует дорогого станка вообще.</p>
+<p><strong>Риск, который надо закрыть:</strong> базирование под сверление идёт от уже отфрезерованных бортов, значит переделы строго последовательны. Если исполнители окажутся на разных площадках, 681 т поедет дважды. Идея работает только если сверлильный участок физически стоит в том же пролёте.</p>
+<h4>Что ещё нужно, чтобы делать самим</h4>
+<p>Станки — по разделу 3. Плюс: кран от 5 т, площадь, два оператора и технолог, программы, метрология. Плита поверочная 2000×1000 класса 1 — около 400 тыс. ₽ у завода-изготовителя.</p>
+<p>Считать это надо не как расход на деталь, а как вложение: станки, оснастка и плита — замороженные деньги, а операторы, площадь и энергия — операционные расходы за период, которые по штукам не делятся.</p>
+</section>
+<section id="r-s7"><p class="plabel">Раздел 8</p><h2>«Была идея купить себе станок, 25–50 млн» (24:52)</h2>
+<p><strong>Вывод: под подписанный красноярский заказ покупать не надо.</strong> Три причины, каждая самостоятельная.</p>
+<h4>Срок</h4>
+<p>Критический путь — не покупка станка, его можно найти за месяц. Критический путь это <strong>оснастка и освоение базирования от литой поверхности</strong>: проектирование и изготовление комплектов наладки 2–4 месяца, освоение первой детали с замером углов и согласованием 3–8 недель, фундамент под тяжёлый станок 28 суток набора прочности. Реалистично <strong>6–8 месяцев</strong>, а первая годная деталь нужна в декабре.</p>
+<h4>Арифметика при том объёме, который реально подписан</h4>
+<p>Операционные расходы участка (два оператора, технолог, энергия, обслуживание, площадь на чужой территории) — порядка 6,5 млн ₽ в год, а держать участок придётся три года, пока идут все три заказа, то есть 19,5 млн ₽ за период.</p>
+<div class="tw"><table><thead><tr><th scope="col">Сколько деталей реально</th><th scope="col">Только операционные, ₽/деталь</th></tr></thead><tbody>
+<tr><td>644 — все три заказа</td><td>30 300</td></tr>
+<tr><td>420 — подписался Ø9,5</td><td>46 400</td></tr>
+<tr><td><strong>196 — только Красноярск, то есть сегодня</strong></td><td><strong>99 500</strong></td></tr>
+</tbody></table></div>
+<p>Сегодня подписано 196. Покупать оборудование под то, чего ещё нет, — это ставка, а не расчёт.</p>
+<h4>Дешёвых денег под эту задачу нет</h4>
+<p><strong>Лизинг Корпорации МСП</strong> — программы адресованы микро- и малому бизнесу (порог выручки 800 млн) и только новому оборудованию. У ТЦЛ выручка 1,335 млрд — не проходит.</p>
+<p><strong>Региональный ФРП (Саратов), «Приоритетная продукция»</strong> — 10–60 млн под 5 %, но в критериях отбора стоит наличие производственных активов <strong>на территории Саратовской области</strong>, а площадку предполагаем в Пензе.</p>
+<p><strong>ФРП федеральный</strong> — б/у оборудование стандарты фонда разрешают, запрет только в лизинговой программе. Но ставка 1 % даётся субъектам промышленной деятельности, а основной ОКВЭД ТЦЛ — 46.90, оптовая торговля. Это надо проверять звонком в фонд, письменно.</p>
+<h4>Про твою цифру 25–50 млн</h4>
+<p>Арифметика верна: 300 тыс. $ × 82,17 = 24,65 млн ₽. И диапазон точно совпадает с рынком — но с рынком <strong>импортных портальных обрабатывающих центров</strong>: Абамет DC-2018SM от 27,06 млн, DC-3018SM от 30,56 млн.</p>
+<p><strong>Это не тот класс станка.</strong> У нас Ra20 везде, отверстия ±1,0 мм, гнёзда +5/−3. Такие центры покупают под пресс-формы.</p>
+<div class="tw"><table><thead><tr><th scope="col">Что</th><th scope="col">Цена</th></tr></thead><tbody>
+<tr><td>б/у 6М610, рабочий</td><td>790 тыс. – 1,9 млн ₽ (наличными, для ООО не сделка)</td></tr>
+<tr><td>б/у 6М610 после ревизии с индикацией</td><td>3,5 млн ₽</td></tr>
+<tr><td>б/у 6М610Ф11-20.3, трёхбабочный</td><td>6,6 млн ₽</td></tr>
+<tr><td>Станотекс ФЦ3015П (3000×1500×600, 5000 кг)</td><td>9,9 млн ₽</td></tr>
+<tr><td>Татмаш ПФ3212 (3200×1200, монтаж и гарантия в цене)</td><td>12,85 млн ₽</td></tr>
+<tr><td>Импортный портальный ОЦ</td><td>27–31 млн ₽</td></tr>
+<tr><td>Капремонт продольно-фрезерного</td><td>4,9–29 млн ₽, срок 8–10 месяцев</td></tr>
+</tbody></table></div>
+<p>Два замечания по б/у: цена «за наличный расчёт» для ООО сделкой не является — нет документов, нет постановки на баланс, нет вычета. И <strong>число бабок гарантируется исполнением, а не индексом</strong>: трёхбабочный стоит 6,6 млн, а не 1,9.</p>
+<h4>Есть ли смысл вообще</h4>
+<p>Есть, но не сейчас и по другой логике. <strong>Разница между «заложить в цену московских договоров 90 тысяч» и «заложить 35» — это 22–31 млн ₽, больше стоимости подходящего станка.</strong> То есть решение по железу связано не с Красноярском, а с тем, по какой цене подписываются Ø9,5 и Ø10,5.</p>
+<p>Порядок жёсткий: сначала замер фактического времени, потом цена в московских договорах, и только потом решение по оборудованию.</p>
+<p><strong>И одна ловушка.</strong> Портальный обрабатывающий центр — это один шпиндель, одна деталь, всё с одного установа. Ровно та схема, которая и даёт твои 8–10 часов. Купить его — значит зафиксировать эту трудоёмкость навсегда.</p>
+</section>
+<section id="r-s8"><p class="plabel">Раздел 9</p><h2>«Один тюбинг делается часов 8–10, 196 штук — три месяца на одном станке» (21:16, 22:00)</h2>
+<h4>Что говорят нормативы</h4>
+<p>Считал по межотраслевым укрупнённым нормативам времени Минтруда (фрезерные — постановление от 12.02.2004 № 13, сверлильные — от 01.02.2001 № 13), карты открыты постранично.</p>
+<p><strong>Карта 40</strong>, продольно-фрезерные, чугун 180–220 НВ, торцовые фрезы ВК8, Rz80 и 14–12 квалитет — совпадает с чертежом. Фреза Ø315, z=24: при глубине 8 мм подача 150 мм/мин, при 12 мм — 96 мм/мин. Коэффициент на литейную корку по листу поправок к этой же карте — <strong>1,2</strong> (цифра 1,4 относится к карте 8, другая группа станков).</p>
+<div class="tw"><table><thead><tr><th scope="col">Что</th><th scope="col">Время</th></tr></thead><tbody>
+<tr><td>Фрезерование четырёх плоскостей при съёме 8 мм</td><td>1,3–1,6 ч</td></tr>
+<tr><td>То же при съёме 12 мм</td><td>2,1–2,5 ч</td></tr>
+<tr><td>Сверление, зенкование, резьба</td><td>0,9–1,5 ч</td></tr>
+<tr><td>Установка мостовым краном (карта 38)</td><td>8,5–10,5 мин</td></tr>
+<tr><td>Кантовка 180°</td><td>3,8 мин при удобной застропке, 9,2 при неудобной</td></tr>
+<tr><td>Подготовительно-заключительное на партию (карта 37)</td><td>22–43 мин плюс 10 мин на инструмент</td></tr>
+</tbody></table></div>
+<p>Время на обслуживание рабочего места и отдых в карты <strong>не включено</strong>: оперативное время умножается на коэффициент 1,085–1,09 (обслуживание 4,5–5,0 % по карте 37 плюс отдых).</p>
+<p><strong>Итог для планирования: 5–8 нормо-часов штучного.</strong> Разброс задаётся не резанием, а наладкой на партию 28 штук и контролем семи-десяти пар двугранных углов.</p>
+<p><strong>Твои 8–10 часов — это другой сценарий:</strong> один универсальный станок делает всё подряд, с краном между операциями. Как база для разговора с подрядчиком она честнее любого расчёта, потому что получена на реальной обработке. Но она описывает одношпиндельную схему.</p>
+<h4>Успевает ли одна пара станков</h4>
+<p>I квартал 2027: 56 рабочих дней, 447 часов при 40-часовой неделе. Фонд одного станка с коэффициентом использования 0,8: <strong>358 часов в одну смену, 715 в две</strong>.</p>
+<p>98 деталей (14 комплектов) за квартал:</p>
+<div class="tw"><table><thead><tr><th scope="col">Трудоёмкость фрезерования</th><th scope="col">Нужно часов</th><th scope="col">Хватает</th></tr></thead><tbody>
+<tr><td>5 ч</td><td>490</td><td>одного станка в две смены</td></tr>
+<tr><td>7 ч</td><td>686</td><td>одного станка в две смены, впритык</td></tr>
+<tr><td>12 ч</td><td>1176</td><td>нужно два станка или три смены</td></tr>
+</tbody></table></div>
+<p>Сверлильный передел при 0,9–1,5 ч на деталь — <strong>88–147 часов</strong> на те же 98 деталей (на весь заказ в 196 штук вышло бы 176–294). Один радиально-сверлильный закрывает это в одну смену с большим запасом: его фонд 358 часов.</p>
+<p><strong>То есть число станков напрямую упирается в трудоёмкость, которую сегодня никто не знает.</strong> Это ещё один довод отдать первый заказ подрядчику, у которого станков несколько.</p>
+<h4>Отраслевые ориентиры — почему их нельзя переносить</h4>
+<p>Днепротяжмаш: четыре линии <strong>специализированных</strong> станков, 100 тюбингов в сутки с каждой. «Сиблитмаш»: поточная линия из восьми станков для колец до 7,5 м, <strong>а крупные тюбинги для колец до 10,5 м обрабатываются на универсальных станках со специальной оснасткой</strong>. Наш случай — второй.</p>
+<p>Для масштаба: «Сиблитмаш» делает 12 тыс. штук и 10 тыс. т в год. <strong>Весь наш пакет — 5–7 % его годового объёма, около трёх недель работы.</strong> Мы приходим не с большим заказом, а с маленьким; это объясняет и цену, и почему крупные заводы отвечают, чтобы отвязаться.</p>
+<h4>Что стоит проверить замером</h4>
+<p>Ты считал 8–10 часов по схеме «одна деталь за цикл». На двухстоечном продольно-фрезерном с четырьмя бабками на столе лежат две-три детали, оба параллельных борта режутся одновременно встречными горизонтальными бабками, радиальные — двумя вертикальными, повёрнутыми <strong>один раз на всю партию</strong>.</p>
+<p>Расчёт даёт около 4 часов на деталь вместо 9. Если это подтвердится — исчезает не цена, а вся конструкция задачи: не нужен второй станок, не нужна покупка, а московские договоры можно подписывать по цене, которую знаешь.</p>
+<p>Проверяется одной отливкой, трёхместным приспособлением по имеющимся 3D-моделям, чужим станком и секундомером. Три-четыре недели.</p>
+<p><strong>Что проверить на конкретном станке:</strong> сводятся ли горизонтальные шпиндели на 750 мм. У 6620 минимальный развод 1550 — тогда «два борта за проход» не работает.</p>
+<h4>И ещё про геометрию, которую надо уточнить по чертежу</h4>
+<p>Кольцевой борт — дуга. При хорде 2083 мм и радиусе кольца 5250 мм стрела около 104 мм, для Ø8,5 при хорде 1604 — около 76 мм. Значит фрезеруемая полоса по высоте не 350 мм, а 425–455 — нужна фреза большого диаметра либо несколько проходов. У 6620 в паспорте наибольший расчётный диаметр торцевых фрез 500 мм, у 6М610 — 320 мм.</p>
+</section>
+<section id="r-s8b"><p class="plabel">Раздел 9а</p><h2>График: обратный отсчёт и двойной стандарт по срокам</h2>
+<h4>Сначала неприятное</h4>
+<p>В записи от 27 июня ты сказал: «практически ещё месяц у нас есть, а больше у нас времени нет». Этот месяц кончился в конце июля. <strong>Сегодня 14 августа</strong>, подрядчик не выбран.</p>
+<h4>Двойной стандарт, который я сам и допустил</h4>
+<p>Покупку своего станка я отговаривал в том числе так: критический путь — не станок, а оснастка и освоение базирования от литой поверхности. Проектирование и изготовление комплектов наладки 2–4 месяца, освоение первой детали с замером углов и согласованием 3–8 недель, фундамент 28 суток. Итого 6–8 месяцев.</p>
+<p>А для подрядчика тот же путь я нигде не заложил, как будто он начнёт выдавать годные детали на следующий день после подписания. У него нет ни оснастки под эту деталь, ни отработанного базирования. Фундамент ему не нужен, станок есть — но <strong>оснастка 2–4 месяца и освоение первой детали 3–8 недель остаются</strong>. Это 3–5,5 месяца от подписи до первой годной детали.</p>
+<div class="note"><p>От 14 августа плюс 3–5,5 месяца — это <strong>с середины ноября по конец января</strong>. То есть даже при подписании договора завтра нижняя граница попадает впритык, а верхняя срывает январь.</p></div>
+<h4>Обратный календарь по первой транше</h4>
+<div class="tw"><table><thead><tr><th scope="col">Когда</th><th scope="col">Что должно быть сделано</th></tr></thead><tbody>
+<tr><td><strong>январь — март 2027</strong></td><td>14 комплектов, 98 деталей. Это <strong>33 детали в месяц</strong> — темп, которого в запросе подрядчику сейчас нет ни строчкой</td></tr>
+<tr><td>декабрь 2026</td><td>первая годная деталь, контрольная сборка комплекта, приёмка</td></tr>
+<tr><td>ноябрь</td><td>оснастка на площадке, отладка базирования, пробные детали</td></tr>
+<tr><td>сентябрь — октябрь</td><td>оснастка изготавливается; отливки первой партии у подрядчика</td></tr>
+<tr><td><strong>конец августа</strong></td><td><strong>договор подписан, оснастка заказана.</strong> Это точка невозврата</td></tr>
+<tr><td>сейчас</td><td>обзвон, сбор цен по единой форме, выбор</td></tr>
+</tbody></table></div>
+<h4>Что делать, если точка невозврата пройдена</h4>
+<p>Она пройдена почти наверняка — значит январь достижим только по одному из трёх путей, и выбрать надо сознательно, а не по факту срыва:</p>
+<ol>
+<li><strong>Разделить объём между двумя подрядчиками.</strong> 98 деталей за квартал это 33 в месяц; двое по 17 успевают спокойнее, чем один по 33, и это же страховка, если один не потянет. Плюс постоянное сравнение цены без единого разговора о чужих внутренних делах.</li>
+<li><strong>Первую партию сделать по обходной схеме.</strong> Меньше приспособлений, больше ручной выверки, ниже темп, выше цена именно за первые детали — а нормальная оснастка догоняет к второй транше в июне. Дороже, но январь остаётся.</li>
+<li><strong>Двигать срок с заказчиком.</strong> Самый дешёвый вариант, если он вообще возможен, и самый быстрый в проверке: один звонок.</li>
+</ol>
+<div class="key"><p><strong>Что добавить в запрос подрядчику прямо сейчас:</strong> строку «требуемый темп — 33 детали в месяц начиная с января, подтвердите или назовите свой с обоснованием по числу станков и смен» и вопрос «сколько деталей вы сдадите к 31 марта 2027». Абстрактная «производительность, деталей в месяц» из формы ответа этого не ловит: подрядчик напишет 20, это будет выглядеть прилично и означать срыв.</p></div>
+</section>
+<section id="r-s9"><p class="plabel">Раздел 10</p><h2>«Мы нашли предприятие в Волгодонске, в Санкт-Петербурге и где-то в Минске» (23:52)</h2>
+<p>Имён ты не назвал, поэтому ниже версии по открытым данным. Марки станков ты обещал запросить у своих специалистов — с ними определение станет точным.</p>
+<h4>Волгодонск</h4>
+<p><strong>Вероятно ООО «Фирма ВКВ»</strong> (ИНН 6143008418, ОКВЭД 25.62). По их сайту: вертикально-фрезерный ЧПУ Droop &amp; Rein FS 130 (стол 3000×1250, деталь 2300×1200×1020 до 5 т), FS 160 (стол 2500×1250), горизонтально-расточной 2622, радиально-сверлильные 2А554, токарно-карусельный 1525.</p>
+<div class="note"><p><b>Оговорка.</b> страница, из-за которой их сочли профильными, называется «Рамки направляющие для проходческих бадей» — это шахтный подъём, а не тоннели.</p></div>
+<p><strong>«Атоммаш» — почти наверняка не он.</strong> Их оборудование: планшайбы Ø5000–8000, стол грузоподъёмностью 500 т, портально-карусельный INNSE TVB 550/450 с деталью до 400 т, изделия до 600 т. <strong>Деталь в 1,5 т на таком столе тарифицируется как корпус реактора</strong> — цена часа от массы детали не зависит. Плюс загрузка выросла на 50 % с начала 2025.</p>
+<h4>Санкт-Петербург</h4>
+<p>Однозначно определить не удалось. Кандидаты:</p>
+<p><strong>АО «КМЗ „Ижора-Металл“» (Колпино)</strong> — в таблице механообработки назван пятикоординатный 6М610 (Ф11-20.3) УФ 0875, но опубликованный для него габарит — кубы 250–800 мм массой до 2500 кг, а самый большой прямоугольный габарит во всей таблице 850 × 1000 × 5000 мм. Детали Ø8,5 по чертежам 1710,8 × 1150 мм в этот габарит проходят, а самая широкая деталь всего комплекта — 105АКП-1 серии Ø10,5, 2083 × 1150 мм — нет. При этом строки таблицы не привязаны однозначно к станкам, поэтому твёрдого вывода по этому заводу нет.</p>
+<p><strong>МЗ «Гефест» (Колпино)</strong> — единственный в городе с публичной ставкой, «от 3000 ₽ нормо-час с НДС». Но фрезерная ширина до 1250 (деталь 1150 — впритык, места под приспособление нет) и <strong>сверление до Ø75, то есть не проходит под гнёзда Ø76 и отверстие Ø120</strong>.</p>
+<p><strong>ПАО «Пролетарский завод»</strong> — в официальном перечне есть и «продольно-фрезерная операция», и «радиально-сверлильная», то есть оба нужных передела. Габаритов не публикуют.</p>
+<p><strong>АО «Балтийский завод»</strong> — фрезерный стол 2000×1000, короче детали 2083; сверление до Ø50. Не проходит.</p>
+<h4>Минск</h4>
+
+<p><strong>У него единственного из всех найденных есть и оснастка, и опыт именно этой детали.</strong> Конкурент — но отсекать по этому признаку преждевременно.</p>
+<p><strong>ООО «СИТЕК МТ» (бренд Mechantek)</strong>, производство в Молодечно: Kekeisen UFF 5000 (стол 2500×1250 плюс поворотный 1400×1250, деталь до 12 т, две поворотные фрезголовы, магазин 40), Soraluce FS 6000 (стол 6000×2500, деталь до 30 т, двухосевая поворотная головка), краны цеха до 20 т. По размеру и по наличию поворотной фрезголовы — лучшее совпадение с нашей деталью. Стол Soraluce берёт четыре наши детали в одной наладке.</p>
+<p><strong>ОАО «МЗОР»</strong> — продаёт мехобработку как услугу: фрезерование детали до 4500 × 14 000 × 3200 мм, строгание, продольное шлифование, расточные, токарно-карусельный. И делает модельные комплекты для литейных производств.</p>
+<h4>Объясняет ли класс оборудования их цену</h4>
+<p>Объясняет, но не оправдывает. При ставке 3000 ₽/ч цена 80–100 тыс. соответствует 27–33 нормо-часам, тогда как расчёт по нормативам даже с полной наладкой даёт 5–12. <strong>Разница — это не сложность детали, а универсальный станок вместо специализированной пары плюс наладка на партию 28 штук.</strong></p>
+<p>Оговорка: ставку 3000 ₽/ч публикует «Гефест», который в число тех, кто уже дал цену, не входит. Ни одна из трёх компаний своей ставки не называла, перевод их цены в часы — предположение.</p>
+</section>
+<section id="r-s9b"><p class="plabel">Раздел 10а</p><h2>«На пути от Пензы до Москвы с шириной 200 километров в разные стороны, ну чтобы лишнюю логистику не иметь» (19:13)</h2>
+<h4>Для двух московских заказов ты прав. Для подписанного красноярского — нет</h4>
+<p>Посчитал по дорожной сети, только по территории России. Базовые плечи: Пенза → Москва <strong>664 км</strong>, Пенза → Красноярск <strong>3622 км</strong>.</p>
+<p>Сначала уточнение по метрике. Отклонение в сторону и лишние километры — не одно и то же: город может стоять в 150 км от прямой, а дорога всё равно идёт вперёд, и лишними окажутся не 300 км, а 40. У Тулы отклонение заметное, а крюк — 139 км. Поэтому считал именно лишние километры.</p>
+<p><strong>Цена лишнего хода: 100 км = 460–510 ₽ на деталь</strong> по московским заказам и 350 ₽ по красноярскому. На фоне разрыва в 40–70 тыс. ₽, который ты закрываешь, это шум — пока крюк измеряется сотнями километров, а не тысячами.</p>
+<div class="tw"><table><thead><tr><th scope="col">Город</th><th scope="col">Крюк по Москве</th><th scope="col">₽ на деталь</th></tr></thead><tbody>
+<tr><td>Пенза, Москва</td><td>0</td><td>0</td></tr>
+<tr><td>Рязань</td><td>+12 км</td><td>55 ₽</td></tr>
+<tr><td>Подольск</td><td>+10 км</td><td>46 ₽</td></tr>
+<tr><td>Сасово</td><td>+53 км</td><td>243 ₽</td></tr>
+<tr><td>Тула</td><td>+144 км</td><td>659 ₽</td></tr>
+<tr><td>Муром</td><td>+140 км</td><td>641 ₽</td></tr>
+<tr><td>Екатеринбург</td><td>+2350 км</td><td><strong>10 760 ₽</strong></td></tr>
+</tbody></table></div>
+<h4>Красноярский заказ идёт на восток, и там другие города</h4>
+<p>Челябинск стоит прямо на трассе: Пенза — Челябинск 1236 км плюс Челябинск — Красноярск 2365 км даёт 3601 км против 3622 напрямую. Крюка нет вообще. То же у Тольятти (+3 км), Новосибирска (+7), Бугульмы (+16), Кусы (+36), Самары (+84), Томска (+92), Ульяновска (+124), Екатеринбурга (+184). Всего <strong>28 предприятий из 104 приоритетных стоят на красноярской линии с крюком меньше 200 км</strong>.</p>
+<p>То есть уральский завод, который по московским заказам добавляет 10 тысяч на деталь, для подписанного заказа Ø8,5 бесплатен по логистике. А тяжёлых станков на Урале заметно больше, чем в московском коридоре.</p>
+<h4>Что оказалось важнее самого коридора</h4>
+<p>Довезти деталь до Красноярска стоит <strong>12 915 ₽ без НДС</strong> — фура 3622 км, 20 деталей в кузове, ставка 87 ₽/км по полосе «от 3000 км», приведённая к базе без налога. При цели 30–40 тысяч за обработку это добавляет ещё треть. Отсюда вопрос, который надо закрыть до переговоров: по подписанному заказу доставку оплачивает заказчик или мы, и заложена ли она в цену. Если мы — это 2,58 млн ₽ без НДС на один заказ.</p>
+<p>Весь транспорт по трём заказам — около 4 млн ₽, и от выбора подрядчика он почти не зависит, пока подрядчик стоит на своей линии. Уход с линии стоит 5 млн ₽ и больше.</p>
+<p>Подробный расчёт со всеми плечами, стоимостью, сроками, погрузкой, стружкой и вопросами по железной дороге — <a href="idei.html#doroga">в отдельном документе по логистике</a>.</p>
+</section>
+<section id="r-s13"><p class="plabel">Раздел 11</p><h2>Материал: расхождение в чертежах (22:59)</h2>
+<p>В записи ты говоришь: «серый чугун 30, СЧ-30. Мы с тобой когда-то эти СЧ прорабатывали, СЧ-25, СЧ-30. В конце концов, я не смог убедить, чтобы они сделали СЧ-20. В итоге СЧ-30… ой, СЧ-25».</p>
+<p>По штампам чертежей:</p>
+<div class="tw"><table><thead><tr><th scope="col">Деталь</th><th scope="col">Марка</th></tr></thead><tbody>
+<tr><td>АК-1Д <strong>прав.</strong></td><td><strong>СЧ20</strong></td></tr>
+<tr><td>АК-1Д <strong>лев.</strong></td><td><strong>СЧ25</strong></td></tr>
+<tr><td>АК-2 прав. и лев.</td><td>СЧ25</td></tr>
+<tr><td>АКП-3 прав. и лев.</td><td>СЧ25</td></tr>
+<tr><td>АКП-4</td><td><strong>СЧ20</strong></td></tr>
+</tbody></table></div>
+<p><strong>У зеркальной пары АК-1Д при одинаковой массе 1539 кг стоят разные марки чугуна.</strong> Проверено по штампам обоих листов. Для обработки разница почти никакая, для приёмки и сертификата — есть. Это единственный пункт из чертежей, который надо снять с конструктором до запуска литья.</p>
+</section>
+<section id="r-s-sources"><p class="plabel">Приложение</p><h2>Первоисточники</h2>
+<p>Всё, на что опирается этот разбор. Открывалось и читалось напрямую, а не по пересказу.</p>
+
+<h3>Конструкторская документация</h3>
+<ul>
+<li>Чертежи комплекта «Перемычка 85.4», 7 листов, экспорт AutoCAD. Данные извлечены из текстового слоя PDF и подтверждены растровыми вырезками узлов при увеличении: таблицы двугранных углов, количество отверстий, марки чугуна, массы, сечения канавки, рамки допусков.</li>
+<li>«База_Тюбингов_031024.xlsx», лист «База_Тюб_260424» — состав комплектов, массы и габариты по трём диаметрам.</li>
+<li>Аудиозапись от 27.06.2026, 26 мин 22 с. Расшифровка NoteGPT, разобрана по таймкодам.</li>
+</ul>
+
+<h3>Патент</h3>
+<ul>
+<li><strong>RU2661929C2</strong> «Способ изготовления чугунных тюбингов». Заявитель ООО НПФ «Днепротехсервис», приоритет 15.12.2015, выдан 23.07.2018, прекращён 16.12.2018 за неуплату пошлины. Среди авторов — Зиновьев Алексей Михайлович. Источник: patents.google.com/patent/RU2661929C2/ru</li>
+</ul>
+
+<h3>Стандарты и технические условия</h3>
+<ul>
+<li><strong>ГОСТ Р 57054-2016</strong> «Оборудование горно-шахтное. Тюбинги чугунные. Комплекты тюбинговых колец. Общие технические условия» — п. 6.3.2 (выступы на спинке), 6.3.7 (класс точности отливки), <strong>6.3.9 (технологические приливы)</strong>, 6.4.1–6.4.3 (отклонения и высоты колец), 9.6–9.8 (контроль и клеймо), 10.1–10.6 (приёмка, консервация, контрольная сборка кольца), приложение Е (средства контроля), приложение Г (типоряд). docs.cntd.ru/document/1200139211</li>
+<li><strong>ГОСТ Р 53464-2009</strong> «Отливки из металлов и сплавов. Допуски размеров, массы и припуски на механическую обработку» — п. 4.5, п. 7.1–7.2.2, п. 8.1, табл. 1 и 6, приложения Е и Ж.</li>
+<li><strong>ГОСТ 8908-81</strong> «Основные нормы взаимозаменяемости. Нормальные углы и допуски углов» — табл. 3, п. 2.4, п. 2.7. files.stroyinf.ru</li>
+<li><strong>ГОСТ 18101-85</strong> — нормы точности продольно-фрезерных станков, п. 1.2.2 и 2.3.4, табл. 29.</li>
+<li><strong>ГОСТ 2110-93</strong> (= ISO 3070-1) — нормы точности горизонтально-расточных станков, табл. 16.</li>
+<li><strong>ГОСТ 1412-85</strong> — серый чугун с пластинчатым графитом.</li>
+<li><strong>ГОСТ 6357-81</strong> — трубная цилиндрическая резьба; G2: наружный 59,614 мм, шаг 2,309 мм.</li>
+<li><strong>ГОСТ 25347</strong> / ISO 286 — поля допусков; 750 ±0,4 соответствует 12-му квалитету для интервала 630–800 мм.</li>
+<li><strong>ГОСТ 9.014</strong> — временная противокоррозионная защита.</li>
+<li><strong>ТУ 35-521-90</strong> «Тюбинги чугунные. Комплекты тюбингов колец … и перемычек пролетом 3,0; 3,75». Полный текст не получен; охват диаметров требует подтверждения у АО «Метрогипротранс».</li>
+<li><strong>СП 120.13330.2022</strong> п. 5.6.3.2 — требование фальцев, образующих чеканочные канавки.</li>
+</ul>
+
+<h3>Нормативы времени</h3>
+<ul>
+<li><strong>Межотраслевые укрупнённые нормативы времени на работы, выполняемые на фрезерных станках (среднесерийное производство)</strong> — постановление Минтруда РФ от 12.02.2004 № 13. Карты 8, 37, 38, 40, 41 разобраны постранично.</li>
+<li><strong>Нормативы на сверлильные работы</strong> — постановление Минтруда РФ от 01.02.2001 № 13. Карты 1, 4, 6, 7, 8, 15, 17.</li>
+<li>Производственный календарь 2027, I квартал: 56 рабочих дней, 447 часов.</li>
+</ul>
+
+<h3>Закупки и цены рынка</h3>
+<ul>
+<li><strong>Аукцион АО «Метрострой Северной Столицы» № 32616136296</strong>, итоговый протокол № 32616136296-3 от 23.07.2026. Победитель ООО «ТЦЛ» ИНН 6439089172, договор на 73 562 335,28 ₽ при начальной 87 056 018,07 ₽. Масса лота пересчитана по приложению № 1 к техническому заданию: 441 × 0,612 + 98 × 0,615 + 49 × 0,189 = 339,423 т. tender.lot-online.ru</li>
+<li><strong>Закупка АО «Моспроект-3» № 32616126333</strong> от 18.06.2026, начальная цена 498,5 млн ₽, итоги 10.07.2026, фактическая цена не опубликована.</li>
+<li>Цены литья серого чугуна: прайс ИКМЗ (ikmz.ru) — 108 ₽/кг без НДС для отливок 500–1000 кг.</li>
+<li>Публичные ставки нормо-часа: tehno-logika.ru, metalltex.ru, zavod-adam.ru, gefestmaster.ru, cometal.ru.</li>
+<li>Курс ЦБ на 09.08.2026: 82,1665 ₽/$. cbr.ru</li>
+</ul>
+
+<h3>Оборудование — паспорта и каталоги</h3>
+<ul>
+<li>stanki-katalog.ru — паспорта 6605, 6606, 6Г608, 6Г610, 6620, 6625, 6М610, 2А554, 2А636, 2А637, 2К550В, 2М55, 2М57.</li>
+<li>mzor.by — действующая линейка МС610 / МС612 / МС616, исполнения МФ4 и Ф11-20.3.</li>
+<li>grsural.ru — ГРС 13/15 ЧПУ. rusmachine.ru — Csepel RFh-100/300. abamet.ru, stanotex.ru, tatmach.com — цены нового оборудования.</li>
+<li>siblitmash.com/novosti/zavershenie-proekta — состав участка обработки тюбингов в цехе № 10.</li>
+<li>metalist.ru/our-equipment — подписи под фотографиями цеха.</li>
+</ul>
+
+<h3>Юридическое</h3>
+<ul>
+<li>ГК РФ: ст. 359 п. 3 (отказ от удержания), ст. 705 п. 1 (риск случайной гибели), ст. 712 (удержание результата и оборудования), ст. 714 и 906 (ответственность за переданное имущество, правила главы 47).</li>
+<li>Судебная практика: постановление АС Северо-Кавказского округа от 31.03.2016 № Ф08-1769/16 по делу № А53-15988/2014.</li>
+</ul>
+
+<h3>Проверка контрагентов</h3>
+<ul>
+<li>ЕГРЮЛ через Rusprofile, list-org, Checko, «За честный бизнес», Федресурс, casebook. По каждому предприятию группы А проверялись статус юрлица, ОКВЭД, численность, финансовые показатели и исполнительные производства.</li>
+</ul>
+
+<div class="note"><p><strong>Чего в этом списке нет и почему.</strong> Полный текст ТУ 35-521-90 получить не удалось — файл 16,7 МБ, обе живые ссылки отдают 404. Ставки нормо-часа именно для крупногабаритной обработки чугуна на продольно-фрезерном станке публично не публикует никто: все найденные прайсы относятся к цехам средних деталей. Открытых котировок на приспособление под деталь 2 м и 1,9 т нет ни одной.</p></div>
+</section>
+</div>
+<footer><p>Технический разбор записи. Основной файл с задачей и заводами — отдельно.</p></footer>
+<button class="up" id="up" type="button">Наверх</button>
+</div>
+<script>
+(function(){
+  var q=document.getElementById('q'), cnt=document.getElementById('cnt'),
+      cards=[].slice.call(document.querySelectorAll('#reestr article.c'));
+  if(q){
+    var base=cards.length;
+    cnt.textContent=base+' предприятий';
+    q.addEventListener('input',function(){
+      var v=q.value.trim().toLowerCase(), n=0;
+      cards.forEach(function(c){
+        var hit=!v||(c.getAttribute('data-s')||'').indexOf(v)>-1;
+        c.classList.toggle('hide',!hit); if(hit)n++;
+      });
+      cnt.textContent=v?(n+' из '+base):(base+' предприятий');
+      document.querySelectorAll('#reestr details').forEach(function(d){ if(v) d.open=true; });
+    });
+  }
+  var up=document.getElementById('up');
+  addEventListener('scroll',function(){ up.classList.toggle('on', scrollY>700); },{passive:true});
+  up.addEventListener('click',function(){ scrollTo({top:0,behavior:'smooth'}); });
+})();
+</script>
+</html>
