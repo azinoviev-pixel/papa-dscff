@@ -44,7 +44,10 @@
 
 /* ── основание ──────────────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+/* Плавной прокрутки здесь быть не должно: документы длиной в 70 и 157 экранов,
+   и переход по разделу анимируется на десятки тысяч пикселей — выглядит как
+   зависание. Прыжок мгновенный. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;max-width:100%;overflow-x:clip}
 img,svg{max-width:100%;height:auto}
 body{
@@ -210,6 +213,8 @@ summary{font-family:var(--narrow);font-weight:700;font-size:16px;padding:var(--s
 summary::-webkit-details-marker{display:none}
 summary::before{content:"▸ ";color:var(--accent)}
 details[open] summary::before{content:"▾ "}
+/* У кнопки «Разделы» своя стрелка справа, эта ей не нужна. */
+.razdely>summary::before{content:none}
 details[open] summary{border-bottom:1px solid var(--rule-2)}
 details>article.c,details>div{margin:var(--s3) var(--s4)}
 
@@ -312,7 +317,30 @@ footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rul
 /* Якоря не должны прятаться под полосой. */
 section[id],h2[id],div[id]{scroll-margin-top:78px}
 
-@media print{.navbar{position:static;border-bottom:0}.razdely{display:none}}
+@media print{.navbar{display:none}.razdely{display:none}button.up{display:none}}
+/* --- Телефон: таблица становится стопкой карточек --------------------------
+   Ширины в 390 px не хватает ни одной нашей таблице. Горизонтальная прокрутка
+   внутри .tw остаётся как запасной путь, но по умолчанию строка разворачивается
+   в карточку, где над каждым значением стоит его заголовок из шапки. */
+@media (max-width:560px){
+  .tw{overflow-x:visible}
+  .tw table,.tw tbody,.tw tr,.tw td{display:block;width:auto}
+  .tw thead{display:none}
+  .tw tr{border:1px solid var(--rule);border-radius:3px;background:var(--card);
+    padding:var(--s3) var(--s4);margin:0 0 var(--s3)}
+  .tw tr:last-child{margin-bottom:0}
+  .tw td{padding:7px 0;border:0;text-align:left}
+  .tw td+td{border-top:1px solid var(--rule-2)}
+  .tw td::before{content:attr(data-l);display:block;
+    font-family:var(--narrow);font-weight:700;font-size:11px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 3px}
+  .tw td[data-l=""]::before,.tw td:not([data-l])::before{display:none}
+  .tw td.num{text-align:left}
+  /* Первая ячейка строки — её название, поэтому крупнее и без подписи. */
+  .tw td:first-child{font-family:var(--narrow);font-weight:700;font-size:16.5px;
+    color:var(--ink);padding-top:0}
+  .tw td:first-child::before{display:none}
+}
 
 a.card{display:block;background:var(--card);border:1px solid var(--rule);border-radius:3px;
   padding:var(--s5);margin:0 0 var(--s3);text-decoration:none;color:inherit;
