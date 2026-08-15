@@ -213,6 +213,8 @@ summary{font-family:var(--narrow);font-weight:700;font-size:16px;padding:var(--s
 summary::-webkit-details-marker{display:none}
 summary::before{content:"▸ ";color:var(--accent)}
 details[open] summary::before{content:"▾ "}
+/* У кнопки «Разделы» своя стрелка справа, эта ей не нужна. */
+.razdely>summary::before{content:none}
 details[open] summary{border-bottom:1px solid var(--rule-2)}
 details>article.c,details>div{margin:var(--s3) var(--s4)}
 
@@ -267,15 +269,64 @@ footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rul
   .doc>*:not(.doc-head){margin-left:var(--s4);margin-right:var(--s4)}
   .doc-head{padding:var(--s3) var(--s4)}
 }
+
+/* --- Закреплённая шапка ---------------------------------------------------
+   Оба меню — переходы между страницами и список разделов — живут в одной
+   липкой полосе. Фон непрозрачный: под полосой проезжает текст, и сквозь
+   полупрозрачный он читался бы как грязь. */
+.navbar{position:sticky;top:0;z-index:60;background:var(--paper);
+  border-bottom:1px solid var(--rule);margin:0 0 var(--s5);
+  display:flex;align-items:center;gap:var(--s2)}
+/* Меню тянется и прокручивается внутри себя, кнопка «Разделы» держит своё место
+   справа и на узком экране никуда не уезжает. min-width:0 обязателен: без него
+   flex-элемент не даёт себя сжать и выталкивает соседа за край. */
+.navbar nav.files{flex:1 1 auto;min-width:0}
+.navbar .razdely{flex:0 0 auto;margin-left:0}
+.navbar nav.files{border-bottom:0;padding:var(--s2) 0;margin:0;
+  display:flex;align-items:center;gap:var(--s1);flex-wrap:nowrap;
+  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.navbar nav.files::-webkit-scrollbar{display:none}
+.navbar nav.files a{flex:0 0 auto;white-space:nowrap}
+
+/* Кнопка «Разделы» и выпадающий список. Сделан на штатном раскрывающемся
+   блоке, а не на скрипте: работает без JS и закрывается по Esc сам. */
+.razdely{position:relative}
+.razdely>summary{list-style:none;cursor:pointer;user-select:none;
+  font-family:var(--narrow);font-size:14.5px;font-weight:700;letter-spacing:.01em;
+  min-height:38px;display:inline-flex;align-items:center;gap:6px;
+  padding:0 var(--s3);color:var(--accent);white-space:nowrap;
+  border:1px solid var(--rule);border-radius:3px;background:var(--card)}
+.razdely>summary::-webkit-details-marker{display:none}
+/* Свою стрелку рисуем через ::after, а штатный маркер гасим: в части браузеров
+   list-style:none его не убирает, и получаются две стрелки сразу. */
+.razdely>summary::marker{content:""}
+.razdely>summary::after{content:"▾";font-size:11px;line-height:1}
+.razdely[open]>summary{border-color:var(--accent)}
+.razdely[open]>summary::after{content:"▴"}
+.razdely-spisok{position:absolute;right:0;top:calc(100% + 6px);z-index:70;
+  min-width:min(320px,86vw);max-height:min(70vh,560px);overflow-y:auto;
+  background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:0 10px 30px rgba(0,0,0,.16);padding:var(--s2) 0}
+.razdely-spisok a{display:block;padding:9px var(--s4);font-size:14.5px;
+  color:var(--ink-2);text-decoration:none;line-height:1.3}
+.razdely-spisok a:hover{background:var(--accent-w);color:var(--accent)}
+.razdely-spisok a.grp{font-family:var(--narrow);font-weight:700;
+  color:var(--ink);border-top:1px solid var(--rule-2);margin-top:4px;padding-top:11px}
+.razdely-spisok a.grp:first-child{border-top:0;margin-top:0}
+
+/* Якоря не должны прятаться под полосой. */
+section[id],h2[id],div[id]{scroll-margin-top:78px}
+
+@media print{.navbar{position:static;border-bottom:0}.razdely{display:none}}
 </style>
-<div class="wrap"><div class="part" id="delo">
-<nav class="files"><a class="cur" href="">Главное</a><a href="papa.html">Всё по задаче</a><a href="idei.html">Логистика и предложения</a><a href="razbor.html">Разбор записи</a><a href="istochniki.html">Откуда что взято</a></nav>
+<div class="wrap"><div class="navbar"><nav class="files"><a class="cur" href="">Главное</a><a href="papa.html">Всё по задаче</a><a href="reestr.html">Реестр заводов</a><a href="idei.html">Логистика и предложения</a><a href="razbor.html">Разбор записи</a><a href="istochniki.html">Откуда что взято</a></nav><details class="razdely"><summary>Разделы</summary><div class="razdely-spisok"><a class="grp" href="#delo">Три действия</a><a href="#r2">Три действия</a><a href="#r3">Кому звонить: заводы со станками с ЧПУ</a><a href="#r5">Ключевые числа и откуда они взяты</a><a href="#r7">В чём мы не уверены</a><a href="#r8">Где что лежит</a></div></details></div><div class="part" id="delo">
+
 <header class="mast"><p class="eyebrow">Тюбинги клинчатых перемычек · давальческая обработка</p>
 <h1>Главное на одной странице</h1>
 <p class="dek">Здесь только то, что нужно для дела: кому звонить, что спрашивать, какие числа и откуда они взяты.
 Все подробности — в файле «Всё по задаче», ссылки стоят в каждой строке.</p></header>
 
-<section><h2>Три действия</h2>
+<section id="r2"><h2>Три действия</h2>
 <ol class="steps">
 <li><b>Шаг первый: обзвонить заводы из списка ниже.</b> Это разговор без файлов и без объёма — ни чертежей,
 ни числа деталей называть не нужно. Два вопроса: какой стол у станка с ЧПУ по ширине и сколько он держит
@@ -288,7 +339,7 @@ footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rul
 без них подрядчики дадут несравнимые цены.</li>
 </ol></section>
 
-<section><h2>Кому звонить: заводы со станками с ЧПУ</h2>
+<section id="r3"><h2>Кому звонить: заводы со станками с ЧПУ</h2>
 <p class="sub">Отобраны по трём признакам одновременно: ЧПУ, опубликованный размер стола берёт деталь 2083 мм длиной
 и не меньше 1150 мм шириной — то есть с запасом, по самому тяжёлому предположению, — и за компанией стоит юрлицо, способное таким станком владеть. Список идёт от лучших к тем, где есть оговорки —
 но включены и спорные, чтобы решение было твоим. Сортировка не по километрам: логистика считается отдельно.</p>
@@ -429,7 +480,7 @@ footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rul
 3000 ₽ за нормо-час с НДС. Поэтому цена придёт только из ответов на запрос, и в форме ответа она стоит
 отдельными строками: ставка нормо-часа, трудоёмкость и число установов.</p></section>
 
-<section><h2>Ключевые числа и откуда они взяты</h2>
+<section id="r5"><h2>Ключевые числа и откуда они взяты</h2>
 <p class="sub">Каждое число с источником. Если источник — расчёт, сказано, из чего он собран.</p>
 <div class="tw"><table><thead><tr><th scope="col">Число</th><th scope="col">Значение</th><th scope="col">Откуда</th></tr></thead><tbody>
 <tr><td>Объём</td><td>644 детали, около 681 тонны</td><td>Твоя запись 27 июня: 28 комплектов по 7 штук на Ø8,5 и по 32 комплекта на Ø9,5 и Ø10,5</td></tr>
@@ -451,7 +502,7 @@ footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rul
 <tr><td>Предприятий в реестре</td><td>348</td><td>Собрано и проверено. С ЧПУ — 131, из них габарит проходит у 49</td></tr>
 </tbody></table></div></section>
 
-<section><h2>В чём мы не уверены</h2>
+<section id="r7"><h2>В чём мы не уверены</h2>
 <ul>
 <li><b>Какая редакция чертежей действует.</b> Ширины подтверждены по всем трём заказам: цепь
 750+400 = 1150 мм стоит на листах и подписанного Ø8,5, и обоих московских — они нашлись в ТУ 35-521-90,
@@ -464,7 +515,7 @@ footer{margin-top:var(--s8);padding-top:var(--s4);border-top:2px solid var(--rul
 <li><b>Ни один телефон не набран.</b> Всё из открытых источников и реестров юрлиц.</li>
 </ul></section>
 
-<section><h2>Где что лежит</h2>
+<section id="r8"><h2>Где что лежит</h2>
 <div class="tw"><table><thead><tr><th scope="col">Файл</th><th scope="col">Что в нём</th></tr></thead><tbody>
 <tr><td><b>Эта страница</b></td><td>Главное: кому звонить, ключевые числа, откуда они</td></tr>
 <tr><td><a href="papa.html">Всё по задаче</a></td><td>То, что ты просил, целиком: заводы по критериям, текст запроса, форма ответа, потолок цены, ответы на твои вопросы, пятнадцать вопросов к тебе и реестр на 348 предприятий с поиском</td></tr>
