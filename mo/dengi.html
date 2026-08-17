@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Деньги и сроки — мехобработка тюбингов</title>
+<style>
+:root{
+  --paper:#F7F7F4; --card:#FFFFFF; --sunk:#F1F1EE;
+  --ink:#15181B; --ink-2:#464C53; --muted:#697077;
+  --rule:#CFD3D6; --rule-2:#E4E7E9; --rule-hi:#15181B;
+  --accent:#17486B; --accent-w:#E7EDF2;
+  --flag:#A3392A;  --flag-w:#F7E9E6;
+  --ok:#2C5F40;    --ok-w:#E6EFE9;
+  --warn:#7A5320;  --warn-w:#F4EDE0;
+  --serif:"PT Serif",Charter,Georgia,serif;
+  --narrow:"PT Sans Narrow","Arial Narrow",system-ui,sans-serif;
+  --sans:"PT Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+    --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+    --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+    --accent:#7FB2D4; --accent-w:#1D2C38;
+    --flag:#E08A7B;  --flag-w:#33211E;
+    --ok:#7FBF9B;    --ok-w:#1C2A22;
+    --warn:#DCBB84;  --warn-w:#2A2318;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+  --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+  --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+  --accent:#7FB2D4; --accent-w:#1D2C38;
+  --flag:#E08A7B;  --flag-w:#33211E;
+  --ok:#7FBF9B;    --ok-w:#1C2A22;
+  --warn:#DCBB84;  --warn-w:#2A2318;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0;max-width:100%;overflow-x:clip}
+img,svg{max-width:100%;height:auto}
+body{background:var(--paper);color:var(--ink);
+  font:16.5px/1.62 var(--serif);
+  font-variant-numeric:lining-nums proportional-nums;
+  padding-inline:max(var(--s5),env(safe-area-inset-left))}
+.wrap{max-width:1060px;margin-inline:auto;padding-bottom:var(--s8)}
+::selection{background:var(--accent-w);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3{font-family:var(--narrow);font-weight:700;letter-spacing:-.005em;
+  color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.06}
+h2{font-size:clamp(21px,3.2vw,29px);line-height:1.12;margin:var(--s7) 0 var(--s3);
+  padding-top:var(--s4);border-top:2px solid var(--rule-hi)}
+h3{font-size:clamp(17px,2.2vw,20px);line-height:1.22;margin:var(--s5) 0 var(--s2)}
+p{margin:0 0 var(--s4);max-width:var(--measure)}
+a{color:var(--accent);text-underline-offset:2px}
+ul,ol{margin:0 0 var(--s4);padding-left:1.35em;max-width:var(--measure)}
+li{margin:0 0 var(--s2)}
+code,.mono{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums}
+/* ── ШАПКА ПОРТАЛА ── */
+.topbar{position:sticky;top:0;z-index:60;background:var(--paper);
+  border-bottom:2px solid var(--rule-hi);margin:0 0 var(--s5)}
+.tb-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) 0 var(--s2);
+  flex-wrap:wrap}
+.tb-logo{font-family:var(--narrow);font-weight:700;font-size:15px;letter-spacing:.02em;
+  color:var(--ink);text-decoration:none;white-space:nowrap}
+.tb-logo span{color:var(--muted);font-weight:400}
+.nav{display:flex;gap:var(--s1);overflow-x:auto;padding:0 0 var(--s2);
+  scrollbar-width:none;-ms-overflow-style:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--narrow);font-size:14.5px;font-weight:700;
+  min-height:38px;display:inline-flex;align-items:center;padding:0 var(--s3);
+  color:var(--ink-2);text-decoration:none;white-space:nowrap;
+  border:1px solid var(--rule);border-radius:3px;background:var(--card)}
+.nav a:hover{color:var(--accent);border-color:var(--accent)}
+.nav a.cur{background:var(--rule-hi);color:var(--paper);border-color:var(--rule-hi)}
+.kicker{font-family:var(--narrow);font-size:12px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.lede{font-size:clamp(17px,2.3vw,20px);line-height:1.5;color:var(--ink-2);
+  max-width:60ch;margin:var(--s4) 0 var(--s6)}
+.tw{overflow-x:auto;margin:0 0 var(--s5);border:1px solid var(--rule);border-radius:3px;
+  background:var(--card)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14.5px;
+  font-variant-numeric:tabular-nums}
+thead th{font-family:var(--narrow);font-weight:700;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:var(--s3);border-bottom:2px solid var(--rule-hi);white-space:nowrap;
+  background:var(--sunk)}
+td{padding:var(--s3);border-bottom:1px solid var(--rule-2);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+td.num,.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note,.key,.open,.good{border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;background:var(--card);padding:var(--s4) var(--s5);margin:0 0 var(--s5)}
+.key{border-left-color:var(--flag);background:var(--flag-w)}
+.open{border-left-color:var(--warn);background:var(--warn-w)}
+.good{border-left-color:var(--ok);background:var(--ok-w)}
+.note p,.key p,.open p,.good p{max-width:none}
+.note>p:last-child,.key>p:last-child,.open>p:last-child,.good>p:last-child{margin-bottom:0}
+.flag{display:inline-block;font-family:var(--narrow);font-weight:700;font-size:11.5px;
+  letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:2px;
+  white-space:nowrap;margin:0 var(--s1) var(--s1) 0}
+.f-red{background:var(--flag-w);color:var(--flag);border:1px solid var(--flag)}
+.f-warn{background:var(--warn-w);color:var(--warn);border:1px solid var(--warn)}
+.f-ok{background:var(--ok-w);color:var(--ok);border:1px solid var(--ok)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:var(--s4);margin:0 0 var(--s5)}
+.cell{border:1px solid var(--rule);border-radius:3px;background:var(--card);padding:var(--s4)}
+.cell h4{font-family:var(--narrow);font-size:12.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.cell .big{font-family:var(--narrow);font-size:clamp(21px,2.9vw,27px);font-weight:700;
+  line-height:1.1;margin:0 0 var(--s1)}
+.cell p{margin:0;font-size:14px;line-height:1.45;max-width:none;color:var(--ink-2)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:var(--s4);margin:0 0 var(--s6)}
+.pcard{border:1px solid var(--rule);border-radius:3px;background:var(--card);
+  padding:var(--s5);text-decoration:none;color:inherit;display:block}
+.pcard:hover{border-color:var(--accent)}
+.pcard h3{margin:0 0 var(--s2);color:var(--accent)}
+.pcard p{margin:0;font-family:var(--sans);font-size:14px;line-height:1.45;
+  color:var(--ink-2);max-width:none}
+.src{font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.5}
+footer{margin-top:var(--s8);padding-top:var(--s4);border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="topbar">
+  <div class="tb-row">
+    <a class="tb-logo" href="index.html">Мехобработка тюбингов <span>· рабочие материалы</span></a>
+  </div>
+  <nav class="nav">
+  <a href="index.html">Обзор</a>
+  <a href="detal.html">Деталь</a>
+  <a href="tehnologiya.html">Технология</a>
+  <a href="zavody.html">Заводы</a>
+  <a href="tyubingi.html">Кто делает тюбинги</a>
+  <a href="dengi.html" class="cur">Деньги и сроки</a>
+  <a href="voprosy.html">Что спрашивать</a>
+  <a href="istochniki.html">Чего не знаем</a>
+  </nav>
+</header>
+
+<p class="kicker">Раздел 5</p>
+<h1>Деньги и сроки</h1>
+<p class="lede">Сколько стоят тюбинги на рынке, какую долю в этом занимает обработка
+и почему расчёт сроков в три месяца сходится не всегда.</p>
+
+<h2>Сколько стоит готовый тюбинг</h2>
+
+<p>Нашли свежий тендер того же заказчика: <b>«Моспроект-3»</b>, закупка чугунных
+тюбингов для станции «Ул. Копылова» Красноярского метро, объявлена 19 июня 2026,
+итоги 10 июля.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Что</th><th class="num">Значение</th></tr></thead>
+<tbody>
+<tr><td data-l="Что">Начальная цена контракта</td><td class="num" data-l="Значение"><b>498 490 953 ₽</b> с НДС</td></tr>
+<tr><td data-l="Что">Объём</td><td class="num" data-l="Значение">около 1500 деталей разных размеров</td></tr>
+<tr><td data-l="Что">Цена за среднюю деталь</td><td class="num" data-l="Значение"><b>332 327 ₽</b> с НДС</td></tr>
+<tr><td data-l="Что">То же без НДС 22 %</td><td class="num" data-l="Значение"><b>272 400 ₽</b></td></tr>
+<tr><td data-l="Что">Что входит</td><td class="num" data-l="Значение">готовый тюбинг: литьё, обработка, поставка</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Для сравнения, тендер 2025 года: 1,5 млрд ₽ за более чем 7300 тюбингов —
+это около <b>205 000 ₽ за штуку</b> с НДС 20 %, то есть 171 000 ₽ без НДС.
+<b>Единой рыночной цены за тюбинг нет, разброс двукратный.</b></p>
+
+<h2>Какую долю занимает обработка</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Что</th><th class="num">₽ за деталь, без НДС</th><th class="num">Доля</th></tr></thead>
+<tbody>
+<tr><td data-l="Что">Готовый тюбинг, тендер 2026</td>
+    <td class="num" data-l="₽">272 400</td><td class="num" data-l="Доля">100 %</td></tr>
+<tr><td data-l="Что">Готовый тюбинг, тендер 2025</td>
+    <td class="num" data-l="₽">171 000</td><td class="num" data-l="Доля">100 %</td></tr>
+<tr><td data-l="Что"><b>Обработка — что просят подрядчики</b></td>
+    <td class="num" data-l="₽">80 000</td><td class="num" data-l="Доля"><b>29 – 47 %</b></td></tr>
+<tr><td data-l="Что">Обработка — цель</td>
+    <td class="num" data-l="₽">30 000 – 40 000</td><td class="num" data-l="Доля">11 – 23 %</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="open">
+<p><b>Осторожно с этими долями.</b> Подрядчики просят за одну операцию <b>от трети
+до половины</b> цены готового изделия — это много. Но вывод «значит цель 30–40 тысяч
+разумна» из этого <b>не следует</b>: мы не знаем ни ставку станко-часа по России,
+ни цену литья у «Комлита».</p>
+<p>При 8–10 часах на деталь 30–40 тысяч дают 3000–5000 ₽ за час работы портального
+станка с оператором, оснасткой, термообработкой и контрольным инструментом под угловой
+допуск в минутах. <b>Если эта цифра ниже себестоимости, отказы придут именно
+от серьёзных заводов</b>, а согласятся те, кто не понял задачу.</p>
+</div>
+
+<h2>Припуск: два документа противоречат друг другу</h2>
+
+<div class="key">
+<p><b>ТУ 35-521-90</b>, по которым сделаны наши чертежи, пункт 1.3.15: увеличение толщины
+спинки, бортов и рёбер против чертежа «не нормируется и причиной к забракованию
+не является».</p>
+<p><b>Действующий ГОСТ Р 57054-2016</b>, пункт 6.3.7, наоборот: «Допуски размеров,
+массы и <b>припуски на механическую обработку — по 13-му классу точности</b>
+по ГОСТ Р 53464».</p>
+<p><b>Разница практическая.</b> По ТУ отливка может прийти толще на сколько угодно,
+и подрядчик не сможет дать фиксированную цену за деталь. По ГОСТу припуск нормирован,
+и цена считается. <b>Какой документ у нас в договоре — вопрос к заказчику,
+и решать его надо до разговора о цене.</b></p>
+</div>
+
+<h2>Сроки упираются в сменность, а не в станок</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Режим</th><th class="num">Рабочих дней</th><th class="num">Это примерно</th></tr></thead>
+<tbody>
+<tr><td data-l="Режим">Три смены, круглосуточно</td><td class="num" data-l="Дней">65 – 82</td>
+    <td class="num" data-l="Это">2,5 месяца</td></tr>
+<tr><td data-l="Режим">Две смены</td><td class="num" data-l="Дней">98 – 123</td>
+    <td class="num" data-l="Это">4 – 5 месяцев</td></tr>
+<tr><td data-l="Режим">Одна смена</td><td class="num" data-l="Дней"><b>196 – 245</b></td>
+    <td class="num" data-l="Это"><b>около года</b></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="open">
+<p><b>Все три строки — на одном станке, и это только машинное время.</b> При 8–10 часах
+на деталь выходит 1568–1960 станко-часов.</p>
+<p>Чего в этих числах <b>нет</b>: установки и выверки отливки почти в две тонны
+по базе из трёх точек, переналадок, выходных, отжига (сутки на садку печи, и таких
+загрузок несколько), второго старения после черновой обработки. Реальный срок будет
+заметно больше — насколько, скажет только завод.</p>
+<p><b>Первый вопрос подрядчику про сроки: сколько станков этого класса он поставит
+и в сколько смен.</b></p>
+</div>
+
+<h2>Рынок тюбингов живой</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Тендер</th><th class="num">Сумма</th><th>Регион</th></tr></thead>
+<tbody>
+<tr><td data-l="Тендер">Красноярское метро, первый этап</td><td class="num" data-l="Сумма">1 151 465 230 ₽</td><td data-l="Регион">Красноярск</td></tr>
+<tr><td data-l="Тендер">Красноярское метро, станция «Ул. Копылова»</td><td class="num" data-l="Сумма">498 490 953 ₽</td><td data-l="Регион">Красноярск</td></tr>
+<tr><td data-l="Тендер">Плита лотковая и тюбинги чугунные</td><td class="num" data-l="Сумма">170 000 000 ₽</td><td data-l="Регион">Покров, Москва</td></tr>
+<tr><td data-l="Тендер">Линия Север-Юг, обделка стволов шахт</td><td class="num" data-l="Сумма">141 870 155 ₽</td><td data-l="Регион">Челябинск</td></tr>
+<tr><td data-l="Тендер">Поставка тюбингов чугунных</td><td class="num" data-l="Сумма">87 056 018 ₽</td><td data-l="Регион">—</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Заводы, которые это делают, загружены — отраслевой обзор за 2025 год пишет о полной
+загрузке предприятий этого круга. На сроки это влияет напрямую.</p>
+
+<div class="note">
+<p><b>Тендеры на давальческую обработку тоже есть.</b> Например, «Оказание услуг
+по механической обработке заготовок из давальческого материала» на 59,5 млн ₽,
+размещён 4 августа 2026. Схема «дай отливку, получи обработку» на рынке обычная.
+Тендеров именно на обработку тюбингов не нашлось — тюбинги закупают готовыми.</p>
+</div>
+<footer>
+<p class="src">Источники: чертежи «Перемычка 85,4» (7 листов), ТУ 35-521-90,
+ГОСТ Р 57054-2016, патент РФ № 2661929, каталоги и вакансии предприятий,
+тендерные площадки. Числа, посчитанные нами, помечены как расчёт.</p>
+<p class="src">Собрано 17 августа 2026 для внутренней работы. Страницы не проиндексированы.</p>
+</footer>
+</div>
+</html>

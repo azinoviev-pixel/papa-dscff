@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Кто делает тюбинги — мехобработка</title>
+<style>
+:root{
+  --paper:#F7F7F4; --card:#FFFFFF; --sunk:#F1F1EE;
+  --ink:#15181B; --ink-2:#464C53; --muted:#697077;
+  --rule:#CFD3D6; --rule-2:#E4E7E9; --rule-hi:#15181B;
+  --accent:#17486B; --accent-w:#E7EDF2;
+  --flag:#A3392A;  --flag-w:#F7E9E6;
+  --ok:#2C5F40;    --ok-w:#E6EFE9;
+  --warn:#7A5320;  --warn-w:#F4EDE0;
+  --serif:"PT Serif",Charter,Georgia,serif;
+  --narrow:"PT Sans Narrow","Arial Narrow",system-ui,sans-serif;
+  --sans:"PT Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+    --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+    --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+    --accent:#7FB2D4; --accent-w:#1D2C38;
+    --flag:#E08A7B;  --flag-w:#33211E;
+    --ok:#7FBF9B;    --ok-w:#1C2A22;
+    --warn:#DCBB84;  --warn-w:#2A2318;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+  --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+  --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+  --accent:#7FB2D4; --accent-w:#1D2C38;
+  --flag:#E08A7B;  --flag-w:#33211E;
+  --ok:#7FBF9B;    --ok-w:#1C2A22;
+  --warn:#DCBB84;  --warn-w:#2A2318;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0;max-width:100%;overflow-x:clip}
+img,svg{max-width:100%;height:auto}
+body{background:var(--paper);color:var(--ink);
+  font:16.5px/1.62 var(--serif);
+  font-variant-numeric:lining-nums proportional-nums;
+  padding-inline:max(var(--s5),env(safe-area-inset-left))}
+.wrap{max-width:1060px;margin-inline:auto;padding-bottom:var(--s8)}
+::selection{background:var(--accent-w);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3{font-family:var(--narrow);font-weight:700;letter-spacing:-.005em;
+  color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.06}
+h2{font-size:clamp(21px,3.2vw,29px);line-height:1.12;margin:var(--s7) 0 var(--s3);
+  padding-top:var(--s4);border-top:2px solid var(--rule-hi)}
+h3{font-size:clamp(17px,2.2vw,20px);line-height:1.22;margin:var(--s5) 0 var(--s2)}
+p{margin:0 0 var(--s4);max-width:var(--measure)}
+a{color:var(--accent);text-underline-offset:2px}
+ul,ol{margin:0 0 var(--s4);padding-left:1.35em;max-width:var(--measure)}
+li{margin:0 0 var(--s2)}
+code,.mono{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums}
+/* ── ШАПКА ПОРТАЛА ── */
+.topbar{position:sticky;top:0;z-index:60;background:var(--paper);
+  border-bottom:2px solid var(--rule-hi);margin:0 0 var(--s5)}
+.tb-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) 0 var(--s2);
+  flex-wrap:wrap}
+.tb-logo{font-family:var(--narrow);font-weight:700;font-size:15px;letter-spacing:.02em;
+  color:var(--ink);text-decoration:none;white-space:nowrap}
+.tb-logo span{color:var(--muted);font-weight:400}
+.nav{display:flex;gap:var(--s1);overflow-x:auto;padding:0 0 var(--s2);
+  scrollbar-width:none;-ms-overflow-style:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--narrow);font-size:14.5px;font-weight:700;
+  min-height:38px;display:inline-flex;align-items:center;padding:0 var(--s3);
+  color:var(--ink-2);text-decoration:none;white-space:nowrap;
+  border:1px solid var(--rule);border-radius:3px;background:var(--card)}
+.nav a:hover{color:var(--accent);border-color:var(--accent)}
+.nav a.cur{background:var(--rule-hi);color:var(--paper);border-color:var(--rule-hi)}
+.kicker{font-family:var(--narrow);font-size:12px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.lede{font-size:clamp(17px,2.3vw,20px);line-height:1.5;color:var(--ink-2);
+  max-width:60ch;margin:var(--s4) 0 var(--s6)}
+.tw{overflow-x:auto;margin:0 0 var(--s5);border:1px solid var(--rule);border-radius:3px;
+  background:var(--card)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14.5px;
+  font-variant-numeric:tabular-nums}
+thead th{font-family:var(--narrow);font-weight:700;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:var(--s3);border-bottom:2px solid var(--rule-hi);white-space:nowrap;
+  background:var(--sunk)}
+td{padding:var(--s3);border-bottom:1px solid var(--rule-2);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+td.num,.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note,.key,.open,.good{border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;background:var(--card);padding:var(--s4) var(--s5);margin:0 0 var(--s5)}
+.key{border-left-color:var(--flag);background:var(--flag-w)}
+.open{border-left-color:var(--warn);background:var(--warn-w)}
+.good{border-left-color:var(--ok);background:var(--ok-w)}
+.note p,.key p,.open p,.good p{max-width:none}
+.note>p:last-child,.key>p:last-child,.open>p:last-child,.good>p:last-child{margin-bottom:0}
+.flag{display:inline-block;font-family:var(--narrow);font-weight:700;font-size:11.5px;
+  letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:2px;
+  white-space:nowrap;margin:0 var(--s1) var(--s1) 0}
+.f-red{background:var(--flag-w);color:var(--flag);border:1px solid var(--flag)}
+.f-warn{background:var(--warn-w);color:var(--warn);border:1px solid var(--warn)}
+.f-ok{background:var(--ok-w);color:var(--ok);border:1px solid var(--ok)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:var(--s4);margin:0 0 var(--s5)}
+.cell{border:1px solid var(--rule);border-radius:3px;background:var(--card);padding:var(--s4)}
+.cell h4{font-family:var(--narrow);font-size:12.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.cell .big{font-family:var(--narrow);font-size:clamp(21px,2.9vw,27px);font-weight:700;
+  line-height:1.1;margin:0 0 var(--s1)}
+.cell p{margin:0;font-size:14px;line-height:1.45;max-width:none;color:var(--ink-2)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:var(--s4);margin:0 0 var(--s6)}
+.pcard{border:1px solid var(--rule);border-radius:3px;background:var(--card);
+  padding:var(--s5);text-decoration:none;color:inherit;display:block}
+.pcard:hover{border-color:var(--accent)}
+.pcard h3{margin:0 0 var(--s2);color:var(--accent)}
+.pcard p{margin:0;font-family:var(--sans);font-size:14px;line-height:1.45;
+  color:var(--ink-2);max-width:none}
+.src{font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.5}
+footer{margin-top:var(--s8);padding-top:var(--s4);border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="topbar">
+  <div class="tb-row">
+    <a class="tb-logo" href="index.html">Мехобработка тюбингов <span>· рабочие материалы</span></a>
+  </div>
+  <nav class="nav">
+  <a href="index.html">Обзор</a>
+  <a href="detal.html">Деталь</a>
+  <a href="tehnologiya.html">Технология</a>
+  <a href="zavody.html">Заводы</a>
+  <a href="tyubingi.html" class="cur">Кто делает тюбинги</a>
+  <a href="dengi.html">Деньги и сроки</a>
+  <a href="voprosy.html">Что спрашивать</a>
+  <a href="istochniki.html">Чего не знаем</a>
+  </nav>
+</header>
+
+<p class="kicker">Раздел 4</p>
+<h1>Кто делает тюбинги</h1>
+<p class="lede">Девять предприятий, которые делают это изделие целиком. Они одновременно
+самые умелые и самые рискованные для нас. Список ведётся отдельно именно поэтому.</p>
+
+<div class="key">
+<p><b>В чём загвоздка.</b> У этих заводов полный цикл: они и льют, и обрабатывают.
+Отдав им обработку, мы показываем им заказчика и объём — и дальше им выгоднее выйти
+к нему напрямую и продать готовый тюбинг, а не оказывать услугу. Идея в том, чтобы
+<b>разделить процессы</b>: литьё у «Комлита», обработка отдельно. Производитель тюбингов
+эту схему ломает.</p>
+</div>
+
+<p>При этом вычёркивать их нельзя — вот чем они ценны, даже если заказ им не отдавать.</p>
+
+<div class="cols">
+  <div class="cell"><h4>Ориентир по цене</h4>
+    <p>Они знают настоящую себестоимость обработки тюбинга. Их прайс — точка отсчёта
+    в разговоре со всеми остальными</p></div>
+  <div class="cell"><h4>Ориентир по времени</h4>
+    <p>«Сиблитмаш» делает 12 000 штук в год. По этому видно, сколько деталь занимает
+    в потоке, а не по одному опыту</p></div>
+  <div class="cell"><h4>Запасной вариант</h4>
+    <p>Если ни один сторонний завод не возьмётся за допуск ±1′10″, это те, кто возьмётся
+    точно</p></div>
+  <div class="cell"><h4>Вариант полного цикла</h4>
+    <p>Если давальческая схема окажется дороже, чем купить готовое, — вот у кого
+    покупать</p></div>
+  <div class="cell"><h4>Источник технологии</h4>
+    <p>У них можно узнать, чем режут канавку и как держат углы, вообще не размещая
+    заказ</p></div>
+</div>
+
+<h2>Россия</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Завод</th><th>Город</th><th class="num">От коридора</th><th>Что известно</th></tr></thead>
+<tbody>
+<tr><td data-l="Завод"><b>ООО «Сиблитмаш»</b></td><td data-l="Город">Новосибирск</td>
+  <td class="num" data-l="Км">2449 км</td>
+  <td data-l="Что"><b>10 000 т в год — это 12 000 штук.</b> Диаметры тоннелей 5,5–15 м,
+    чугун СЧ15–СЧ30. Поставки в Москву, Новосибирск, Омск, Екатеринбург, Челябинск,
+    Якутию. Брак снижен с 5 % до 2 %. Прямо заявлен «производственный поток механической
+    обработки тюбингов». Данные конца 2022 года<br>
+    <span class="flag f-red">конкурент</span></td></tr>
+<tr><td data-l="Завод"><b>АО «Металлист»</b><br>Качканарский ЛМЗ</td><td data-l="Город">Качканар</td>
+  <td class="num" data-l="Км">1086 км</td>
+  <td data-l="Что">До <b>100 т в месяц</b> для Московского метро — <b>взамен поставок
+    с Днепротяжмаша</b>. Около 900 работников, литьё СЧ15–СЧ30 и ВЧ40–ВЧ60.
+    Под фотографией цеха: «Фрезеровка параллельных бортов тюбинга на двухстоечном
+    фрезерном станке». Пятикоординатный портальный UNIPORT 7000<br>
+    <span class="flag f-red">конкурент</span></td></tr>
+<tr><td data-l="Завод"><b>ООО «Механоремонтный комплекс»</b></td><td data-l="Город">Магнитогорск</td>
+  <td class="num" data-l="Км">927 км</td>
+  <td data-l="Что">Дочернее предприятие ММК. Тюбинги для метро и шахт. Более 450 единиц
+    оборудования<br><span class="flag f-red">конкурент</span></td></tr>
+<tr><td data-l="Завод"><b>ООО «Арсенал-Деталь»</b></td><td data-l="Город">Екатеринбург</td>
+  <td class="num" data-l="Км">1070 км</td>
+  <td data-l="Что">Числится по чугунным тюбингам для метро и шахт. Подробностей по станкам
+    нет<br><span class="flag f-red">конкурент</span> <span class="flag f-warn">данных мало</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Ближнее зарубежье</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Завод</th><th>Где</th><th>Что известно</th></tr></thead>
+<tbody>
+<tr><td data-l="Завод"><b>Гомельский литейный завод «Центролит»</b></td>
+  <td data-l="Где">Гомель, Беларусь</td>
+  <td data-l="Что">Отгружает по <b>200 т тюбингов</b> для Москвы, расширяет литейный
+    участок. Данные октября 2025<br><span class="flag f-red">конкурент</span>
+    <span class="flag f-warn">вне РФ</span></td></tr>
+<tr><td data-l="Завод"><b>Пуховичский опытно-экспериментальный завод</b></td>
+  <td data-l="Где">Марьина Горка, Минская обл.</td>
+  <td data-l="Что">Тюбинги <b>с 1989 года</b>. После реконструкции 2006 года —
+    <b>до 1000 т в месяц</b>. Поставляет в минский, московский и другие метрополитены<br>
+    <span class="flag f-red">конкурент</span> <span class="flag f-warn">вне РФ</span></td></tr>
+<tr><td data-l="Завод"><b>АО «ТЭМК»</b></td><td data-l="Где">Темиртау, Казахстан</td>
+  <td data-l="Что">Делает тюбинги сам. <b>Но собственный станочный парк мал:</b>
+    фрезерные со столом 1000 × 300 до 120 кг, расточные 1120 × 900 до 3 т.
+    Наша деталь туда не входит<br><span class="flag f-red">конкурент</span>
+    <span class="flag f-warn">вне РФ</span> <span class="flag f-warn">деталь не входит</span></td></tr>
+<tr><td data-l="Завод"><b>ПАО «Днепротяжмаш»</b></td><td data-l="Где">Днепр, Украина</td>
+  <td data-l="Что">Исторический поставщик всего Метростроя СССР. <b>Там работал отец</b>,
+    оттуда же патент на способ изготовления и обработки тюбинга<br>
+    <span class="flag f-red">конкурент</span> <span class="flag f-warn">недоступен</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Две карточки в нашей базе оказались ложными</h2>
+
+<p>Фраза «Фрезеровка параллельных бортов тюбинга на двухстоечном фрезерном станке»
+была скопирована в карточки трёх разных предприятий. Настоящий владелец фразы —
+Качканар.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Завод</th><th>Проверка</th></tr></thead>
+<tbody>
+<tr><td data-l="Завод"><b>ООО «Металлист-Тольятти»</b></td>
+  <td data-l="Проверка"><b>Тюбинги не делает.</b> Каталог сайта прочитан целиком:
+    пресс-формы, штампы. Пометка «конкурент» снята. При этом завод остаётся сильным
+    кандидатом — у него портально-фрезерный <b>Waldrich Coburg PMC3000</b></td></tr>
+<tr><td data-l="Завод"><b>ООО «Металлист», Тула</b></td>
+  <td data-l="Проверка"><b>Тюбинги не делает.</b> Другое предприятие с похожим
+    названием. Пометка снята</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Что с ними делать</h2>
+
+<ol>
+<li><b>Не звонить первыми.</b> Сначала идут сторонние обработчики без пометки
+  «конкурент» — те, кому нет смысла перехватывать заказ.</li>
+<li><b>Звонить во вторую очередь и осторожно:</b> спрашивать про технологию и загрузку,
+  не называя заказчика и объём. Отсюда берём ориентир по цене и времени.</li>
+<li><b>Держать как запасной вариант</b> на случай, если допуск ±1′10″ окажется никому
+  не по силам.</li>
+</ol>
+<footer>
+<p class="src">Источники: чертежи «Перемычка 85,4» (7 листов), ТУ 35-521-90,
+ГОСТ Р 57054-2016, патент РФ № 2661929, каталоги и вакансии предприятий,
+тендерные площадки. Числа, посчитанные нами, помечены как расчёт.</p>
+<p class="src">Собрано 17 августа 2026 для внутренней работы. Страницы не проиндексированы.</p>
+</footer>
+</div>
+</html>

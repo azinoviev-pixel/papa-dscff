@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Деталь — мехобработка тюбингов</title>
+<style>
+:root{
+  --paper:#F7F7F4; --card:#FFFFFF; --sunk:#F1F1EE;
+  --ink:#15181B; --ink-2:#464C53; --muted:#697077;
+  --rule:#CFD3D6; --rule-2:#E4E7E9; --rule-hi:#15181B;
+  --accent:#17486B; --accent-w:#E7EDF2;
+  --flag:#A3392A;  --flag-w:#F7E9E6;
+  --ok:#2C5F40;    --ok-w:#E6EFE9;
+  --warn:#7A5320;  --warn-w:#F4EDE0;
+  --serif:"PT Serif",Charter,Georgia,serif;
+  --narrow:"PT Sans Narrow","Arial Narrow",system-ui,sans-serif;
+  --sans:"PT Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+    --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+    --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+    --accent:#7FB2D4; --accent-w:#1D2C38;
+    --flag:#E08A7B;  --flag-w:#33211E;
+    --ok:#7FBF9B;    --ok-w:#1C2A22;
+    --warn:#DCBB84;  --warn-w:#2A2318;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+  --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+  --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+  --accent:#7FB2D4; --accent-w:#1D2C38;
+  --flag:#E08A7B;  --flag-w:#33211E;
+  --ok:#7FBF9B;    --ok-w:#1C2A22;
+  --warn:#DCBB84;  --warn-w:#2A2318;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0;max-width:100%;overflow-x:clip}
+img,svg{max-width:100%;height:auto}
+body{background:var(--paper);color:var(--ink);
+  font:16.5px/1.62 var(--serif);
+  font-variant-numeric:lining-nums proportional-nums;
+  padding-inline:max(var(--s5),env(safe-area-inset-left))}
+.wrap{max-width:1060px;margin-inline:auto;padding-bottom:var(--s8)}
+::selection{background:var(--accent-w);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3{font-family:var(--narrow);font-weight:700;letter-spacing:-.005em;
+  color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.06}
+h2{font-size:clamp(21px,3.2vw,29px);line-height:1.12;margin:var(--s7) 0 var(--s3);
+  padding-top:var(--s4);border-top:2px solid var(--rule-hi)}
+h3{font-size:clamp(17px,2.2vw,20px);line-height:1.22;margin:var(--s5) 0 var(--s2)}
+p{margin:0 0 var(--s4);max-width:var(--measure)}
+a{color:var(--accent);text-underline-offset:2px}
+ul,ol{margin:0 0 var(--s4);padding-left:1.35em;max-width:var(--measure)}
+li{margin:0 0 var(--s2)}
+code,.mono{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums}
+/* ── ШАПКА ПОРТАЛА ── */
+.topbar{position:sticky;top:0;z-index:60;background:var(--paper);
+  border-bottom:2px solid var(--rule-hi);margin:0 0 var(--s5)}
+.tb-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) 0 var(--s2);
+  flex-wrap:wrap}
+.tb-logo{font-family:var(--narrow);font-weight:700;font-size:15px;letter-spacing:.02em;
+  color:var(--ink);text-decoration:none;white-space:nowrap}
+.tb-logo span{color:var(--muted);font-weight:400}
+.nav{display:flex;gap:var(--s1);overflow-x:auto;padding:0 0 var(--s2);
+  scrollbar-width:none;-ms-overflow-style:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--narrow);font-size:14.5px;font-weight:700;
+  min-height:38px;display:inline-flex;align-items:center;padding:0 var(--s3);
+  color:var(--ink-2);text-decoration:none;white-space:nowrap;
+  border:1px solid var(--rule);border-radius:3px;background:var(--card)}
+.nav a:hover{color:var(--accent);border-color:var(--accent)}
+.nav a.cur{background:var(--rule-hi);color:var(--paper);border-color:var(--rule-hi)}
+.kicker{font-family:var(--narrow);font-size:12px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.lede{font-size:clamp(17px,2.3vw,20px);line-height:1.5;color:var(--ink-2);
+  max-width:60ch;margin:var(--s4) 0 var(--s6)}
+.tw{overflow-x:auto;margin:0 0 var(--s5);border:1px solid var(--rule);border-radius:3px;
+  background:var(--card)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14.5px;
+  font-variant-numeric:tabular-nums}
+thead th{font-family:var(--narrow);font-weight:700;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:var(--s3);border-bottom:2px solid var(--rule-hi);white-space:nowrap;
+  background:var(--sunk)}
+td{padding:var(--s3);border-bottom:1px solid var(--rule-2);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+td.num,.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note,.key,.open,.good{border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;background:var(--card);padding:var(--s4) var(--s5);margin:0 0 var(--s5)}
+.key{border-left-color:var(--flag);background:var(--flag-w)}
+.open{border-left-color:var(--warn);background:var(--warn-w)}
+.good{border-left-color:var(--ok);background:var(--ok-w)}
+.note p,.key p,.open p,.good p{max-width:none}
+.note>p:last-child,.key>p:last-child,.open>p:last-child,.good>p:last-child{margin-bottom:0}
+.flag{display:inline-block;font-family:var(--narrow);font-weight:700;font-size:11.5px;
+  letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:2px;
+  white-space:nowrap;margin:0 var(--s1) var(--s1) 0}
+.f-red{background:var(--flag-w);color:var(--flag);border:1px solid var(--flag)}
+.f-warn{background:var(--warn-w);color:var(--warn);border:1px solid var(--warn)}
+.f-ok{background:var(--ok-w);color:var(--ok);border:1px solid var(--ok)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:var(--s4);margin:0 0 var(--s5)}
+.cell{border:1px solid var(--rule);border-radius:3px;background:var(--card);padding:var(--s4)}
+.cell h4{font-family:var(--narrow);font-size:12.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.cell .big{font-family:var(--narrow);font-size:clamp(21px,2.9vw,27px);font-weight:700;
+  line-height:1.1;margin:0 0 var(--s1)}
+.cell p{margin:0;font-size:14px;line-height:1.45;max-width:none;color:var(--ink-2)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:var(--s4);margin:0 0 var(--s6)}
+.pcard{border:1px solid var(--rule);border-radius:3px;background:var(--card);
+  padding:var(--s5);text-decoration:none;color:inherit;display:block}
+.pcard:hover{border-color:var(--accent)}
+.pcard h3{margin:0 0 var(--s2);color:var(--accent)}
+.pcard p{margin:0;font-family:var(--sans);font-size:14px;line-height:1.45;
+  color:var(--ink-2);max-width:none}
+.src{font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.5}
+footer{margin-top:var(--s8);padding-top:var(--s4);border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="topbar">
+  <div class="tb-row">
+    <a class="tb-logo" href="index.html">Мехобработка тюбингов <span>· рабочие материалы</span></a>
+  </div>
+  <nav class="nav">
+  <a href="index.html">Обзор</a>
+  <a href="detal.html" class="cur">Деталь</a>
+  <a href="tehnologiya.html">Технология</a>
+  <a href="zavody.html">Заводы</a>
+  <a href="tyubingi.html">Кто делает тюбинги</a>
+  <a href="dengi.html">Деньги и сроки</a>
+  <a href="voprosy.html">Что спрашивать</a>
+  <a href="istochniki.html">Чего не знаем</a>
+  </nav>
+</header>
+
+<p class="kicker">Раздел 1</p>
+<h1>Что за деталь</h1>
+<p class="lede">Всё прочитано с самих чертежей и ТУ. Массы и марки — по штампу каждого
+из семи листов, отдельно.</p>
+
+<h2>Комплект Ø8,5 — подписанный заказ</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Деталь</th><th class="num">Масса</th><th>Чугун</th><th>Габарит, мм</th></tr></thead>
+<tbody>
+<tr><td data-l="Деталь">АК-1Д левый</td><td class="num" data-l="Масса">1539 кг</td>
+    <td data-l="Чугун"><b>СЧ25</b></td><td data-l="Габарит">1710,8 × 1150</td></tr>
+<tr><td data-l="Деталь">АК-1Д правый</td><td class="num" data-l="Масса">1539 кг</td>
+    <td data-l="Чугун"><b>СЧ20</b></td><td data-l="Габарит">1710,8 × 1150</td></tr>
+<tr><td data-l="Деталь">АК-2 левый</td><td class="num" data-l="Масса">804 кг</td>
+    <td data-l="Чугун">СЧ25</td><td data-l="Габарит">1345,9 × 950</td></tr>
+<tr><td data-l="Деталь">АК-2 правый</td><td class="num" data-l="Масса">804 кг</td>
+    <td data-l="Чугун">СЧ25</td><td data-l="Габарит">1345,9 × 950</td></tr>
+<tr><td data-l="Деталь">АКП-3 левый</td><td class="num" data-l="Масса">712 кг</td>
+    <td data-l="Чугун">СЧ25</td><td data-l="Габарит">1110,9 × 825</td></tr>
+<tr><td data-l="Деталь">АКП-3 правый</td><td class="num" data-l="Масса">712 кг</td>
+    <td data-l="Чугун">СЧ25</td><td data-l="Габарит">1110,9 × 825</td></tr>
+<tr><td data-l="Деталь">АКП-4</td><td class="num" data-l="Масса">676 кг</td>
+    <td data-l="Чугун"><b>СЧ20</b></td><td data-l="Габарит">1022,1 × 750</td></tr>
+<tr><td data-l="Деталь"><b>Комплект</b></td><td class="num" data-l="Масса"><b>6786 кг</b></td>
+    <td data-l="Чугун"></td><td data-l="Габарит"></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>28 комплектов = <b>196 деталей, 190,0 тонн готовых деталей</b>. Красноярск.</p>
+
+<div class="open">
+<p><b>Зеркальные детали из разного чугуна.</b> АК-1Д левая — СЧ25, правая — СЧ20.
+Проверено по штампам обоих листов отдельно, дважды. Похоже на ошибку в конструкторской
+документации, но по действующему ГОСТ Р 57054-2016 обе марки разрешены, так что
+формально это не брак. Подрядчику надо честно говорить «СЧ20 и СЧ25», а не одну марку.</p>
+</div>
+
+<h2>Металла нужно больше, чем считали</h2>
+
+<p>Патент на эту технологию даёт коэффициент: <b>стружка 10–16 % от массы готового
+тюбинга</b>. Значит обрабатывается отливка, которая тяжелее детали.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Что</th><th class="num">Деталь</th><th class="num">Отливка</th></tr></thead>
+<tbody>
+<tr><td data-l="Что">Самая крупная, АК-1Д</td><td class="num" data-l="Деталь">1539 кг</td>
+    <td class="num" data-l="Отливка"><b>до 1785 кг</b></td></tr>
+<tr><td data-l="Что">Комплект Ø8,5</td><td class="num" data-l="Деталь">6786 кг</td>
+    <td class="num" data-l="Отливка"><b>7465 – 7872 кг</b></td></tr>
+<tr><td data-l="Что">28 комплектов</td><td class="num" data-l="Деталь">190,0 т</td>
+    <td class="num" data-l="Отливка"><b>209 – 220 т</b></td></tr>
+<tr><td data-l="Что">Стружка на весь заказ</td><td class="num" data-l="Деталь">—</td>
+    <td class="num" data-l="Отливка"><b>19 – 30 т</b></td></tr>
+</tbody>
+</table>
+</div>
+
+<p><b>Практический смысл.</b> «Комлиту» надо заливать 209–220 тонн, а не 190. На стол
+подрядчику ложится 1785 кг, а не 1539. Стружки набирается 19–30 тонн — чья она,
+вопрос договора, и его лучше решить заранее.</p>
+
+<h2>Перспектива: Ø10,5 и Ø9,5</h2>
+
+<p>Ещё два заказа по 32 комплекта на Москву. Комплект Ø10,5 из семи деталей —
+<b>8223 кг</b>, самая тяжёлая деталь 105 АКП-1 весит <b>1895 кг</b>, и это максимум
+по всей номенклатуре ТУ 35-521-90.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Серия</th><th class="num">Длина</th><th class="num">Ширина</th>
+  <th class="num">Деталь</th><th class="num">Отливка</th></tr></thead>
+<tbody>
+<tr><td data-l="Серия">Ø8,5, АК-1Д</td><td class="num" data-l="Длина">1710,8 мм</td>
+    <td class="num" data-l="Ширина">1150 мм</td><td class="num" data-l="Деталь">1539 кг</td>
+    <td class="num" data-l="Отливка">до 1785 кг</td></tr>
+<tr><td data-l="Серия">Ø10,5, 105 АКП-1</td><td class="num" data-l="Длина">1733,1 мм</td>
+    <td class="num" data-l="Ширина">1150 мм</td><td class="num" data-l="Деталь">1895 кг</td>
+    <td class="num" data-l="Отливка">до 2198 кг</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note">
+<p><b>Разница между сериями всего 22 мм.</b> Раньше у нас стояло 372 мм — размеры были
+сняты с разных видов чертежа. Ошибку нашла проверка. Практический вывод: круг подходящих
+заводов под обе серии практически один и тот же, а не разный, как мы думали.</p>
+<p>По Ø9,5 чертежей нет вообще, есть только массы в таблицах ТУ.</p>
+</div>
+
+<div class="open">
+<p><b>Предупреждение по чертежам.</b> Файл, с которым мы работаем, — размеченная копия:
+на листах есть чужие аннотации, около каждого радиуса R30 дописано «R15»
+с перечёркивающей линией. Кто и что этим отменял — по файлу не восстановить.
+<b>Радиусы из этой копии в техзадание переносить нельзя</b>, нужен чистый оригинал.
+Массы, марки чугуна, углы и линейные размеры проверены и не затронуты.</p>
+</div>
+<footer>
+<p class="src">Источники: чертежи «Перемычка 85,4» (7 листов), ТУ 35-521-90,
+ГОСТ Р 57054-2016, патент РФ № 2661929, каталоги и вакансии предприятий,
+тендерные площадки. Числа, посчитанные нами, помечены как расчёт.</p>
+<p class="src">Собрано 17 августа 2026 для внутренней работы. Страницы не проиндексированы.</p>
+</footer>
+</div>
+</html>
