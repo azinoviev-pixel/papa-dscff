@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Связи и патенты — мехобработка тюбингов</title>
+<style>
+:root{
+  --paper:#F7F7F4; --card:#FFFFFF; --sunk:#F1F1EE;
+  --ink:#15181B; --ink-2:#464C53; --muted:#697077;
+  --rule:#CFD3D6; --rule-2:#E4E7E9; --rule-hi:#15181B;
+  --accent:#17486B; --accent-w:#E7EDF2;
+  --flag:#A3392A;  --flag-w:#F7E9E6;
+  --ok:#2C5F40;    --ok-w:#E6EFE9;
+  --warn:#7A5320;  --warn-w:#F4EDE0;
+  --serif:"PT Serif",Charter,Georgia,serif;
+  --narrow:"PT Sans Narrow","Arial Narrow",system-ui,sans-serif;
+  --sans:"PT Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+    --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+    --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+    --accent:#7FB2D4; --accent-w:#1D2C38;
+    --flag:#E08A7B;  --flag-w:#33211E;
+    --ok:#7FBF9B;    --ok-w:#1C2A22;
+    --warn:#DCBB84;  --warn-w:#2A2318;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+  --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+  --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+  --accent:#7FB2D4; --accent-w:#1D2C38;
+  --flag:#E08A7B;  --flag-w:#33211E;
+  --ok:#7FBF9B;    --ok-w:#1C2A22;
+  --warn:#DCBB84;  --warn-w:#2A2318;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0;max-width:100%;overflow-x:clip}
+img,svg{max-width:100%;height:auto}
+body{background:var(--paper);color:var(--ink);
+  font:16.5px/1.62 var(--serif);
+  font-variant-numeric:lining-nums proportional-nums;
+  padding-inline:max(var(--s5),env(safe-area-inset-left))}
+.wrap{max-width:1060px;margin-inline:auto;padding-bottom:var(--s8)}
+::selection{background:var(--accent-w);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3{font-family:var(--narrow);font-weight:700;letter-spacing:-.005em;
+  color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.06}
+h2{font-size:clamp(21px,3.2vw,29px);line-height:1.12;margin:var(--s7) 0 var(--s3);
+  padding-top:var(--s4);border-top:2px solid var(--rule-hi)}
+h3{font-size:clamp(17px,2.2vw,20px);line-height:1.22;margin:var(--s5) 0 var(--s2)}
+p{margin:0 0 var(--s4);max-width:var(--measure)}
+a{color:var(--accent);text-underline-offset:2px}
+ul,ol{margin:0 0 var(--s4);padding-left:1.35em;max-width:var(--measure)}
+li{margin:0 0 var(--s2)}
+code,.mono{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums}
+/* ── ШАПКА ПОРТАЛА ── */
+.topbar{position:sticky;top:0;z-index:60;background:var(--paper);
+  border-bottom:2px solid var(--rule-hi);margin:0 0 var(--s5)}
+.tb-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) 0 var(--s2);
+  flex-wrap:wrap}
+.tb-logo{font-family:var(--narrow);font-weight:700;font-size:15px;letter-spacing:.02em;
+  color:var(--ink);text-decoration:none;white-space:nowrap}
+.tb-logo span{color:var(--muted);font-weight:400}
+.nav{display:flex;gap:var(--s1);overflow-x:auto;padding:0 0 var(--s2);
+  scrollbar-width:none;-ms-overflow-style:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--narrow);font-size:14.5px;font-weight:700;
+  min-height:38px;display:inline-flex;align-items:center;padding:0 var(--s3);
+  color:var(--ink-2);text-decoration:none;white-space:nowrap;
+  border:1px solid var(--rule);border-radius:3px;background:var(--card)}
+.nav a:hover{color:var(--accent);border-color:var(--accent)}
+.nav a.cur{background:var(--rule-hi);color:var(--paper);border-color:var(--rule-hi)}
+.kicker{font-family:var(--narrow);font-size:12px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.lede{font-size:clamp(17px,2.3vw,20px);line-height:1.5;color:var(--ink-2);
+  max-width:60ch;margin:var(--s4) 0 var(--s6)}
+.tw{overflow-x:auto;margin:0 0 var(--s5);border:1px solid var(--rule);border-radius:3px;
+  background:var(--card)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14.5px;
+  font-variant-numeric:tabular-nums}
+thead th{font-family:var(--narrow);font-weight:700;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:var(--s3);border-bottom:2px solid var(--rule-hi);white-space:nowrap;
+  background:var(--sunk)}
+td{padding:var(--s3);border-bottom:1px solid var(--rule-2);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+td.num,.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note,.key,.open,.good{border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;background:var(--card);padding:var(--s4) var(--s5);margin:0 0 var(--s5)}
+.key{border-left-color:var(--flag);background:var(--flag-w)}
+.open{border-left-color:var(--warn);background:var(--warn-w)}
+.good{border-left-color:var(--ok);background:var(--ok-w)}
+.note p,.key p,.open p,.good p{max-width:none}
+.note>p:last-child,.key>p:last-child,.open>p:last-child,.good>p:last-child{margin-bottom:0}
+.flag{display:inline-block;font-family:var(--narrow);font-weight:700;font-size:11.5px;
+  letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:2px;
+  white-space:nowrap;margin:0 var(--s1) var(--s1) 0}
+.f-red{background:var(--flag-w);color:var(--flag);border:1px solid var(--flag)}
+.f-warn{background:var(--warn-w);color:var(--warn);border:1px solid var(--warn)}
+.f-ok{background:var(--ok-w);color:var(--ok);border:1px solid var(--ok)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:var(--s4);margin:0 0 var(--s5)}
+.cell{border:1px solid var(--rule);border-radius:3px;background:var(--card);padding:var(--s4)}
+.cell h4{font-family:var(--narrow);font-size:12.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.cell .big{font-family:var(--narrow);font-size:clamp(21px,2.9vw,27px);font-weight:700;
+  line-height:1.1;margin:0 0 var(--s1)}
+.cell p{margin:0;font-size:14px;line-height:1.45;max-width:none;color:var(--ink-2)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:var(--s4);margin:0 0 var(--s6)}
+.pcard{border:1px solid var(--rule);border-radius:3px;background:var(--card);
+  padding:var(--s5);text-decoration:none;color:inherit;display:block}
+.pcard:hover{border-color:var(--accent)}
+.pcard h3{margin:0 0 var(--s2);color:var(--accent)}
+.pcard p{margin:0;font-family:var(--sans);font-size:14px;line-height:1.45;
+  color:var(--ink-2);max-width:none}
+.src{font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.5}
+footer{margin-top:var(--s8);padding-top:var(--s4);border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="topbar">
+  <div class="tb-row">
+    <a class="tb-logo" href="index.html">Мехобработка тюбингов <span>· рабочие материалы</span></a>
+  </div>
+  <nav class="nav">
+  <a href="index.html">Обзор</a>
+  <a href="detal.html">Тюбинг</a>
+  <a href="tehnologiya.html">Технология</a>
+  <a href="zavody.html">Кому звонить</a>
+  <a href="vse-zavody.html">Все заводы</a>
+  <a href="tyubingi.html">Кто делает тюбинги</a>
+  <a href="dengi.html">Деньги и сроки</a>
+  <a href="voprosy.html">Что спрашивать</a>
+  <a href="svyazi.html">Связи</a>
+  <a href="istochniki.html">Чего не знаем</a>
+  </nav>
+</header>
+
+<p class="kicker">Раздел 8 · собрано и проверено 18 августа 2026</p>
+<h1>Связи и патенты</h1>
+<p class="lede">Что видно про наш круг снаружи, по открытым источникам. Каждое
+утверждение здесь снято дважды: сначала поиском, потом отдельной проверкой
+с пересъёмом первоисточника. Что подтвердить не удалось — сказано прямо.</p>
+
+<h2>Патенты</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Документ</th><th>Кто в нём</th><th>Чей</th></tr></thead>
+<tbody>
+<tr><td data-l="Документ"><b>RU 2661929</b><br>«Способ изготовления и обработки
+  чугунной отливки тюбинга тоннельной обделки»</td>
+  <td data-l="Кто">Зиновьев А. М. (UA) — первым, далее Харченко В. В., Маймур А. И.,
+  Чересло А. Р., Драгомирецкий Ю. А., Лахно Д. Н. — все UA</td>
+  <td data-l="Чей">ООО НПФ «Днепротехсервис». <b>Адрес для переписки — Днепропетровск,
+  ПАО «Днепротяжмаш»</b>. Заявка 15.12.2015, выдан 23.07.2018, действие прекращено
+  16.12.2018 за неуплату пошлины</td></tr>
+<tr><td data-l="Документ"><b>RU 2860002</b> — опорный тюбинг и тюбинговое кольцо<br>
+  <b>RU 237756</b> — тюбинговое кольцо<br><b>RU 238602</b> — опорный тюбинг</td>
+  <td data-l="Кто">Одинаковый состав во всех трёх: Зиновьев А. М., <b>Зиновьев Е. А.</b>,
+  Соколов Е. О., Мельников О. Н., Зайцев Д. С., Исайкин А. В.</td>
+  <td data-l="Чей"><b>ООО «Тюбинг Центролит»</b>. Все три поданы 29.07.2025; выданы
+  03.10.2025, 01.11.2025 и 14.04.2026. Это первые патенты ТЦЛ</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Всего по этому имени в базе патентов <b>24 уникальные публикации</b> (28 записей,
+четыре — вторые языковые версии). Тюбинговый ряд оформлен на «Днепротехсервис»,
+«Днепротяжмаш», «Металлическую Крепь», «Метрогипротранс» и ТЦЛ.</p>
+
+<div class="note">
+<p><b>Полезная модель № 156940 — не ТЦЛ.</b> В нашем черновике она была записана
+за «Тюбинг Центролитом», но и Google Patents, и Espacenet дают патентообладателем
+НПФ «Днепротехсервис». Перенос прав ничем не показан. Поправлено 18.08.</p>
+</div>
+
+<div class="open">
+<p><b>Чего патент не доказывает.</b> Он фиксирует только то, что человек указан
+автором. Первым он стоит во всех документах с 2011 по 2026, при том что состав
+соавторов полностью сменился — это признак владельца, а не разработчика способа.</p>
+</div>
+
+<h2>Пуховичи: линия мехобработки на чужом заводе</h2>
+
+<div class="good">
+<p>Районная газета <b>gorka.by, 6 декабря 2017</b> — статья «У ОАО „Пуховичский
+опытно-экспериментальный завод" появились партнеры». Проверено пересъёмом,
+цитаты дословные:</p>
+<blockquote style="border-left:3px solid var(--rule);margin:0 0 var(--s4);
+  padding:0 0 0 var(--s4);color:var(--ink-2)">
+<p>«Наш завод предоставил украинским партнерам площади, где они смогли разместить
+оборудование, которое используется для обработки отлитых на ОАО „Пуховичский
+опытно-экспериментальный завод" больших тюбингов для строительства метрополитена.
+И мы теперь имеем полный цикл производства тюбингов».</p>
+<p>«На оборудовании партнеров уже обработано более 400 тонн литья. Это тюбинги
+размера 8,5 и 9,5 метра в диаметре. Возможности линии гораздо больше: до 1000 тонн
+литья в месяц».</p>
+</blockquote>
+<p>Там же: в июне на <b>Шацком участке</b> провели контрольную сборку колец Ø8,5 и 9,5.
+То есть схема «мы льём — обработку ставим рядом» на этом заводе уже работала,
+и ровно на наших диаметрах.</p>
+</div>
+
+<p>Стыкуется с «Известиями» от 5 февраля 2015 года, дословно: <i>«ООО „ЕТК" через
+российскую компанию ООО „Металлическая крепь" к изготовлению тюбингов привлек
+„Днепротяжмаш", а механическая обработка деталей с Украины частично размещена
+на предприятиях России и Белоруссии»</i>.</p>
+
+<h2>Красноярск: что известно про поставки</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Что</th><th>Источник, дословно</th></tr></thead>
+<tbody>
+<tr><td data-l="Что">Первая партия по железной дороге</td>
+  <td data-l="Источник">Красноярская железная дорога, 8 сентября 2025: «Груз общим
+  весом 67 тонн проследовал 4504 км от станции Пуховичи (Республика Беларусь)
+  до Красноярска… Новые поставки планируются регулярно до февраля 2026 года»</td></tr>
+<tr><td data-l="Что">Куда идут пуховичские тюбинги</td>
+  <td data-l="Источник">mlyn.by, 19 декабря 2025: «Именно из них складываются километры
+  тоннелей минского, московского, петербургского, <b>красноярского</b>, алмаатинского
+  и других метрополитенов»</td></tr>
+<tr><td data-l="Что">Гомель вернулся на московский рынок</td>
+  <td data-l="Источник">centrolit.by: «после семилетнего перерыва возобновил поставки
+  тюбингов для московского метрополитена», диаметр 5,5 м (июль 2025)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="open">
+<p><b>Грузоотправитель нигде не назван.</b> Ни в сообщении железной дороги, ни в
+белорусских публикациях. Победители тендеров «Моспроекта-3» на тюбинги для
+красноярского метро в открытых источниках тоже не опубликованы. Так что связь
+конкретных вагонов с конкретной компанией по документам мы не показали —
+это вопрос одной фразы к отцу.</p>
+</div>
+
+<h2>Российские производители: пересечений не нашли</h2>
+
+<p>Проверялись «Сиблитмаш», Качканарский «Металлист», Механоремонтный комплекс
+Магнитогорска, «Арсенал-Деталь» и Чебоксарский агрегатный — по владельцам,
+руководителям и патентам. Совпадений нет.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Завод</th><th>Кто руководит и владеет</th></tr></thead>
+<tbody>
+<tr><td data-l="Завод">«Сиблитмаш», Новосибирск</td><td data-l="Кто">Шашукова Л. А.;
+  владелец — ООО «ЛитБаС» (семья Масаловых)</td></tr>
+<tr><td data-l="Завод">«Металлист», Качканар</td><td data-l="Кто">Вихляев А. А.;
+  акционеры не раскрыты</td></tr>
+<tr><td data-l="Завод">Механоремонтный комплекс, Магнитогорск</td>
+  <td data-l="Кто">Куряев Д. В.; 98,75 % у ПАО «ММК»</td></tr>
+<tr><td data-l="Завод">«Арсенал-Деталь», Екатеринбург</td><td data-l="Кто">Макеев В. А., 100 %</td></tr>
+<tr><td data-l="Завод">Чебоксарский агрегатный</td><td data-l="Кто">УК «Концерн
+  „Тракторные заводы"», учредитель ООО «Актив»</td></tr>
+<tr><td data-l="Завод">АО «Балаково-Центролит»</td><td data-l="Кто">директор с 05.03.2024
+  Мишин Н. В.; акционеры не раскрываются (реестр у АО «Реестр»). Связь с ТЦЛ,
+  о которой писала статья 2022 года, в реестрах не видна — <b>как факт не утверждаем</b></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Однофамильцы, чтобы не путать: в отчёте Чебоксарского агрегатного за 2013 год стоит
+<b>Александр</b> Михайлович Зиновьев, 1972 года рождения — другой человек. Самарский
+нефтяной кластер патентов — тоже другой, доцент СамГТУ.</p>
+
+<h2>Что осталось неподтверждённым</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Вопрос</th><th>Как есть</th></tr></thead>
+<tbody>
+<tr><td data-l="Вопрос">Год рождения 1959</td>
+  <td data-l="Как">Документом не подтверждён и не опровергнут. В реестрах и патентах
+  дат рождения нет. Ближайшее: Focus, 30.03.2012 — «53 года, женат, трое детей»,
+  это 1958 или 1959; трое детей сходятся поимённо</td></tr>
+<tr><td data-l="Вопрос">Кто отправляет вагоны из Пуховичей</td>
+  <td data-l="Как">Не назван ни в одном источнике</td></tr>
+<tr><td data-l="Вопрос">Владельцы белорусских заводов</td>
+  <td data-l="Как">Реестр учредителей в Беларуси закрыт — по открытым данным не проверяется</td></tr>
+<tr><td data-l="Вопрос">Акционеры двух АО (Качканар, Балаково-Центролит)</td>
+  <td data-l="Как">Не раскрываются. «Не нашли» здесь означает предел открытых данных,
+  а не отсутствие связи</td></tr>
+</tbody>
+</table>
+</div>
+<footer>
+<p class="src">Источники: чертежи «Перемычка 85,4» (7 листов), ТУ 35-521-90, патент РФ № 2661929, каталоги и вакансии предприятий,
+тендерные площадки. Числа, посчитанные нами, помечены как расчёт.</p>
+<p class="src">Собрано 18 августа 2026 для внутренней работы. Страницы не проиндексированы.</p>
+</footer>
+</div>
+</html>
