@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Статистика работы — мехобработка</title>
+<style>
+:root{
+  --paper:#F7F7F4; --card:#FFFFFF; --sunk:#F1F1EE;
+  --ink:#15181B; --ink-2:#464C53; --muted:#697077;
+  --rule:#CFD3D6; --rule-2:#E4E7E9; --rule-hi:#15181B;
+  --accent:#17486B; --accent-w:#E7EDF2;
+  --flag:#A3392A;  --flag-w:#F7E9E6;
+  --ok:#2C5F40;    --ok-w:#E6EFE9;
+  --warn:#7A5320;  --warn-w:#F4EDE0;
+  --serif:"PT Serif",Charter,Georgia,serif;
+  --narrow:"PT Sans Narrow","Arial Narrow",system-ui,sans-serif;
+  --sans:"PT Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+    --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+    --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+    --accent:#7FB2D4; --accent-w:#1D2C38;
+    --flag:#E08A7B;  --flag-w:#33211E;
+    --ok:#7FBF9B;    --ok-w:#1C2A22;
+    --warn:#DCBB84;  --warn-w:#2A2318;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171A; --card:#1B1F23; --sunk:#1F2428;
+  --ink:#E9ECEE; --ink-2:#C3CACF; --muted:#8E979E;
+  --rule:#394147; --rule-2:#2B3237; --rule-hi:#E9ECEE;
+  --accent:#7FB2D4; --accent-w:#1D2C38;
+  --flag:#E08A7B;  --flag-w:#33211E;
+  --ok:#7FBF9B;    --ok-w:#1C2A22;
+  --warn:#DCBB84;  --warn-w:#2A2318;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0;max-width:100%;overflow-x:clip}
+img,svg{max-width:100%;height:auto}
+body{background:var(--paper);color:var(--ink);
+  font:16.5px/1.62 var(--serif);
+  font-variant-numeric:lining-nums proportional-nums;
+  padding-inline:max(var(--s5),env(safe-area-inset-left))}
+.wrap{max-width:1060px;margin-inline:auto;padding-bottom:var(--s8)}
+::selection{background:var(--accent-w);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3{font-family:var(--narrow);font-weight:700;letter-spacing:-.005em;
+  color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.06}
+h2{font-size:clamp(21px,3.2vw,29px);line-height:1.12;margin:var(--s7) 0 var(--s3);
+  padding-top:var(--s4);border-top:2px solid var(--rule-hi)}
+h3{font-size:clamp(17px,2.2vw,20px);line-height:1.22;margin:var(--s5) 0 var(--s2)}
+p{margin:0 0 var(--s4);max-width:var(--measure)}
+a{color:var(--accent);text-underline-offset:2px}
+ul,ol{margin:0 0 var(--s4);padding-left:1.35em;max-width:var(--measure)}
+li{margin:0 0 var(--s2)}
+code,.mono{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums}
+/* ── ШАПКА ПОРТАЛА ── */
+.topbar{position:sticky;top:0;z-index:60;background:var(--paper);
+  border-bottom:2px solid var(--rule-hi);margin:0 0 var(--s5)}
+.tb-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) 0 var(--s2);
+  flex-wrap:wrap}
+.tb-logo{font-family:var(--narrow);font-weight:700;font-size:15px;letter-spacing:.02em;
+  color:var(--ink);text-decoration:none;white-space:nowrap}
+.tb-logo span{color:var(--muted);font-weight:400}
+.nav{display:flex;gap:var(--s1);overflow-x:auto;padding:0 0 var(--s2);
+  scrollbar-width:none;-ms-overflow-style:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--narrow);font-size:14.5px;font-weight:700;
+  min-height:38px;display:inline-flex;align-items:center;padding:0 var(--s3);
+  color:var(--ink-2);text-decoration:none;white-space:nowrap;
+  border:1px solid var(--rule);border-radius:3px;background:var(--card)}
+.nav a:hover{color:var(--accent);border-color:var(--accent)}
+.nav a.cur{background:var(--rule-hi);color:var(--paper);border-color:var(--rule-hi)}
+.kicker{font-family:var(--narrow);font-size:12px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.lede{font-size:clamp(17px,2.3vw,20px);line-height:1.5;color:var(--ink-2);
+  max-width:60ch;margin:var(--s4) 0 var(--s6)}
+.tw{overflow-x:auto;margin:0 0 var(--s5);border:1px solid var(--rule);border-radius:3px;
+  background:var(--card)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14.5px;
+  font-variant-numeric:tabular-nums}
+thead th{font-family:var(--narrow);font-weight:700;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:var(--s3);border-bottom:2px solid var(--rule-hi);white-space:nowrap;
+  background:var(--sunk)}
+td{padding:var(--s3);border-bottom:1px solid var(--rule-2);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+td.num,.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note,.key,.open,.good{border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:3px;background:var(--card);padding:var(--s4) var(--s5);margin:0 0 var(--s5)}
+.key{border-left-color:var(--flag);background:var(--flag-w)}
+.open{border-left-color:var(--warn);background:var(--warn-w)}
+.good{border-left-color:var(--ok);background:var(--ok-w)}
+.note p,.key p,.open p,.good p{max-width:none}
+.note>p:last-child,.key>p:last-child,.open>p:last-child,.good>p:last-child{margin-bottom:0}
+.flag{display:inline-block;font-family:var(--narrow);font-weight:700;font-size:11.5px;
+  letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:2px;
+  white-space:nowrap;margin:0 var(--s1) var(--s1) 0}
+.f-red{background:var(--flag-w);color:var(--flag);border:1px solid var(--flag)}
+.f-warn{background:var(--warn-w);color:var(--warn);border:1px solid var(--warn)}
+.f-ok{background:var(--ok-w);color:var(--ok);border:1px solid var(--ok)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:var(--s4);margin:0 0 var(--s5)}
+.cell{border:1px solid var(--rule);border-radius:3px;background:var(--card);padding:var(--s4)}
+.cell h4{font-family:var(--narrow);font-size:12.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 var(--s2)}
+.cell .big{font-family:var(--narrow);font-size:clamp(21px,2.9vw,27px);font-weight:700;
+  line-height:1.1;margin:0 0 var(--s1)}
+.cell p{margin:0;font-size:14px;line-height:1.45;max-width:none;color:var(--ink-2)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:var(--s4);margin:0 0 var(--s6)}
+.pcard{border:1px solid var(--rule);border-radius:3px;background:var(--card);
+  padding:var(--s5);text-decoration:none;color:inherit;display:block}
+.pcard:hover{border-color:var(--accent)}
+.pcard h3{margin:0 0 var(--s2);color:var(--accent)}
+.pcard p{margin:0;font-family:var(--sans);font-size:14px;line-height:1.45;
+  color:var(--ink-2);max-width:none}
+.src{font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.5}
+footer{margin-top:var(--s8);padding-top:var(--s4);border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="topbar">
+  <div class="tb-row">
+    <a class="tb-logo" href="index.html">Мехобработка тюбингов <span>· рабочие материалы</span></a>
+  </div>
+  <nav class="nav"><a href="index.html">← к порталу</a></nav>
+</header>
+
+<p class="kicker">Внутренняя страница · не в меню портала</p>
+<h1>Сколько работы стоит за этим порталом</h1>
+<p class="lede">Считано по файлам, коммитам и логам, а не по памяти. Цифры на 18 августа
+2026 года. Страница служебная: ссылки на неё в меню нет, открывается только по адресу.</p>
+
+<div class="cols">
+  <div class="cell"><h4>Предприятий в базе</h4><p class="big">367</p>
+    <p>из 186 городов, каждое со своим статусом и обоснованием</p></div>
+  <div class="cell"><h4>Агентов-исследователей</h4><p class="big">82</p>
+    <p>запущено за сутки: сборщики, сверщики, критики, ревьюеры</p></div>
+  <div class="cell"><h4>Цитат из источников</h4><p class="big">2 340</p>
+    <p>дословных, с адресом и датой съёма</p></div>
+  <div class="cell"><h4>Доменов-источников</h4><p class="big">707</p>
+    <p>сайты заводов, каталоги, вакансии, тендеры, СМИ</p></div>
+</div>
+
+<h2>Что собрано по заводам</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Что</th><th class="num">Сколько</th><th>Пояснение</th></tr></thead>
+<tbody>
+<tr><td data-l="Что">Записей в базе</td><td class="num" data-l="Сколько"><b>367</b></td>
+  <td data-l="Пояснение">350 разных предприятий: 13 повторов под другим написанием, плюс компания отца</td></tr>
+<tr><td data-l="Что">Прошли глубокий досбор</td><td class="num" data-l="Сколько"><b>220</b></td>
+  <td data-l="Пояснение">по шести каналам: свой сайт, вакансии, каталоги субподряда, госзакупки, торги имуществом, СМИ</td></tr>
+<tr><td data-l="Что">Обоснование по группам</td><td class="num" data-l="Сколько"><b>367</b></td>
+  <td data-l="Пояснение">у всех: за что поставлен балл по каждой из семи групп условий</td></tr>
+<tr><td data-l="Что">Телефонов</td><td class="num" data-l="Сколько"><b>644</b></td>
+  <td data-l="Пояснение">из них 380 с подписью — кто именно на линии</td></tr>
+<tr><td data-l="Что">Электронных почт</td><td class="num" data-l="Сколько"><b>412</b></td><td data-l="Пояснение">—</td></tr>
+<tr><td data-l="Что">Адресов сайтов</td><td class="num" data-l="Сколько"><b>517</b></td><td data-l="Пояснение">—</td></tr>
+<tr><td data-l="Что">Объём собранных цитат</td><td class="num" data-l="Сколько"><b>681 тыс. знаков</b></td>
+  <td data-l="Пояснение">это примерно 400 страниц текста — только выдержки с сайтов заводов</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Чем закончился отбор</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Чем доказана зона</th><th class="num">Записей</th></tr></thead>
+<tbody>
+<tr><td data-l="Зона">Опубликованными размерами станка</td><td class="num" data-l="Записей">135</td></tr>
+<tr><td data-l="Зона">Классом станка, размеров нет</td><td class="num" data-l="Записей">35</td></tr>
+<tr><td data-l="Зона">Только за два установа</td><td class="num" data-l="Записей">11</td></tr>
+<tr><td data-l="Зона">Фактом выпуска тюбингов</td><td class="num" data-l="Записей">6</td></tr>
+<tr><td data-l="Зона">Фактом обработки чужих тюбингов</td><td class="num" data-l="Записей">1</td></tr>
+<tr><td data-l="Зона"><b>Доказанный отказ</b></td><td class="num" data-l="Записей"><b>10</b></td></tr>
+<tr><td data-l="Зона">Не известна — вопрос звонком, не отказ</td><td class="num" data-l="Записей">169</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Из 367 записей выброшено по доказательству <b>десять</b>. Это принципиально:
+«данных нет» — не «не подходит», а повод спросить.</p>
+
+<h2>Работа над самим порталом</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Что</th><th class="num">Сколько</th></tr></thead>
+<tbody>
+<tr><td data-l="Что">Страниц в разделе</td><td class="num" data-l="Сколько">10 (плюс эта)</td></tr>
+<tr><td data-l="Что">Общий вес страниц</td><td class="num" data-l="Сколько">960 КБ</td></tr>
+<tr><td data-l="Что">Выкладок на сайт</td><td class="num" data-l="Сколько">29, из них 25 за 18 августа</td></tr>
+<tr><td data-l="Что">Версий базы</td><td class="num" data-l="Сколько">26 (v9 → v34), старые не перезаписываются</td></tr>
+<tr><td data-l="Что">Скриптов сборки и правок</td><td class="num" data-l="Сколько">16</td></tr>
+<tr><td data-l="Что">Файлов результатов досбора</td><td class="num" data-l="Сколько">56</td></tr>
+<tr><td data-l="Что">Отчётов проверки 18 августа</td><td class="num" data-l="Сколько">18 файлов, 4 234 строки</td></tr>
+<tr><td data-l="Что">Файлов в проекте всего</td><td class="num" data-l="Сколько">853: 135 документов, 121 база, 76 страниц, 63 скрипта</td></tr>
+<tr><td data-l="Что">Объём баз данных</td><td class="num" data-l="Сколько">35 МБ</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Проверка 18 августа</h2>
+
+<p>Каждая страница проверялась отдельно, парой независимых агентов: один сверял
+каждое утверждение с первоисточниками, второй искал логические дыры. Потом сквозной
+проверяющий прошёл по всем страницам разом, и отдельный агент написал заключение.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Что проверено</th><th class="num">Результат</th></tr></thead>
+<tbody>
+<tr><td data-l="Что">Перенос базы на страницы</td>
+  <td class="num" data-l="Результат"><b>0 расхождений</b> из 2 184 сравнений</td></tr>
+<tr><td data-l="Что">Массы и марки чугуна по чертежам</td>
+  <td class="num" data-l="Результат">20 подтверждено, лжи нет</td></tr>
+<tr><td data-l="Что">Утверждений проверено пересъёмом</td>
+  <td class="num" data-l="Результат">более 200 за сутки</td></tr>
+<tr><td data-l="Что">Найдено и исправлено ошибок</td>
+  <td class="num" data-l="Результат">два прямых вранья и больше двадцати неточностей</td></tr>
+<tr><td data-l="Что">Объём вывода агентов</td>
+  <td class="num" data-l="Результат">8 МБ протоколов</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note">
+<p><b>Что считалось за «ошибку».</b> Не опечатка, а утверждение, которое могло увести
+в сторону: например, «готовность к давальческой схеме не заявляет ни один завод» —
+при том что таких записей в базе 138. Или зона «делает тюбинги» у двух предприятий,
+поставленная по цитате, принадлежавшей третьему.</p>
+</div>
+
+<h2>Хронология задачи</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th>Когда</th><th>Что</th></tr></thead>
+<tbody>
+<tr><td data-l="Когда">27 июня</td><td data-l="Что">Аудиозадача от отца, 26 минут: найти предприятие на мехобработку</td></tr>
+<tr><td data-l="Когда">28 июля</td><td data-l="Что">Первый разбор: производители и подрядчики в коридоре Пенза–Москва</td></tr>
+<tr><td data-l="Когда">9–14 августа</td><td data-l="Что">Чертежи, ТУ, реестр предприятий, три внешних аудита</td></tr>
+<tr><td data-l="Когда">15 августа</td><td data-l="Что">Мехобработка выделена в отдельную работу</td></tr>
+<tr><td data-l="Когда">16–17 августа</td><td data-l="Что">Правила отбора переписаны: не обрубать выборку, стол не догма, цена не критерий</td></tr>
+<tr><td data-l="Когда">18 августа</td><td data-l="Что">Досбор закрыт целиком; постраничная проверка портала; найден «Спецпроммаш»</td></tr>
+</tbody>
+</table>
+</div>
+<footer>
+<p class="src">Источники: чертежи «Перемычка 85,4» (7 листов), ТУ 35-521-90, патент РФ № 2661929, каталоги и вакансии предприятий,
+тендерные площадки. Числа, посчитанные нами, помечены как расчёт.</p>
+<p class="src">Собрано 18 августа 2026 для внутренней работы. Страницы не проиндексированы.</p>
+</footer>
+</div>
+</html>
