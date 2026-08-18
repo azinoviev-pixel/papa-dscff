@@ -269,4 +269,21 @@ footer{margin-top:var(--s8);padding-top:var(--s4);border-top:1px solid var(--rul
 <p class="src">Собрано 17–18 августа 2026 для внутренней работы. Страницы не проиндексированы.</p>
 </footer>
 </div>
+<script>
+(function(){
+  var cur=document.querySelector('.nav a.cur');
+  if(cur&&cur.scrollIntoView){cur.scrollIntoView({block:'nearest',inline:'center'});}
+  if(document.documentElement.scrollHeight>12000){
+    var b=document.createElement('button');
+    b.textContent='\u2191';b.setAttribute('aria-label','Наверх');
+    b.style.cssText='position:fixed;right:14px;bottom:14px;z-index:80;width:46px;height:46px;'+
+      'border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--ink);'+
+      'font-size:20px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);display:none';
+    b.onclick=function(){window.scrollTo({top:0,behavior:'smooth'});};
+    document.body.appendChild(b);
+    window.addEventListener('scroll',function(){b.style.display=window.scrollY>1200?'block':'none';},{passive:true});
+  }
+})();
+</script>
+
 </html>
